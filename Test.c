@@ -27,10 +27,25 @@ void main() {
         printf("Il risultato della add_vertex e': %d\n",upo_add_vertex(graph));
       }
       else if(scelta == 3){
+        printf("Inserire il vertice 1\n",);
+        scanf("%d", &vertex1);
+        printf("Inserire il vertice 2\n",);
+        scanf("%d", &vertex2);
+        if(vertex1 >= 0 && vertex1 <= n && vertex2 >= 0 && vertex2 <= n){
         printf("Il risultato della add_edge e': %d\n", upo_add_edge(graph, vertex1, vertex2)); // chidere di Inserire i nomi dei vertici e controllarli
+        }
+        else{
+          printf("ERROR invalid vertex\n");
+        }
+      }
+      else if(scelta == 4){
+        char str[DIM]; //dimensione da definire
+        str = upo_print_graph(graph);
+        printf("Grafo: %s\n", str);
       }
     }
   }
   while(scelta != 0)
   // ricordarsi di deallocare il grafo.
+  //per uscire dal ciclo serve il comando 0 che prima dealloca il grafo e poi esce.
 }
