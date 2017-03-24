@@ -5,7 +5,7 @@ void main() {
   int n = 0;
   upo_dirgraph_t graph = NULL;
   do{
-    printf("Questa e' il menu'.\n");
+    printf("Questo e' il menu'.\n");
     printf("0 = eliminare il grafo e uscire.\n");
     printf("1 = crea il grafo.\n");
     printf("2 = inserisci un vertice.\n");
