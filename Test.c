@@ -31,12 +31,7 @@ void main() {
         scanf("%d", &vertex1);
         printf("Inserire il vertice 2\n",);
         scanf("%d", &vertex2);
-        if(vertex1 >= 0 && vertex1 <= n && vertex2 >= 0 && vertex2 <= n){
         printf("Il risultato della add_edge e': %d\n", upo_add_edge(graph, vertex1, vertex2)); // chidere di Inserire i nomi dei vertici e controllarli
-        }
-        else{
-          printf("ERROR invalid vertex\n");
-        }
       }
       else if(scelta == 4){
         char str[DIM]; //dimensione da definire
