@@ -70,12 +70,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
  */
 int upo_num_vertices(upo_dirgraph_t graph){
     if(graph == NULL) return -1;
-    for(i = 0, i < n, i++){
-      for(j = 0, j < n, j++){
-        if(graph.adj[i][j] != 0){}
-        graph->n++;// non devi modificare nulla (riccardo)
-      }
-    return graph->n;//basta solo questa return senza fare nulla (riccardo)
+    return graph->n;
 }
 
 /**
