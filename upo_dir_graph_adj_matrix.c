@@ -45,13 +45,14 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
  *
  */
 int upo_dirgraph_destroy(upo_dirgraph_t graph){
+    int i;
     if(graph == NULL) return -1;
     else{
-      for(i = n, i > 0, i--){// n non esiste... pensa bene a cosa vorresti come dato(riccardo)
-        for(j = n, j > 0, j--){// non hai il bisogno di cancellare cella per cella ma puoi fare le free di dei vari vettori(riccardo)
-          free(graph.adj[i][j]);
-        }
+      for(i = graph->n, i > 0, i--){
+        free(graph.adj[i]);
       }
+      free(graph.adj);
+      free(graph);
     }
     if(graph == NULL){
       return 1;
@@ -138,9 +139,7 @@ int upo_get_degree(upo_dirgraph_t graph, int vertex) {
 int upo_is_graph_empty(upo_dirgraph_t graph) {
     if(graph == NULL) return -1;
     if(graph->n == 0) return 1;
-    else{
-      return 0;
-    }
+    else return 0;
 }
 
 /**
@@ -214,7 +213,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  */
 int upo_add_vertex(upo_dirgraph_t graph) {
     if(graph == NULL) return -1;
-    
+
 
     fprintf(stderr, "To be implemented!\n");
     abort();
