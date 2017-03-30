@@ -97,6 +97,8 @@ int upo_num_edges(upo_dirgraph_t graph) {
  * @return il grado entrante di vertex, -1 se il grafo e' nullo
  */
 int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
+    if(graph == NULL) return -1;
+
     fprintf(stderr, "To be implemented!\n");
     abort();
 }
@@ -109,6 +111,7 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
  * @return il grado uscente di vertex, -1 se il grafo e' nullo
  */
 int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
+    if(graph == NULL) return -1;
     fprintf(stderr, "To be implemented!\n");
     abort();
 }
@@ -121,6 +124,7 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
  * @return il grado complessivo di vertex, -1 se il grafo e' nullo
  */
 int upo_get_degree(upo_dirgraph_t graph, int vertex) {
+    if(graph == NULL) return -1;
     fprintf(stderr, "To be implemented!\n");
     abort();
 }
@@ -132,8 +136,11 @@ int upo_get_degree(upo_dirgraph_t graph, int vertex) {
  * @return 1 se il grafo e' vuoto, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_is_graph_empty(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if(graph == NULL) return -1;
+    if(graph->n == 0) return 1;
+    else{
+      return 0;
+    }
 }
 
 /**
@@ -144,8 +151,22 @@ int upo_is_graph_empty(upo_dirgraph_t graph) {
  * @return una lista contenente i vertici adiacenti a vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if(graph == NULL) return NULL;
+    upo_list_t list == NULL;
+    upo_list_t temp == NULL;
+    list = upo_create_list(list->elementSize, list->freeFunction freeFn);
+    int i = 0;
+    while(i < graph->n){
+      if(i == 0){
+        upo_add_first(list, graph.adj[vertex][j]);
+        j++;
+      }
+      else{
+        upo_add_last(list, graph.adj[vertex][j]);
+        j++;
+      }
+    }
+    return list;
 }
 
 /**
@@ -192,6 +213,9 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  *
  */
 int upo_add_vertex(upo_dirgraph_t graph) {
+    if(graph == NULL) return -1;
+    
+
     fprintf(stderr, "To be implemented!\n");
     abort();
 }
