@@ -155,6 +155,7 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
     upo_list_t temp == NULL;
     list = upo_create_list(list->elementSize, list->freeFunction freeFn);
     int i = 0;
+    int j = 0;
     while(i < graph->n){
       if(i == 0){
         upo_add_first(list, graph.adj[vertex][j]);
