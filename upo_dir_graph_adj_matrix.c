@@ -24,7 +24,7 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     upo_dirgraph_t graph_p = NULL;
     int i;
     graph_p = (upo_dirgraph_t) malloc(sizeof(upo_dirgraph_s));
-    graph_p.n = n;
+    graph_p.n = 0;
     graph_p.adj = (upo_dirgraph_t) malloc(n * (sizeof(int*)));
     for(i = 0, i < n, i++){
         graph_p.adj[i] = (upo_dirgraph_t) malloc(n * (sizeof(int)));
@@ -83,11 +83,15 @@ int upo_num_vertices(upo_dirgraph_t graph){
 int upo_num_edges(upo_dirgraph_t graph) {
     if(graph == NULL) return -1;
     int archi = 0;
-
-
+    int i;
+    int j;
+    int n = upo_num_vertices(graph);
+    for(i = 0, i < n, i++){
+      for(j = 0, j < n, j++){
+        if(graph.adj[i][j] == 1) archi++;
+      }
+    }
     return archi;
-    fprintf(stderr, "To be implemented!\n");
-    abort();
 }
 
 /**
@@ -98,10 +102,14 @@ int upo_num_edges(upo_dirgraph_t graph) {
  * @return il grado entrante di vertex, -1 se il grafo e' nullo
  */
 int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
+    int i;
+    int n = upo_num_vertices(graph);
+    int grado = 0;
     if(graph == NULL) return -1;
-
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    for(i = 0, i < n, i++){
+      if(graph.adj[i][vertex] == 1) grado++;
+    }
+    return grado;
 }
 
 /**
@@ -112,9 +120,14 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
  * @return il grado uscente di vertex, -1 se il grafo e' nullo
  */
 int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
+    int j;
+    int n = upo_num_vertices(graph);
+    int grado = 0;
     if(graph == NULL) return -1;
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    for(j = 0, j < n, j++){
+      if(graph.adj[vertex][j] == 1) grado++;
+    }
+    return grado;
 }
 
 /**
@@ -126,8 +139,7 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
  */
 int upo_get_degree(upo_dirgraph_t graph, int vertex) {
     if(graph == NULL) return -1;
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    return (upo_get_in_degree(graph, vertex) + upo_get_out_degree(graph, vertex));
 }
 
 /**
@@ -150,20 +162,17 @@ int upo_is_graph_empty(upo_dirgraph_t graph) {
  * @return una lista contenente i vertici adiacenti a vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
+    int archi = upo_get_out_degree(graph, vertex);
+    if(archi == 0) return NULL;
     if(graph == NULL) return NULL;
     upo_list_t list == NULL;
     upo_list_t temp == NULL;
-    list = upo_create_list(list->elementSize, list->freeFunction freeFn);
-    int i = 0;
-    int j = 0;
-    while(i < graph->n){
-      if(i == 0){
-        upo_add_first(list, graph.adj[vertex][j]);
-        j++;
-      }
-      else{
-        upo_add_last(list, graph.adj[vertex][j]);
-        j++;
+    list = upo_create_list(sizeof(int), NULL);
+    int j;
+    int n = upo_num_vertices(graph);
+    for(j = 0, j < n, j++){
+      if(graph.adj[vertex][j] == 1){ //aggiungo nodo alla lista
+        upo_add_first(list, &j);
       }
     }
     return list;
