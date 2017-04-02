@@ -166,7 +166,6 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
     if(archi == 0) return NULL;
     if(graph == NULL) return NULL;
     upo_list_t list == NULL;
-    upo_list_t temp == NULL;
     list = upo_create_list(sizeof(int), NULL);
     int j;
     int n = upo_num_vertices(graph);
@@ -186,8 +185,16 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_list_t list = NULL;
+    int j;
+    int n = upo_num_vertices(graph);
+    if(graph == NULL) return NULL;
+    for(j = 0, j < n, j++){
+      if(graph.adj[vertex][j] == 1){
+        upo_add_first(list, &j);
+      }
+    }
+    return list;
 }
 
 /**
@@ -198,8 +205,16 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi archi entranti in vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_list_t list = NULL;
+    int i;
+    int n = upo_num_vertices(graph);
+    if(graph == NULL) return NULL;
+    for(i = 0, i < n, i++){
+      if(graph.adj[i][vertex] == 1){
+        upo_add_first(list, &i);
+      }
+    }
+    return list;
 }
 
 /**
@@ -210,8 +225,22 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi incidenti a vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_list_t list = NULL;
+    int i;
+    int j;
+    int n = upo_num_vertices(graph);
+    if(graph == NULL) return NULL;
+    for(i = 0, i < n, i++){
+      if(graph.adj[i][vertex] == 1){
+        upo_add_first(list, &i);
+      }
+    }
+    for(j = 0, j < n, j++){
+      if(graph.adj[vertex][j] == 1){
+        upo_add_first(list, &j);
+      }
+    }
+    return list;
 }
 
 /**
@@ -222,8 +251,9 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  *
  */
 int upo_add_vertex(upo_dirgraph_t graph) {
+    int size = upo_num_vertices(graph);
     if(graph == NULL) return -1;
-
+    graph.adj[size+1] = malloc (upo_dirgraph_t) malloc(n * (sizeof(int)));
 
     fprintf(stderr, "To be implemented!\n");
     abort();
@@ -237,8 +267,11 @@ int upo_add_vertex(upo_dirgraph_t graph) {
  * @return 1 se il grafo contiene il vertice, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if(graph == NULL) return -1;
+    if(graph.adj[vertex][vertex] != NULL) return 1;
+    else{
+      return 0;
+    }
 }
 
 /**
