@@ -24,14 +24,14 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     upo_dirgraph_t graph_p = NULL;
     int i;
     graph_p = (upo_dirgraph_t) malloc(sizeof(upo_dirgraph_s));
-    graph_p.n = 0;
-    graph_p.adj = (upo_dirgraph_t) malloc(n * (sizeof(int*)));
+    graph_p->n = 0;
+    graph_p->adj = (upo_dirgraph_t) malloc(n * (sizeof(int*)));
     for(i = 0, i < n, i++){
-        graph_p.adj[i] = (upo_dirgraph_t) malloc(n * (sizeof(int)));
+        graph_p->adj[i] = (upo_dirgraph_t) malloc(n * (sizeof(int)));
     }
     for(i = 0, i < n, i++){
       for(j = 0, j < n, j++){
-        graph_p.adj[i][j] = 0;
+        graph_p->adj[i][j] = 0;
       }
     }
     return graph_p;
@@ -49,9 +49,9 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
     if(graph == NULL) return -1;
     else{
       for(i = graph->n, i > 0, i--){
-        free(graph.adj[i]);
+        free(graph->adj[i]);
       }
-      free(graph.adj);
+      free(graph->adj);
       free(graph);
     }
     if(graph == NULL){
@@ -88,7 +88,7 @@ int upo_num_edges(upo_dirgraph_t graph) {
     int n = upo_num_vertices(graph);
     for(i = 0, i < n, i++){
       for(j = 0, j < n, j++){
-        if(graph.adj[i][j] == 1) archi++;
+        if(graph->adj[i][j] == 1) archi++;
       }
     }
     return archi;
@@ -107,7 +107,7 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
     int grado = 0;
     if(graph == NULL) return -1;
     for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1) grado++;
+      if(graph->adj[i][vertex] == 1) grado++;
     }
     return grado;
 }
@@ -125,7 +125,7 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
     int grado = 0;
     if(graph == NULL) return -1;
     for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1) grado++;
+      if(graph->adj[vertex][j] == 1) grado++;
     }
     return grado;
 }
@@ -170,7 +170,7 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
     int j;
     int n = upo_num_vertices(graph);
     for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){ //aggiungo nodo alla lista
+      if(graph->adj[vertex][j] == 1){ //aggiungo nodo alla lista
         upo_add_first(list, &j);
       }
     }
@@ -191,7 +191,7 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){
+      if(graph->adj[vertex][j] == 1){
         upo_add_first(list, &j);
       }
     }
@@ -212,7 +212,7 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1){
+      if(graph->adj[i][vertex] == 1){
         upo_add_first(list, &i);
       }
     }
@@ -234,12 +234,12 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1){
+      if(graph->adj[i][vertex] == 1){
         upo_add_first(list, &i);
       }
     }
     for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){
+      if(graph->adj[vertex][j] == 1){
         upo_add_first(list, &j);
       }
     }
@@ -256,7 +256,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
 int upo_add_vertex(upo_dirgraph_t graph) {
     int size = upo_num_vertices(graph);
     if(graph == NULL) return -1;
-    graph.adj[size+1] = malloc (upo_dirgraph_t) malloc(n * (sizeof(int)));
+    graph->adj[size+1] = malloc (upo_dirgraph_t) malloc(n * (sizeof(int)));
 
     fprintf(stderr, "To be implemented!\n");
     abort();
@@ -271,7 +271,7 @@ int upo_add_vertex(upo_dirgraph_t graph) {
  */
 int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
     if(graph == NULL) return -1;
-    if(graph.adj[vertex][vertex] != NULL) return 1;
+    if(graph->adj[vertex][vertex] != NULL) return 1;
     else{
       return 0;
     }
