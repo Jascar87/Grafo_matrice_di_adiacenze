@@ -166,12 +166,16 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
     if(archi == 0) return NULL;
     if(graph == NULL) return NULL;
     upo_list_t list == NULL;
+    int* int_P = NULL;
     list = upo_create_list(sizeof(int), NULL);
     int j;
     int n = upo_num_vertices(graph);
     for(j = 0, j < n, j++){
       if(graph->adj[vertex][j] == 1){ //aggiungo nodo alla lista
-        upo_add_first(list, &j);
+        int_P = malloc(sizeof(int));
+        *int_P = j;
+        upo_add_first(list, int_P);
+        int_P=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -186,13 +190,18 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
  */
 upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
     upo_list_t list = NULL;
-    list = upo_create_list(sizeof(int), NULL);
+    list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
     int j;
+    upo_dir_edge_s* edge=NULL;
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(j = 0, j < n, j++){
       if(graph->adj[vertex][j] == 1){
-        upo_add_first(list, &j);
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=vertex;
+        edge->to=j;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -207,13 +216,18 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
  */
 upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
     upo_list_t list = NULL;
-    list = upo_create_list(sizeof(int), NULL);
+    list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
     int i;
+    upo_dir_edge_s* edge=NULL;
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(i = 0, i < n, i++){
       if(graph->adj[i][vertex] == 1){
-        upo_add_first(list, &i);
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=i;
+        edge->to=vertex;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -228,19 +242,27 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
  */
 upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
     upo_list_t list = NULL;
-    list = upo_create_list(sizeof(int), NULL);
+    list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
     int i;
-    int j;
     int n = upo_num_vertices(graph);
+    upo_dir_edge_t edge = NULL;
     if(graph == NULL) return NULL;
-    for(i = 0, i < n, i++){
-      if(graph->adj[i][vertex] == 1){
-        upo_add_first(list, &i);
+    for(i=0; i<n; i++){
+      if (graph->adj[i][vertex] ==1){
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=i;
+        edge->to=vertex;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
-    for(j = 0, j < n, j++){
-      if(graph->adj[vertex][j] == 1){
-        upo_add_first(list, &j);
+    for(i=0; i<n; i++){
+      if (graph->adj[vertex][i] ==1){
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=vertex;
+        edge->to=i;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
