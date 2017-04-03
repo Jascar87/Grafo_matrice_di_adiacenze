@@ -146,4 +146,3 @@ void* upo_get_iterator_element(upo_iterator iterator) {
 upo_iterator upo_get_next(upo_iterator iterator) {
     return (upo_iterator) iterator->next;
 }
-
