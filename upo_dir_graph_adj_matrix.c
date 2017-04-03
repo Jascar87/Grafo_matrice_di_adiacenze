@@ -192,7 +192,7 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
     upo_list_t list = NULL;
     list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
     int j;
-    upo_dir_edge_s* edge=NULL;
+    upo_dir_edge_t edge=NULL;
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(j = 0, j < n, j++){
@@ -218,7 +218,7 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
     upo_list_t list = NULL;
     list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
     int i;
-    upo_dir_edge_s* edge=NULL;
+    upo_dir_edge_t edge=NULL;
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(i = 0, i < n, i++){
