@@ -277,9 +277,9 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  */
 int upo_add_vertex(upo_dirgraph_t graph) {
     int size = upo_num_vertices(graph);
+    size_t dim = (graph->n) * (sizeof(int*));
     if(graph == NULL) return -1;
-    graph->adj[size+1] = malloc (upo_dirgraph_t) malloc(n * (sizeof(int)));
-
+    realloc((graph->adj[size+1])&, dim);
     fprintf(stderr, "To be implemented!\n");
     abort();
 }
@@ -333,8 +333,11 @@ int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if(graph == NULL) return -1;
+    if(graph->adj[vertex1][vertex2] != NULL) return 1;
+    else{
+      return 0;
+    }
 }
 
 /**
@@ -359,8 +362,11 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se i vertici sono adiacenti, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    if(graph == NULL) return -1;
+    if(graph->adj[vertex1][vertex2] == 1) return 1;
+    else{
+      return 0;
+    }
 }
 
 /**
