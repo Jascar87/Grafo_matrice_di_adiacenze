@@ -182,7 +182,21 @@ int upo_is_graph_empty(upo_dirgraph_t graph) {
  * @return una lista contenente i vertici adiacenti a vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
-    int archi = upo_get_out_degree(graph, vertex);
+    upo_list_t adjVert = NULL;
+      if(upo_is_graph_empty(graph) == 0){
+        adjVert = upo_create_list(sizeof(int),NULL); /**< Creazione della lista. */
+        int n = upo_num_vertices(graph);
+        for(int column = 0; index < n; index++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
+          if(graph->adj[vertex][column] != 0){ /**< Selezione dei vertici da inserire nella lista. */
+            //int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
+            //*value = column; /**< Salvataggio del valore del vertice nella memoria appena allocata. */
+            upo_add_last(adjVert, column); /** Creazione di un nuovo nodo della lista contenente il vertice e inserimento in coda. */
+          }
+        }
+      }
+      return adjVert;
+    }
+/*    int archi = upo_get_out_degree(graph, vertex);
     if(archi == 0) return NULL;
     if(graph == NULL) return NULL;
     upo_list_t list == NULL;
@@ -195,7 +209,7 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
       }
     }
     return list;
-}
+}*/
 
 /**
  * @brief Restituisce una lista contenente gli archi uscenti da vertex
