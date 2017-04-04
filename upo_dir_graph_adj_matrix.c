@@ -187,7 +187,7 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
         adjVert = upo_create_list(sizeof(int),NULL); /**< Creazione della lista. */
         int n = upo_num_vertices(graph);
         for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
-          if(graph->adj[vertex][column] != 0){ /**< Selezione dei vertici da inserire nella lista. */
+          if(graph->adj[vertex][column] == 1){ /**< Selezione dei vertici da inserire nella lista. */
             //int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
             //*value = column; /**< Salvataggio del valore del vertice nella memoria appena allocata. */
             upo_add_last(adjVert, column); /** Creazione di un nuovo nodo della lista contenente il vertice e inserimento in coda. */
@@ -219,7 +219,22 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
-    upo_list_t list = NULL;
+  upo_list_t inc_out_edges = NULL;
+  if(upo_is_graph_empty(graph) == 0){
+      inc_out_edges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
+      int n = upo_num_vertices(graph);
+      for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca degli archi uscenti da un dato vertice. */
+          if(graph->adj[vertex][column] == 1){ /**< Selezione degli archi da inserire nella lista. */
+            upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
+            edge->from = vertex; /**< Salvataggio dell'arco nella memoria appena allocata. */
+            edge->to = column;
+            upo_add_last(inc_out_edges, edge); /** Creazione di un nuovo nodo della lista contenente l'arco e inserimento in coda. */
+          }
+      }
+  }
+  return inc_out_edges;
+}
+/*    upo_list_t list = NULL;
     list = upo_create_list(sizeof(int), NULL);
     int j;
     int n = upo_num_vertices(graph);
@@ -230,7 +245,7 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
       }
     }
     return list;
-}
+}*/
 
 /**
  * @brief Restituisce una lista contenente gli archi entranti in vertex
