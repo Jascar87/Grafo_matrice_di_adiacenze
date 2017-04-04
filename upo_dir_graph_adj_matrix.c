@@ -332,13 +332,20 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_add_vertex(upo_dirgraph_t graph) {
-    int size = upo_num_vertices(graph);
-    if(graph == NULL) return -1;
-    graph.adj[size+1] = malloc (upo_dirgraph_t) malloc(n * (sizeof(int)));
-
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
+    if(graph == NULL){
+      return -1;
+    }
+    int n = graph->++n;
+    for(int row = 0; row < n; row++){
+      realloc(graph->adj[row], (sizeof(graph->adj[row]) + sizeof(graph->adj[row][0])));
+      graph->adj[row][n-1] = 0;
+    }
+    realloc(graph->adj, (sizeof(graph->adj) + sizeof(graph->adj[0])));
+    for(int column = 0; column < n; column++){
+      graph->adj[n-1][column] = 0;
+    }
+    return 1;
 }
 
 /**
