@@ -114,7 +114,7 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
     int inDegree = 0;
     int n = upo_num_vertices(graph);
     for(int row = 0, row < n, row++){
-      if(graph->adj[i][vertex] == 1){
+      if(graph->adj[row][vertex] == 1){
         inDegree++;
       }
     }
@@ -129,14 +129,17 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
  * @return il grado uscente di vertex, -1 se il grafo e' nullo
  */
 int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
-    int j;
-    int n = upo_num_vertices(graph);
-    int grado = 0;
-    if(graph == NULL) return -1;
-    for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1) grado++;
+    if(graph == NULL){
+      return -1;
     }
-    return grado;
+    int outDegree = 0;
+    int n = upo_num_vertices(graph);
+    for(int column = 0, column < n, column++){
+      if(graph->adj[vertex][column] == 1){
+        outDegree++;
+      }
+    }
+    return outDegree;
 }
 
 /**
