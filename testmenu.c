@@ -232,7 +232,7 @@ void destroy_graph(upo_dirgraph_t* graph) {
 void create_graph(upo_dirgraph_t* graph) {
     printf("\n\tCrea un nuovo grafo");
     if (*graph == NULL) {
-        *graph = upo_dirgraph_create();
+        *graph = upo_dirgraph_create(0);
         printf("\n\tCreazione completata.");
     }
     else {

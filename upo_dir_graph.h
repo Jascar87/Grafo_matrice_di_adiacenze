@@ -10,10 +10,10 @@ typedef struct upo_dir_edge_s* upo_dir_edge_t;
 /**
  * @brief Definizione della struttura per rappresentare un arco diretto
  */
-struct upo_dir_edge_s {
+typedef struct upo_dir_edge_s {
     int from; /**< Vertice da cui l'arco esce. */
     int to; /**< Vertice nel quale l'arco entra. */
-};
+} upo_dir_edge_s;
 
 /**
  * @brief Crea un nuovo grafo orientato

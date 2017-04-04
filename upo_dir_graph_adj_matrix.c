@@ -45,22 +45,17 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_dirgraph_destroy(upo_dirgraph_t graph){
+int upo_dirgraph_destroy(upo_dirgraph_t graph){ //da rivedere per quando deve ritornare 0
     if(graph == NULL){
       return -1;
     }
     else{
       for(int row = NELEMS(graph->adj); row >= 0; row--){
-        free(graph->adj[i]);
+        free(graph->adj[row]);
       }
       free(graph->adj);
       free(graph);
-    }
-    if(graph == NULL){
       return 1;
-    }
-    else{
-      return 0;
     }
 }
 
@@ -90,10 +85,10 @@ int upo_num_edges(upo_dirgraph_t graph) {
     }
     int edges = 0;
     int n = upo_num_vertices(graph);
-    for(int row = 0; i < n; row++){
-      for(int column = 0; j < n; column++){
+    for(int row = 0; row < n; row++){
+      for(int column = 0; column < n; column++){
         if(graph->adj[row][column] == 1){
-          archi++;
+          edges++;
         }
       }
     }
@@ -188,9 +183,9 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
         int n = upo_num_vertices(graph);
         for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
           if(graph->adj[vertex][column] == 1){ /**< Selezione dei vertici da inserire nella lista. */
-            //int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
-            //*value = column; /**< Salvataggio del valore del vertice nella memoria appena allocata. */
-            upo_add_last(adjVert, column); /** Creazione di un nuovo nodo della lista contenente il vertice e inserimento in coda. */
+            int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
+            *value = column; /**< Salvataggio del valore del vertice nella memoria appena allocata. */
+            upo_add_last(adjVert, value); /** Creazione di un nuovo nodo della lista contenente il vertice e inserimento in coda. */
           }
         }
       }
@@ -336,7 +331,8 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
     if(graph == NULL){
       return -1;
     }
-    int n = graph->++n;
+    graph->n++;
+    int n = upo_num_vertices(graph);
     for(int row = 0; row < n; row++){
       realloc(graph->adj[row], (sizeof(graph->adj[row]) + sizeof(graph->adj[row][0])));
       graph->adj[row][n-1] = 0;
