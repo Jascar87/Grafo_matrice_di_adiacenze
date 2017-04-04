@@ -29,9 +29,9 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
       n = 1;
     }
     graph->adj = malloc(sizeof(int**[n]));
-    for(int row = 0, row < n, row++){
+    for(int row = 0; row < n; row++){
       graph->adj[row] = malloc (sizeof(int*[n]));
-      for (int column = 0, column < n, column++){
+      for (int column = 0; column < n; column++){
         graph->adj[row][column] = 0;
       }
     }
@@ -50,7 +50,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
       return -1;
     }
     else{
-      for(int row = NELEMS(graph->adj), row >= 0, row--){
+      for(int row = NELEMS(graph->adj); row >= 0; row--){
         free(graph->adj[i]);
       }
       free(graph->adj);
@@ -90,8 +90,8 @@ int upo_num_edges(upo_dirgraph_t graph) {
     }
     int edges = 0;
     int n = upo_num_vertices(graph);
-    for(int row = 0, i < n, row++){
-      for(int column = 0, j < n, column++){
+    for(int row = 0; i < n; row++){
+      for(int column = 0; j < n; column++){
         if(graph->adj[row][column] == 1){
           archi++;
         }
@@ -113,7 +113,7 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
     }
     int inDegree = 0;
     int n = upo_num_vertices(graph);
-    for(int row = 0, row < n, row++){
+    for(int row = 0; row < n; row++){
       if(graph->adj[row][vertex] == 1){
         inDegree++;
       }
@@ -134,7 +134,7 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
     }
     int outDegree = 0;
     int n = upo_num_vertices(graph);
-    for(int column = 0, column < n, column++){
+    for(int column = 0; column < n; column++){
       if(graph->adj[vertex][column] == 1){
         outDegree++;
       }
