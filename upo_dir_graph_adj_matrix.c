@@ -85,17 +85,19 @@ int upo_num_vertices(upo_dirgraph_t graph){
  * @return il numero di archi del grafo, -1 se il grafo e' nullo
  */
 int upo_num_edges(upo_dirgraph_t graph) {
-    if(graph == NULL) return -1;
-    int archi = 0;
-    int i;
-    int j;
+    if(graph == NULL){
+      return -1;
+    }
+    int edges = 0;
     int n = upo_num_vertices(graph);
-    for(i = 0, i < n, i++){
-      for(j = 0, j < n, j++){
-        if(graph.adj[i][j] == 1) archi++;
+    for(int row = 0, i < n, i++){
+      for(int column = 0, j < n, j++){
+        if(graph->adj[row][column] == 1){
+          archi++;
+        }
       }
     }
-    return archi;
+    return edges;
 }
 
 /**
