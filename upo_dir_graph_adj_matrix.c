@@ -371,8 +371,37 @@ int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  if (graph == NULL) {
+      return -1;
+  }
+  else if (upo_has_vertex (graph, vertex) == 1) {
+      int** newMatrix = malloc (sizeof(int**[(graph->n)])); /**< Allocazione della nuova matrice di adiacenza. */
+      int oldRow = 0;
+      int oldColumn = 0;
+      int newRow = 0;
+      int newColumn = 0;
+      int n = upo_num_vertices(graph);
+      for (oldRow = 0; oldRow < n; oldRow++) {
+          if (oldRow != vertex) {
+              newMatrix[newRow] = malloc (sizeof(int*[n-1]));
+              for (oldColumn = 0; oldColumn < n; oldColumn++) {
+                  if (oldColumn != vertex) {
+                      newMatrix[newRow][newColumn] = graph->adj[oldRow][oldColumn]; /**< Copia della vecchia matrice nella nuova. */
+                      newColumn++;
+                  }
+              }
+              newRow++;
+          }
+          free(graph->adj[oldRow]);
+      }
+      free(graph->adj);
+      graph->adj = newMatrix;
+      graph->n--;
+      return 1;
+  }
+  else {
+      return 0;
+  }
 }
 
 /**
@@ -384,8 +413,14 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  if (graph == NULL) {
+      return -1;
+  }
+  else if (upo_has_edge(graph, vertex1, vertex2) == 0) {
+          graph->adj[vertex1][vertex2] = 1;
+          return 1;
+  }
+  return 0;
 }
 
 /**
@@ -397,8 +432,15 @@ int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  if (graph == NULL) {
+      return -1;
+  }
+  else if (upo_has_vertex( graph, vertex1) == 1 && upo_has_vertex( graph, vertex2) == 1) {
+      if (graph->adj[vertex1][vertex2] == 1) {
+          return 1;
+      }
+  }
+  return 0;
 }
 
 /**
@@ -410,8 +452,14 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  if (graph == NULL) {
+      return -1;
+  }
+  else if (upo_has_edge(graph, vertex1, vertex2) == 1) {
+      graph->adj[vertex1][vertex2] = 0;
+      return 1;
+  }
+  return 0;
 }
 
 /**
@@ -423,8 +471,15 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se i vertici sono adiacenti, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  if (graph == NULL) {
+      return -1;
+  }
+  else if (upo_has_vertex(graph, vertex1) == 1 && upo_has_vertex(graph, vertex2) == 1) {
+      if (graph->adj[vertex1][vertex2] == 1 && graph->adj[vertex2][vertex1] == 1) {
+          return 1;
+      }
+  }
+  return 0;
 }
 
 /**
@@ -434,6 +489,22 @@ int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return una stringa rappresentante il grafo
  */
 char* upo_print_graph(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  char* graphToString = calloc(1024,sizeof(char));
+  if (graph != NULL) {
+      for (int vertex = 0; vertex < graph->n; vertex++) {
+          char buffer1 [20];
+          sprintf(buffer1,"Vertice: %d;\n",vertex);
+          strcat(graphToString,buffer1);
+          upo_list_t adjVert = upo_get_adj_vert(graph, vertex);
+          while (upo_list_size(adjVert) != 0) {
+              int nextAdjVert = *((int*)upo_remove_first(adjVert));
+              char buffer2 [20];
+              sprintf(buffer2," %d -> %d;\n", vertex, nextAdjVert);
+              strcat(graphToString,buffer2);
+          }
+          upo_destroy_list(adjVert);
+      }
+  }
+
+  return graphToString;
 }
