@@ -21,20 +21,16 @@
 **/
 
 upo_dirgraph_t upo_dirgraph_create(int n) {
-    upo_dirgraph_t graph_p = NULL;
-    int i;
-    graph_p = (upo_dirgraph_t) malloc(sizeof(upo_dirgraph_s));
-    graph_p.n = 0;
-    graph_p.adj = (upo_dirgraph_t) malloc(n * (sizeof(int*)));
-    for(i = 0, i < n, i++){
-        graph_p.adj[i] = (upo_dirgraph_t) malloc(n * (sizeof(int)));
-    }
-    for(i = 0, i < n, i++){
-      for(j = 0, j < n, j++){
-        graph_p.adj[i][j] = 0;
-      }
-    }
-    return graph_p;
+    upo_dirgraph_t graph = NULL;
+    graph = malloc(sizeof(upo_dirgraph_s));
+    graph->n = 0;
+    graph->adj = malloc(sizeof(int**[n]));
+    for(int row = 0, row < n, row++){
+        graph->adj[row] = malloc (sizeof(int*[n]));
+        for (int column = 0, column < n, column++){
+          graph->adj[row][column] = 0;
+        }
+    return graph;
 }
 
 /**
@@ -45,13 +41,14 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
  *
  */
 int upo_dirgraph_destroy(upo_dirgraph_t graph){
-    int i;
-    if(graph == NULL) return -1;
+    if(graph == NULL){
+      return -1;
+    }
     else{
-      for(i = graph->n, i > 0, i--){
-        free(graph.adj[i]);
+      for(int i = graph->n, i > 0, i--){
+        free(graph->adj[i]);
       }
-      free(graph.adj);
+      free(graph->adj);
       free(graph);
     }
     if(graph == NULL){
@@ -70,7 +67,9 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
  * @return il numero di vertici del grafo, -1 se il grafo e' nullo
  */
 int upo_num_vertices(upo_dirgraph_t graph){
-    if(graph == NULL) return -1;
+    if(graph == NULL){
+      return -1;
+    }
     return graph->n;
 }
 
