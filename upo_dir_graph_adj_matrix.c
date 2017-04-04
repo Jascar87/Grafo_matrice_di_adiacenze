@@ -255,7 +255,22 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi archi entranti in vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
-    upo_list_t list = NULL;
+  upo_list_t inc_in_edges = NULL;
+  if(upo_is_graph_empty(graph) == 0){
+    inc_in_edges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
+    int n = upo_num_vertices(graph);
+    for(int row = 0; row < n; row++){ /**< Scorrimento delle righe data una colonna in cerca degli archi entranti da un dato vertice. */
+      if(graph->adj[row][vertex] == 1){ /**< Selezione degli archi da inserire nella lista. */
+        upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
+        edge->from = row; /**< Salvataggio dell'arco nella memoria appena allocata. */
+        edge->to = vertex;
+        upo_add_last(inc_in_edges, edge); /** Creazione di un nuovo nodo della lista contenente l'arco e inserimento in coda. */
+      }
+    }
+  }
+  return inc_in_edges;
+}
+/*    upo_list_t list = NULL;
     list = upo_create_list(sizeof(int), NULL);
     int i;
     int n = upo_num_vertices(graph);
@@ -266,7 +281,7 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
       }
     }
     return list;
-}
+}*/
 
 /**
  * @brief Restituisce una lista contenente gli archi incidenti a vertex
