@@ -26,10 +26,11 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     graph->n = 0;
     graph->adj = malloc(sizeof(int**[n]));
     for(int row = 0, row < n, row++){
-        graph->adj[row] = malloc (sizeof(int*[n]));
-        for (int column = 0, column < n, column++){
-          graph->adj[row][column] = 0;
-        }
+      graph->adj[row] = malloc (sizeof(int*[n]));
+      for (int column = 0, column < n, column++){
+        graph->adj[row][column] = 0;
+      }
+    }
     return graph;
 }
 
