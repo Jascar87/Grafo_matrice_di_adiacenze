@@ -20,7 +20,6 @@
   * }
 **/
 
-
 upo_dirgraph_t upo_dirgraph_create(int n) {
 <<<<<<< HEAD
     upo_dirgraph_t graph = NULL;
