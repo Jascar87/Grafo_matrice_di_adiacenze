@@ -150,7 +150,9 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
  * @return il grado complessivo di vertex, -1 se il grafo e' nullo
  */
 int upo_get_degree(upo_dirgraph_t graph, int vertex) {
-    if(graph == NULL) return -1;
+    if(graph == NULL){
+      return -1;
+    }
     return (upo_get_in_degree(graph, vertex) + upo_get_out_degree(graph, vertex));
 }
 
@@ -161,9 +163,15 @@ int upo_get_degree(upo_dirgraph_t graph, int vertex) {
  * @return 1 se il grafo e' vuoto, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_is_graph_empty(upo_dirgraph_t graph) {
-    if(graph == NULL) return -1;
-    if(graph->n == 0) return 1;
-    else return 0;
+    if(graph == NULL){
+      return -1;
+    }
+    else if(graph->n == 0){
+      return 1;
+    }
+    else{
+      return 0;
+    }
 }
 
 /**
