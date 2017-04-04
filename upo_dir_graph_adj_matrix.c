@@ -356,10 +356,14 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
  * @return 1 se il grafo contiene il vertice, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
-    if(graph == NULL) return -1;
-    if(graph.adj[vertex][vertex] != NULL) return 1;
-    else{
-      return 0;
+    if(graph == NULL){
+      return -1;
+    }
+    else if (vertex >= graph->n || graph->n == 0 || vertex < 0) {
+        return 0;
+    }
+    else {
+        return 1;
     }
 }
 
