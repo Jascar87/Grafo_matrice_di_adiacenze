@@ -342,7 +342,6 @@ void graph_operations(upo_dirgraph_t* graph) {
 int main(void) {
     upo_dirgraph_t graph = NULL;
     int digit = 0;
-
     while (TRUE) {
         print_menu_list();
         selection(&digit);

@@ -1,5 +1,4 @@
 #include "upo_dir_graph_adj_matrix.h"
-#define NELEMS(x) (sizeof(x) / sizeof((x)[0]) -1)
 
 /**
  * @brief Crea un nuovo grafo orientato
@@ -50,7 +49,8 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){ //da rivedere per quando deve ri
       return -1;
     }
     else{
-      for(int row = NELEMS(graph->adj); row >= 0; row--){
+      int row = upo_num_vertices(graph) - 1;
+        for(; row >= 0; row--){
         free(graph->adj[row]);
       }
       free(graph->adj);
@@ -331,15 +331,18 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
     if(graph == NULL){
       return -1;
     }
-    graph->n++;
     int n = upo_num_vertices(graph);
-    for(int row = 0; row < n; row++){
-      realloc(graph->adj[row], (sizeof(graph->adj[row]) + sizeof(graph->adj[row][0])));
-      graph->adj[row][n-1] = 0;
-    }
-    realloc(graph->adj, (sizeof(graph->adj) + sizeof(graph->adj[0])));
-    for(int column = 0; column < n; column++){
-      graph->adj[n-1][column] = 0;
+    graph->n++;
+    if(n > 0){
+        for(int row = 0; row < n; row++){
+            graph->adj[row] = realloc(graph->adj[row], (sizeof(int*[n+1])));
+            graph->adj[row][n] = 0;
+        }
+        graph->adj = realloc(graph->adj, (sizeof(int**[n+1])));
+        graph->adj[n] = malloc(sizeof(int*[n+1]));
+        for(int column = 0; column <= n; column++){
+            graph->adj[n][column] = 0;
+        }
     }
     return 1;
 }
@@ -375,12 +378,12 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
       return -1;
   }
   else if (upo_has_vertex (graph, vertex) == 1) {
-      int** newMatrix = malloc (sizeof(int**[(graph->n)])); /**< Allocazione della nuova matrice di adiacenza. */
+      int n = upo_num_vertices(graph);
+      int** newMatrix = malloc (sizeof(int**[(n-1)])); /**< Allocazione della nuova matrice di adiacenza. */
       int oldRow = 0;
       int oldColumn = 0;
       int newRow = 0;
       int newColumn = 0;
-      int n = upo_num_vertices(graph);
       for (oldRow = 0; oldRow < n; oldRow++) {
           if (oldRow != vertex) {
               newMatrix[newRow] = malloc (sizeof(int*[n-1]));
