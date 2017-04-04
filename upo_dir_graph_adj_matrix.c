@@ -20,7 +20,9 @@
   * }
 **/
 
+
 upo_dirgraph_t upo_dirgraph_create(int n) {
+<<<<<<< HEAD
     upo_dirgraph_t graph = NULL;
     graph = malloc(sizeof(upo_dirgraph_s));
     graph->n = 0;
@@ -32,6 +34,19 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
       graph->adj[row] = malloc (sizeof(int*[n]));
       for (int column = 0; column < n; column++){
         graph->adj[row][column] = 0;
+=======
+    upo_dirgraph_t graph_p = NULL;
+    int i;
+    graph_p = (upo_dirgraph_t) malloc(sizeof(upo_dirgraph_s));
+    graph_p->n = 0;
+    graph_p->adj = (upo_dirgraph_t) malloc(n * (sizeof(int*)));
+    for(i = 0, i < n, i++){
+        graph_p->adj[i] = (upo_dirgraph_t) malloc(n * (sizeof(int)));
+    }
+    for(i = 0, i < n, i++){
+      for(j = 0, j < n, j++){
+        graph_p->adj[i][j] = 0;
+>>>>>>> origin/master
       }
     }
     return graph;
@@ -49,9 +64,14 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){ //da rivedere per quando deve ri
       return -1;
     }
     else{
+<<<<<<< HEAD
       int row = upo_num_vertices(graph) - 1;
         for(; row >= 0; row--){
         free(graph->adj[row]);
+=======
+      for(i = graph->n, i > 0, i--){
+        free(graph->adj[i]);
+>>>>>>> origin/master
       }
       free(graph->adj);
       free(graph);
@@ -85,11 +105,17 @@ int upo_num_edges(upo_dirgraph_t graph) {
     }
     int edges = 0;
     int n = upo_num_vertices(graph);
+<<<<<<< HEAD
     for(int row = 0; row < n; row++){
       for(int column = 0; column < n; column++){
         if(graph->adj[row][column] == 1){
           edges++;
         }
+=======
+    for(i = 0, i < n, i++){
+      for(j = 0, j < n, j++){
+        if(graph->adj[i][j] == 1) archi++;
+>>>>>>> origin/master
       }
     }
     return edges;
@@ -108,10 +134,17 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
     }
     int inDegree = 0;
     int n = upo_num_vertices(graph);
+<<<<<<< HEAD
     for(int row = 0; row < n; row++){
       if(graph->adj[row][vertex] == 1){
         inDegree++;
       }
+=======
+    int grado = 0;
+    if(graph == NULL) return -1;
+    for(i = 0, i < n, i++){
+      if(graph->adj[i][vertex] == 1) grado++;
+>>>>>>> origin/master
     }
     return inDegree;
 }
@@ -129,10 +162,17 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
     }
     int outDegree = 0;
     int n = upo_num_vertices(graph);
+<<<<<<< HEAD
     for(int column = 0; column < n; column++){
       if(graph->adj[vertex][column] == 1){
         outDegree++;
       }
+=======
+    int grado = 0;
+    if(graph == NULL) return -1;
+    for(j = 0, j < n, j++){
+      if(graph->adj[vertex][j] == 1) grado++;
+>>>>>>> origin/master
     }
     return outDegree;
 }
@@ -195,12 +235,16 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
     if(archi == 0) return NULL;
     if(graph == NULL) return NULL;
     upo_list_t list == NULL;
+    int* int_P = NULL;
     list = upo_create_list(sizeof(int), NULL);
     int j;
     int n = upo_num_vertices(graph);
     for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){ //aggiungo nodo alla lista
-        upo_add_first(list, &j);
+      if(graph->adj[vertex][j] == 1){ //aggiungo nodo alla lista
+        int_P = malloc(sizeof(int));
+        *int_P = j;
+        upo_add_first(list, int_P);
+        int_P=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -214,6 +258,7 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
+<<<<<<< HEAD
   upo_list_t incOutEdges = NULL;
   if(upo_is_graph_empty(graph) == 0){
       incOutEdges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
@@ -231,12 +276,21 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
 }
 /*    upo_list_t list = NULL;
     list = upo_create_list(sizeof(int), NULL);
+=======
+    upo_list_t list = NULL;
+    list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
+>>>>>>> origin/master
     int j;
+    upo_dir_edge_t edge=NULL;
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){
-        upo_add_first(list, &j);
+      if(graph->adj[vertex][j] == 1){
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=vertex;
+        edge->to=j;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -250,6 +304,7 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi archi entranti in vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
+<<<<<<< HEAD
   upo_list_t incInEdges = NULL;
   if(upo_is_graph_empty(graph) == 0){
     incInEdges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
@@ -267,12 +322,21 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
 }
 /*    upo_list_t list = NULL;
     list = upo_create_list(sizeof(int), NULL);
+=======
+    upo_list_t list = NULL;
+    list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
+>>>>>>> origin/master
     int i;
+    upo_dir_edge_t edge=NULL;
     int n = upo_num_vertices(graph);
     if(graph == NULL) return NULL;
     for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1){
-        upo_add_first(list, &i);
+      if(graph->adj[i][vertex] == 1){
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=i;
+        edge->to=vertex;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -286,6 +350,7 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
  * @return una lista contenente gli archi incidenti a vertex, NULL se il grafo e' vuoto
  */
 upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
+<<<<<<< HEAD
   upo_list_t incEdges = NULL;
   if(upo_is_graph_empty(graph) == 0){
     incEdges = upo_get_inc_out_edg(graph, vertex);
@@ -303,18 +368,30 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
 }
 /*    upo_list_t list = NULL;
     list = upo_create_list(sizeof(int), NULL);
+=======
+    upo_list_t list = NULL;
+    list = upo_create_list(sizeof(upo_dir_edge_s), NULL);
+>>>>>>> origin/master
     int i;
-    int j;
     int n = upo_num_vertices(graph);
+    upo_dir_edge_t edge = NULL;
     if(graph == NULL) return NULL;
-    for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1){
-        upo_add_first(list, &i);
+    for(i=0; i<n; i++){
+      if (graph->adj[i][vertex] ==1){
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=i;
+        edge->to=vertex;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
-    for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){
-        upo_add_first(list, &j);
+    for(i=0; i<n; i++){
+      if (graph->adj[vertex][i] ==1){
+        edge=malloc (sizeof(upo_dir_edge_s);
+        edge->from=vertex;
+        edge->to=i;
+        upo_add_first(list, edge);
+        edge=NULL; //lo metto a NULL per implementare dei test dopo la malloc
       }
     }
     return list;
@@ -327,6 +404,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
+<<<<<<< HEAD
 int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
     if(graph == NULL){
       return -1;
@@ -345,6 +423,15 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
         }
     }
     return 1;
+=======
+int upo_add_vertex(upo_dirgraph_t graph) {
+    int size = upo_num_vertices(graph);
+    if(graph == NULL) return -1;
+    graph->adj[size+1] = malloc (upo_dirgraph_t) malloc(n * (sizeof(int)));
+
+    fprintf(stderr, "To be implemented!\n");
+    abort();
+>>>>>>> origin/master
 }
 
 /**
@@ -355,6 +442,7 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
  * @return 1 se il grafo contiene il vertice, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
+<<<<<<< HEAD
     if(graph == NULL){
       return -1;
     }
@@ -363,6 +451,12 @@ int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
     }
     else {
         return 1;
+=======
+    if(graph == NULL) return -1;
+    if(graph->adj[vertex][vertex] != NULL) return 1;
+    else{
+      return 0;
+>>>>>>> origin/master
     }
 }
 
