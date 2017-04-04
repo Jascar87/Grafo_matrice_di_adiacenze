@@ -50,7 +50,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
       return -1;
     }
     else{
-      for(int i = NELEMS(graph->adj), i >= 0, i--){
+      for(int row = NELEMS(graph->adj), row >= 0, row--){
         free(graph->adj[i]);
       }
       free(graph->adj);
@@ -90,8 +90,8 @@ int upo_num_edges(upo_dirgraph_t graph) {
     }
     int edges = 0;
     int n = upo_num_vertices(graph);
-    for(int row = 0, i < n, i++){
-      for(int column = 0, j < n, j++){
+    for(int row = 0, i < n, row++){
+      for(int column = 0, j < n, column++){
         if(graph->adj[row][column] == 1){
           archi++;
         }
@@ -108,14 +108,17 @@ int upo_num_edges(upo_dirgraph_t graph) {
  * @return il grado entrante di vertex, -1 se il grafo e' nullo
  */
 int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
-    int i;
-    int n = upo_num_vertices(graph);
-    int grado = 0;
-    if(graph == NULL) return -1;
-    for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1) grado++;
+    if(graph == NULL){
+      return -1;
     }
-    return grado;
+    int inDegree = 0;
+    int n = upo_num_vertices(graph);
+    for(int row = 0, row < n, row++){
+      if(graph->adj[i][vertex] == 1){
+        inDegree++;
+      }
+    }
+    return inDegree;
 }
 
 /**
