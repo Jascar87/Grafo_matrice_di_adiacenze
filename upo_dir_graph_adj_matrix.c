@@ -1,5 +1,4 @@
 #include "upo_dir_graph_adj_matrix.h"
-#define NELEMS(x) (sizeof(x) / sizeof((x)[0]) -1)
 
 /**
  * @brief Crea un nuovo grafo orientato
@@ -25,9 +24,6 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     upo_dirgraph_t graph = NULL;
     graph = malloc(sizeof(upo_dirgraph_s));
     graph->n = 0;
-    if(n < 1){
-      n = 1;
-    }
     graph->adj = malloc(sizeof(int**[n]));
     for(int row = 0, row < n, row++){
       graph->adj[row] = malloc (sizeof(int*[n]));
@@ -50,7 +46,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
       return -1;
     }
     else{
-      for(int i = NELEMS(graph->adj) i >= 0, i--){
+      for(int i = graph->n, i > 0, i--){
         free(graph->adj[i]);
       }
       free(graph->adj);
