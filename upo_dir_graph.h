@@ -1,5 +1,5 @@
 #include <string.h>
-#include "upo_list.h" 
+#include "upo_list.h"
 
 #ifndef UPO_DIR_GRAPH_H
 #define UPO_DIR_GRAPH_H
@@ -10,10 +10,10 @@ typedef struct upo_dir_edge_s* upo_dir_edge_t;
 /**
  * @brief Definizione della struttura per rappresentare un arco diretto
  */
-struct upo_dir_edge_s {
+typedef struct upo_dir_edge_s {
     int from; /**< Vertice da cui l'arco esce. */
     int to; /**< Vertice nel quale l'arco entra. */
-};
+} upo_dir_edge_s;
 
 /**
  * @brief Crea un nuovo grafo orientato
@@ -21,7 +21,7 @@ struct upo_dir_edge_s {
  * @return un nuovo grafo diretto vuoto
  *
  */
-upo_dirgraph_t upo_dirgraph_create();
+upo_dirgraph_t upo_dirgraph_create(int n);
 
 /**
  * @brief Distrugge un grafo liberando tutta la memoria
@@ -197,4 +197,3 @@ char* upo_print_graph(upo_dirgraph_t graph);
 
 
 #endif /* GRAPH_H */
-
