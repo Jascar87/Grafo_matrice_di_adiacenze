@@ -29,10 +29,7 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     }
     graph->adj = malloc(sizeof(int**[n]));
     for(int row = 0; row < n; row++){
-      graph->adj[row] = malloc (sizeof(int*[n]));
-      for (int column = 0; column < n; column++){
-        graph->adj[row][column] = 0;
-      }
+      graph->adj[row] = calloc (n, sizeof(int));
     }
     return graph;
 }
@@ -340,10 +337,7 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
             graph->adj[row][n] = 0;
         }
         graph->adj = realloc(graph->adj, (sizeof(int**[n+1])));
-        graph->adj[n] = malloc(sizeof(int*[n+1]));
-        for(int column = 0; column <= n; column++){
-            graph->adj[n][column] = 0;
-        }
+        graph->adj[n] = calloc (n+1, sizeof(int));
     }
     return 1;
 }
