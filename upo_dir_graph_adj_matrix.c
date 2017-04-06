@@ -327,15 +327,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-<<<<<<< HEAD
-int upo_add_vertex(upo_dirgraph_t graph) {
-    int size = upo_num_vertices(graph);
-    size_t dim = (graph->n) * (sizeof(int*));
-    if(graph == NULL) return -1;
-    realloc((graph->adj[size+1])&, dim);
-    fprintf(stderr, "To be implemented!\n");
-    abort();
-=======
+
 int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
     if(graph == NULL){
       return -1;
@@ -354,7 +346,6 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
         }
     }
     return 1;
->>>>>>> origin/master
 }
 
 /**
@@ -445,13 +436,6 @@ int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
-<<<<<<< HEAD
-    if(graph == NULL) return -1;
-    if(graph->adj[vertex1][vertex2] != NULL) return 1;
-    else{
-      return 0;
-    }
-=======
   if (graph == NULL) {
       return -1;
   }
@@ -461,7 +445,6 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       }
   }
   return 0;
->>>>>>> origin/master
 }
 
 /**
@@ -492,23 +475,13 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return 1 se i vertici sono adiacenti, -1 se il grafo e' nullo, 0 altrimenti
  */
 int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
-<<<<<<< HEAD
-    if(graph == NULL) return -1;
-    if(graph->adj[vertex1][vertex2] == 1) return 1;
-    else{
-      return 0;
-    }
-=======
   if (graph == NULL) {
       return -1;
   }
-  else if (upo_has_vertex(graph, vertex1) == 1 && upo_has_vertex(graph, vertex2) == 1) {
-      if (graph->adj[vertex1][vertex2] == 1 && graph->adj[vertex2][vertex1] == 1) {
-          return 1;
-      }
+  else if (upo_has_edge(graph, vertex1, vertex2) == 1) {
+      return 1;
   }
   return 0;
->>>>>>> origin/master
 }
 
 /**
