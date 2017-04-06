@@ -1,35 +1,26 @@
 #include "upo_dir_graph_adj_matrix.h"
-
+#include <assert.h>
 /**
  * @brief Crea un nuovo grafo orientato
  *
  * @return un nuovo grafo diretto vuoto
  *
  */
-/** upo_dirgraph_t upo_dirgraph_create(int n) {
-  * upo_dirgraph_t graph_p = NULL;
-  * int i;
-  * if(n == 0){return graph_p;}
-  * graph_p = malloc(sizeof(upo_dirgraph_s));
-  * graph_p.n = n;
-  * graph_p.adj = malloc(n * (sizeof(int*)));
-  * for(i = 0, i < n, i++){
-  *     (graph_p.adj) + (i * sizeof(int*)) = malloc(n * (sizeof(int)));
-  * }
-  * return graph_p;
-  * }
-**/
 
 upo_dirgraph_t upo_dirgraph_create(int n) {
     upo_dirgraph_t graph = NULL;
     graph = malloc(sizeof(upo_dirgraph_s));
+    assert(graph!=NULL);
     graph->n = 0;
     if(n < 1){
       n = 1;
     }
+    graph->adj=NULL;
     graph->adj = malloc(sizeof(int**[n]));
+    assert(graph->adj!=NULL);
     for(int row = 0; row < n; row++){
       graph->adj[row] = calloc (n, sizeof(int));
+      assert(graph->adj[row]!=NULL);
     }
     return graph;
 }
@@ -181,27 +172,14 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
         for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
           if(graph->adj[vertex][column] == 1){ /**< Selezione dei vertici da inserire nella lista. */
             int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
+            assert(value!=NULL);
             *value = column; /**< Salvataggio del valore del vertice nella memoria appena allocata. */
             upo_add_last(adjVert, value); /** Creazione di un nuovo nodo della lista contenente il vertice e inserimento in coda. */
           }
         }
       }
       return adjVert;
-    }
-/*    int archi = upo_get_out_degree(graph, vertex);
-    if(archi == 0) return NULL;
-    if(graph == NULL) return NULL;
-    upo_list_t list == NULL;
-    list = upo_create_list(sizeof(int), NULL);
-    int j;
-    int n = upo_num_vertices(graph);
-    for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){ //aggiungo nodo alla lista
-        upo_add_first(list, &j);
-      }
-    }
-    return list;
-}*/
+}
 
 /**
  * @brief Restituisce una lista contenente gli archi uscenti da vertex
@@ -218,6 +196,7 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
       for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca degli archi uscenti da un dato vertice. */
           if(graph->adj[vertex][column] == 1){ /**< Selezione degli archi da inserire nella lista. */
             upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
+            assert(edge!=NULL);
             edge->from = vertex; /**< Salvataggio dell'arco nella memoria appena allocata. */
             edge->to = column;
             upo_add_last(incOutEdges, edge); /** Creazione di un nuovo nodo della lista contenente l'arco e inserimento in coda. */
@@ -226,18 +205,6 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
   }
   return incOutEdges;
 }
-/*    upo_list_t list = NULL;
-    list = upo_create_list(sizeof(int), NULL);
-    int j;
-    int n = upo_num_vertices(graph);
-    if(graph == NULL) return NULL;
-    for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){
-        upo_add_first(list, &j);
-      }
-    }
-    return list;
-}*/
 
 /**
  * @brief Restituisce una lista contenente gli archi entranti in vertex
@@ -254,6 +221,7 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
     for(int row = 0; row < n; row++){ /**< Scorrimento delle righe data una colonna in cerca degli archi entranti da un dato vertice. */
       if(graph->adj[row][vertex] == 1){ /**< Selezione degli archi da inserire nella lista. */
         upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
+        assert(edge!=NULL);
         edge->from = row; /**< Salvataggio dell'arco nella memoria appena allocata. */
         edge->to = vertex;
         upo_add_last(incInEdges, edge); /** Creazione di un nuovo nodo della lista contenente l'arco e inserimento in coda. */
@@ -262,18 +230,6 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
   }
   return incInEdges;
 }
-/*    upo_list_t list = NULL;
-    list = upo_create_list(sizeof(int), NULL);
-    int i;
-    int n = upo_num_vertices(graph);
-    if(graph == NULL) return NULL;
-    for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1){
-        upo_add_first(list, &i);
-      }
-    }
-    return list;
-}*/
 
 /**
  * @brief Restituisce una lista contenente gli archi incidenti a vertex
@@ -298,24 +254,6 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
   }
   return incEdges;
 }
-/*    upo_list_t list = NULL;
-    list = upo_create_list(sizeof(int), NULL);
-    int i;
-    int j;
-    int n = upo_num_vertices(graph);
-    if(graph == NULL) return NULL;
-    for(i = 0, i < n, i++){
-      if(graph.adj[i][vertex] == 1){
-        upo_add_first(list, &i);
-      }
-    }
-    for(j = 0, j < n, j++){
-      if(graph.adj[vertex][j] == 1){
-        upo_add_first(list, &j);
-      }
-    }
-    return list;
-}*/
 
 /**
  * @brief Aggiunge un nuovo vertice al grafo di indice size+1 (dove size è il numero di vertici)
@@ -334,10 +272,13 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
     if(n > 0){
         for(int row = 0; row < n; row++){
             graph->adj[row] = realloc(graph->adj[row], (sizeof(int*[n+1])));
+            assert(graph->adj[row]!=NULL);
             graph->adj[row][n] = 0;
         }
         graph->adj = realloc(graph->adj, (sizeof(int**[n+1])));
+        assert(graph->adj!=NULL);
         graph->adj[n] = calloc (n+1, sizeof(int));
+        assert(graph->adj[n]!=NULL);
     }
     return 1;
 }
@@ -375,6 +316,7 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
   else if (upo_has_vertex (graph, vertex) == 1) {
       int n = upo_num_vertices(graph);
       int** newMatrix = malloc (sizeof(int**[(n-1)])); /**< Allocazione della nuova matrice di adiacenza. */
+      assert(newMatrix1!=NULL);
       int oldRow = 0;
       int oldColumn = 0;
       int newRow = 0;
@@ -382,6 +324,7 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
       for (oldRow = 0; oldRow < n; oldRow++) {
           if (oldRow != vertex) {
               newMatrix[newRow] = malloc (sizeof(int*[n-1]));
+              assert(newMatrix[newRow]!=NULL);
               for (oldColumn = 0; oldColumn < n; oldColumn++) {
                   if (oldColumn != vertex) {
                       newMatrix[newRow][newColumn] = graph->adj[oldRow][oldColumn]; /**< Copia della vecchia matrice nella nuova. */
@@ -486,6 +429,7 @@ int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
  */
 char* upo_print_graph(upo_dirgraph_t graph) {
   char* graphToString = calloc(1024,sizeof(char));
+  assert(graphToString!=NULL);
   if (graph != NULL) {
       for (int vertex = 0; vertex < graph->n; vertex++) {
           char buffer1 [20];
