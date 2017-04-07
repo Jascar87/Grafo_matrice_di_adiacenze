@@ -48,12 +48,25 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
 int upo_cyclic(upo_dirgraph_t graph);
 
 /**
+ * @brief controlla se esistono archi all' indietro 
+ *
+ * @param graph il grafo da esaminare
+ * @param vertex è il vertice che stiamo considerando
+ * @param color è il vettore che memorizza lo stato dei vettori
+ * @return 1 se il grafo presenta un arco all'indietro se no 0
+ *
+ */
+
+int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color);
+
+/**
  * @brief Controlla se un grafo graph e' un DAG (partendo dall'assunzione che sia diretto)
  *
  * @param graph il grafo da esaminare
  * @return 1 se il grafo e' un DAG, 0 se non lo e', -1 se il grafo e' nullo
  *
  */
+
 int upo_is_DAG(upo_dirgraph_t graph);
 
 /**
