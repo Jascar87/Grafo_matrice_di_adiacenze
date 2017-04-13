@@ -9,14 +9,14 @@
 
 upo_dirgraph_t upo_dirgraph_create(int n) {
     upo_dirgraph_t graph = NULL;
-    graph = malloc(sizeof(upo_dirgraph_s));
+    graph = malloc(sizeof(upo_dirgraph_s)); /**< Allocazione della struttura grafo e controllo con assert. */
     assert(graph!=NULL);
     graph->n = 0;
-    if(n < 1){
+    if(n < 1){ /**< Controllo che n abbia unn valore valido. */
       n = 1;
     }
     graph->adj=NULL;
-    graph->adj = malloc(sizeof(int**[n]));
+    graph->adj = malloc(sizeof(int**[n])); /**< Creazione della matrice di adiacenza e controllo con assert. */
     assert(graph->adj!=NULL);
     for(int row = 0; row < n; row++){
       graph->adj[row] = calloc (n, sizeof(int));
