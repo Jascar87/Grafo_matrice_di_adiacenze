@@ -267,7 +267,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  *
  */
 
-int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
+int upo_add_vertex(upo_dirgraph_t graph) {
     if(graph == NULL){
       return -1;
     }
@@ -283,8 +283,9 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
         assert(graph->adj!=NULL);
         graph->adj[n] = calloc (n+1, sizeof(int));
         assert(graph->adj[n]!=NULL);
+        return 1;
     }
-    return 1;
+    return 0;
 }
 
 /**
