@@ -22,7 +22,8 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     graph->adj=NULL;
     graph->adj = malloc(sizeof(int**[n])); /**< Creazione della matrice di adiacenza e controllo con assert. */
     assert(graph->adj!=NULL);
-    for(int row = 0; row < n; row++){
+    int row = 0;
+    for(; row < n; row++){
       graph->adj[row] = calloc (n, sizeof(int));
       assert(graph->adj[row]!=NULL);
     }
@@ -80,8 +81,10 @@ int upo_num_edges(upo_dirgraph_t graph) {
     }
     int edges = 0;
     int n = upo_num_vertices(graph);
-    for(int row = 0; row < n; row++){
-      for(int column = 0; column < n; column++){
+    int row = 0;
+    int column = 0;
+    for(; row < n; row++){
+      for(column = 0; column < n; column++){
         if(graph->adj[row][column] == 1){
           edges++;
         }
@@ -103,7 +106,8 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
     }
     int inDegree = 0;
     int n = upo_num_vertices(graph);
-    for(int row = 0; row < n; row++){
+    int row = 0;
+    for(; row < n; row++){
       if(graph->adj[row][vertex] == 1){
         inDegree++;
       }
@@ -124,7 +128,8 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
     }
     int outDegree = 0;
     int n = upo_num_vertices(graph);
-    for(int column = 0; column < n; column++){
+    int column = 0;
+    for(; column < n; column++){
       if(graph->adj[vertex][column] == 1){
         outDegree++;
       }
@@ -176,7 +181,8 @@ upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
       if(upo_is_graph_empty(graph) == 0){
         adjVert = upo_create_list(sizeof(int),NULL); /**< Creazione della lista. */
         int n = upo_num_vertices(graph);
-        for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
+        int column = 0;
+        for(; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
           if(graph->adj[vertex][column] == 1){ /**< Selezione dei vertici da inserire nella lista. */
             int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
             assert(value!=NULL);
@@ -200,7 +206,8 @@ upo_list_t upo_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
   if(upo_is_graph_empty(graph) == 0){
       incOutEdges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
       int n = upo_num_vertices(graph);
-      for(int column = 0; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca degli archi uscenti da un dato vertice. */
+      int column = 0;
+      for(; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca degli archi uscenti da un dato vertice. */
           if(graph->adj[vertex][column] == 1){ /**< Selezione degli archi da inserire nella lista. */
             upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
             assert(edge!=NULL);
@@ -225,7 +232,8 @@ upo_list_t upo_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
   if(upo_is_graph_empty(graph) == 0){
     incInEdges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
     int n = upo_num_vertices(graph);
-    for(int row = 0; row < n; row++){ /**< Scorrimento delle righe data una colonna in cerca degli archi entranti da un dato vertice. */
+    int row = 0;
+    for(; row < n; row++){ /**< Scorrimento delle righe data una colonna in cerca degli archi entranti da un dato vertice. */
       if(graph->adj[row][vertex] == 1){ /**< Selezione degli archi da inserire nella lista. */
         upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
         assert(edge!=NULL);
@@ -277,7 +285,8 @@ int upo_add_vertex(upo_dirgraph_t graph) {
     int n = upo_num_vertices(graph);
     graph->n++;
     if(n > 0){
-        for(int row = 0; row < n; row++){ /**< Ingrandimento della matrice di adiacenza di una colonna. */
+        int row = 0;
+        for(; row < n; row++){ /**< Ingrandimento della matrice di adiacenza di una colonna. */
             graph->adj[row] = realloc(graph->adj[row], (sizeof(int*[n+1])));
             assert(graph->adj[row]!=NULL);
             graph->adj[row][n] = 0; /**< Inizializzazione a 0 della nuova colonna. */
@@ -443,7 +452,8 @@ char* upo_print_graph(upo_dirgraph_t graph) {
   char* graphToString = calloc(DIM_STRING,sizeof(char)); /**< Allocazione della stringa da ritornare con inizializzazione della memoria allocata a 0 e controllo con assert. */
   assert(graphToString!=NULL);
   if (graph != NULL) {
-      for (int vertex = 0; vertex < graph->n; vertex++) { /**< Scorrimento di tutti i vertici del grafo. */
+      int vertex = 0;
+      for (; vertex < graph->n; vertex++) { /**< Scorrimento di tutti i vertici del grafo. */
           char buffer1 [DIM_BUF];
           sprintf(buffer1,"Vertice: %d;\n",vertex); /**< Salvataggio nel buffer della stringa "Vertice: %d;\n". */
           strcat(graphToString,buffer1); /**< Concatenazione del buffer con la stringa da ritornare. */
