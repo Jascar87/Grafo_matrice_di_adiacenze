@@ -3,6 +3,7 @@
 /**
  * @brief Crea un nuovo grafo orientato
  *
+ * @param n dimensione della matrice di adiacenza da creare
  * @return un nuovo grafo diretto vuoto
  *
  */
@@ -32,11 +33,11 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_dirgraph_destroy(upo_dirgraph_t graph){ //da rivedere per quando deve ritornare 0
+int upo_dirgraph_destroy(upo_dirgraph_t graph){ /**< Non ritorna mai 0, poichè non si può verificare l'andamento della free. */
     if(graph == NULL){
       return -1;
     }
-    else{
+    else{                                       /**< Deallocazione della matrice di adiacenza e successivamente del grafo. */
       int row = upo_num_vertices(graph) - 1;
         for(; row >= 0; row--){
         free(graph->adj[row]);

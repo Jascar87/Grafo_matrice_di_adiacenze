@@ -18,6 +18,7 @@ typedef struct upo_dir_edge_s {
 /**
  * @brief Crea un nuovo grafo orientato
  *
+ * @param n dimensione della matrice di adiacenza da creare
  * @return un nuovo grafo diretto vuoto
  *
  */
