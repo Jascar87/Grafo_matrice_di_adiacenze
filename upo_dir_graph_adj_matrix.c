@@ -324,7 +324,7 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
   else if (upo_has_vertex (graph, vertex) == 1) {
       int n = upo_num_vertices(graph);
       int** newMatrix = malloc (sizeof(int**[(n-1)])); /**< Allocazione della nuova matrice di adiacenza e controllo con assert. */
-      assert(newMatrix1!=NULL);
+      assert(newMatrix!=NULL);
       int oldRow = 0;
       int oldColumn = 0;
       int newRow = 0;

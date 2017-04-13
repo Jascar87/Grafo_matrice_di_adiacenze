@@ -187,7 +187,7 @@ void adj_vert(upo_dirgraph_t graph) {
     }
     else {
         printf("Vertice: %d;\n",vertex);
-        while (upo_list_size(adj_vert) != 0) {
+        while (upo_list_size((upo_list_t)adj_vert) != 0) {
             int nextAdjVert = *((int*)upo_remove_first(adjVert));
             printf(" %d -> %d;\n", vertex, nextAdjVert);
         }
@@ -352,7 +352,7 @@ void destroy_graph(upo_dirgraph_t* graph) {
             printf("\n\tDistruzione annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tDistruzione annullata per un errore ignoto."); 
+            printf("\n\tDistruzione annullata per un errore ignoto.");
             break;
         case 1 :
             *graph = NULL;
