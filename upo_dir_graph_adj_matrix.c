@@ -336,6 +336,7 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
           if (oldRow != vertex) {
               newMatrix[newRow] = malloc (sizeof(int*[n-1]));
               assert(newMatrix[newRow]!=NULL);
+              newColumn = 0;
               for (oldColumn = 0; oldColumn < n; oldColumn++) { /**< Scorrimento delle colonne della vecchia matrice. */
                   if (oldColumn != vertex) {
                       newMatrix[newRow][newColumn] = graph->adj[oldRow][oldColumn]; /**< Copia del vecchio valore nella nuova matrice. */
