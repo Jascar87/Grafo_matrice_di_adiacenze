@@ -299,7 +299,7 @@ int upo_has_vertex(upo_dirgraph_t graph, int vertex) {
     if(graph == NULL){
       return -1;
     }
-    else if (vertex >= graph->n || graph->n == 0 || vertex < 0) {
+    else if (vertex >= graph->n || graph->n == 0 || vertex < 0) { /**< Controllo che valore del vartice non sia più grande del numero di vertici presenti, che il grafo non sia vuoto, che il valore del vertice non sia < 0. */
         return 0;
     }
     else {
