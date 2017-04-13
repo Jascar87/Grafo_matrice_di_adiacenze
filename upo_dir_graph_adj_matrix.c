@@ -246,7 +246,7 @@ upo_list_t upo_get_inc_edg(upo_dirgraph_t graph, int vertex) {
   upo_list_t incEdges = NULL;
   if(upo_is_graph_empty(graph) == 0){
     incEdges = upo_get_inc_out_edg(graph, vertex);
-    if( upo_list_size(incEdges) > 0){
+    if( upo_list_size(incEdges) > 0){ /**< Se la lista degli archi uscenti dal vertice non è vuota collego alla sua coda la lista degli archi entranti in quel vertice. */
       upo_list_t tempList = upo_get_inc_in_edg(graph, vertex);
       incEdges->tail->next = tempList->head;
       incEdges->tail = tempList->tail;
@@ -274,12 +274,12 @@ int upo_add_vertex(upo_dirgraph_t graph) { //Verificare quando deve ritornare 0
     int n = upo_num_vertices(graph);
     graph->n++;
     if(n > 0){
-        for(int row = 0; row < n; row++){
+        for(int row = 0; row < n; row++){ /**< Ingrandimento della matrice di adiacenza di una colonna. */
             graph->adj[row] = realloc(graph->adj[row], (sizeof(int*[n+1])));
             assert(graph->adj[row]!=NULL);
-            graph->adj[row][n] = 0;
+            graph->adj[row][n] = 0; /**< Inizializzazione a 0 della nuova colonna. */
         }
-        graph->adj = realloc(graph->adj, (sizeof(int**[n+1])));
+        graph->adj = realloc(graph->adj, (sizeof(int**[n+1]))); /**< Ingrandimento della matrice di adiacenza di una riga. */
         assert(graph->adj!=NULL);
         graph->adj[n] = calloc (n+1, sizeof(int));
         assert(graph->adj[n]!=NULL);
