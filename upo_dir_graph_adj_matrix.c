@@ -426,7 +426,7 @@ int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
   else if (upo_has_edge(graph, vertex1, vertex2) == 1) {
       return 1;
   }
-  return 0;
+  return 0; /**< Negli stessi casi di upo_has_edge. */
 }
 
 /**

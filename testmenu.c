@@ -100,7 +100,7 @@ void has_edge(upo_dirgraph_t graph) {
     int returnValue = upo_has_edge(graph, vertex1, vertex2);
     switch (returnValue) {
         case -1 :
-            printf("\n\tRicerca annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tRicerca annullata, il grafo e' nullo.");
             break;
         case 0 :
             printf("\n\tIl grafo non contiene almeno uno dei due vertici.");
@@ -144,10 +144,10 @@ void add_edge(upo_dirgraph_t* graph) {
     int returnValue = upo_add_edge(*graph, vertex1, vertex2);
     switch (returnValue) {
         case -1 :
-            printf("\n\tCreazione annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tCreazione annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tCreazione annullata, almeno uno dei due vertici non esiste oppure l'arco indicato e' gia presente."); //chiedere al professore
+            printf("\n\tCreazione annullata, almeno uno dei due vertici non esiste oppure l'arco indicato e' gia presente.");
             break;
       case 1 :
             printf("\n\tAggiunta completata.");
@@ -251,7 +251,7 @@ void has_vertex(upo_dirgraph_t graph) {
     int returnValue = upo_has_vertex(graph, vertex);
     switch (returnValue) {
         case -1 :
-            printf("\n\tRicerca annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tRicerca annullata, il grafo e' nullo.");
             break;
         case 0 :
             printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
@@ -271,7 +271,7 @@ void remove_vertex(upo_dirgraph_t* graph) {
     int returnValue = upo_remove_vertex(*graph, vertex);
     switch (returnValue) {
         case -1 :
-            printf("\n\tRimozione annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tRimozione annullata, il grafo e' nullo.");
             break;
         case 0 :
             printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
@@ -288,10 +288,10 @@ void add_vertex(upo_dirgraph_t* graph) {
     int returnValue = upo_add_vertex(*graph);
     switch (returnValue) {
         case -1 :
-            printf("\n\tAggiunta annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tAggiunta annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tAggiunta annullata per un errore ignoto."); //chiedere al professore
+            printf("\n\tAggiunta annullata per un errore ignoto.");
             break;
         case 1 :
             printf("\n\tAggiunta completata.");
@@ -349,10 +349,10 @@ void destroy_graph(upo_dirgraph_t* graph) {
     int returnValue = upo_dirgraph_destroy(*graph);
     switch (returnValue) {
         case -1 :
-            printf("\n\tDistruzione annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tDistruzione annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tDistruzione annullata per un errore ignoto."); //chiedere al professore
+            printf("\n\tDistruzione annullata per un errore ignoto."); 
             break;
         case 1 :
             *graph = NULL;
