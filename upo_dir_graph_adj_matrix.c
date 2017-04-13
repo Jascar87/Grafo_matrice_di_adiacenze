@@ -1,5 +1,8 @@
 #include "upo_dir_graph_adj_matrix.h"
 #include <assert.h>
+#define DIM_STRING 1024
+#define DIM_BUF 20
+
 /**
  * @brief Crea un nuovo grafo orientato
  *
@@ -433,17 +436,17 @@ int upo_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @return una stringa rappresentante il grafo
  */
 char* upo_print_graph(upo_dirgraph_t graph) {
-  char* graphToString = calloc(1024,sizeof(char));
+  char* graphToString = calloc(DIM_STRING,sizeof(char)); /**< Allocazione della stringa da ritornare e controllo con assert. */
   assert(graphToString!=NULL);
   if (graph != NULL) {
       for (int vertex = 0; vertex < graph->n; vertex++) {
-          char buffer1 [20];
+          char buffer1 [DIM_BUF];
           sprintf(buffer1,"Vertice: %d;\n",vertex);
           strcat(graphToString,buffer1);
           upo_list_t adjVert = upo_get_adj_vert(graph, vertex);
           while (upo_list_size(adjVert) != 0) {
               int nextAdjVert = *((int*)upo_remove_first(adjVert));
-              char buffer2 [20];
+              char buffer2 [DIM_BUF];
               sprintf(buffer2," %d -> %d;\n", vertex, nextAdjVert);
               strcat(graphToString,buffer2);
           }
