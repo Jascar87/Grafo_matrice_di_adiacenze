@@ -288,6 +288,9 @@ int upo_add_vertex(upo_dirgraph_t graph) {
         assert(graph->adj[n]!=NULL);
         return 1;
     }
+    else if(n == 0) {
+      return 1;
+    }
     return 0; /**< Non ritorna mai 0, ma previsto per eventuali implementazioni future e per conformità con il resto del codice. */
 }
 
@@ -389,7 +392,7 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
           return 1;
       }
   }
-  return 0; /**< Se esiste gia l'arco tra vertex1 e vertex2, oppure se il grafo non contiene uno o entrambi i vertici. */
+  return 0; /**< Se non esiste l'arco tra vertex1 e vertex2, oppure se il grafo non contiene uno o entrambi i vertici. */
 }
 
 /**

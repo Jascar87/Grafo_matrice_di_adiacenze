@@ -39,7 +39,12 @@ void inc_edg(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t incEdg = upo_get_inc_edg(graph, vertex);
     if (incEdg == NULL) {
-        printf("\n\tStampa annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tStampa annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tStampa annullata, il grafo e' vuoto.");
+        }
     }
     else {
         printf("Vertice: %d;\n",vertex);
@@ -58,7 +63,12 @@ void inc_in_edg(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t incInEdg = upo_get_inc_in_edg(graph, vertex);
     if (incInEdg == NULL) {
-        printf("\n\tStampa annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tStampa annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tStampa annullata, il grafo e' vuoto.");
+        }
     }
     else {
         printf("Vertice: %d;\n",vertex);
@@ -77,7 +87,12 @@ void inc_out_edg(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t incOutEdg = upo_get_inc_out_edg(graph, vertex);
     if (incOutEdg == NULL) {
-        printf("\n\tStampa annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tStampa annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tStampa annullata, il grafo e' vuoto.");
+        }
     }
     else {
         printf("Vertice: %d;\n",vertex);
@@ -103,7 +118,7 @@ void has_edge(upo_dirgraph_t graph) {
             printf("\n\tRicerca annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tIl grafo non contiene almeno uno dei due vertici.");
+            printf("\n\tIl grafo non contiene l'arco cercato o almeno uno dei due vertici.");
             break;
         case 1 :
             printf("\n\tIl grafo contiene l'arco %d -> %d.", vertex1, vertex2);
@@ -166,7 +181,7 @@ void are_adj(upo_dirgraph_t graph) {
     int returnValue = upo_are_adj(graph, vertex1, vertex2);
     switch (returnValue) {
         case 0 :
-            printf("\n\tI vertici %d e %d non sono adiacenti.");
+            printf("\n\tI vertici %d e %d non esistono o non sono adiacenti.");
             break;
         case 1 :
             printf("\n\tI vertici %d e %d sono adiacenti.");
@@ -183,13 +198,21 @@ void adj_vert(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t adjVert = upo_get_adj_vert(graph, vertex);
     if (adjVert == NULL) {
-        printf("\n\tCreazione della lista di adiacenza annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tCreazione della lista di adiacenza annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tCreazione della lista di adiacenza annullata, il grafo e' vuoto.");
+        }
     }
     else {
-        printf("Vertice: %d;\n",vertex);
-        while (upo_list_size((upo_list_t)adj_vert) != 0) {
-            int nextAdjVert = *((int*)upo_remove_first(adjVert));
+        printf("\nVertice: %d;\n",vertex);
+        int nextAdjVert = 0;
+        int listSize = upo_list_size(adjVert);
+        while ( listSize != 0) {
+            nextAdjVert = *((int*)upo_remove_first(adjVert));
             printf(" %d -> %d;\n", vertex, nextAdjVert);
+            listSize--;
         }
         upo_destroy_list(adjVert);
     }
@@ -206,8 +229,13 @@ void degree(upo_dirgraph_t graph) {
             printf("\n\tCalcolo annullato, il grafo e' nullo.");
             break;
         default :
-            printf("\n\tIl vertice con indice %d ha grado totale %d.",vertex,returnValue);
-            break;
+        if(upo_has_vertex(graph, vertex) == 1) {
+          printf("\n\tIl vertice con indice %d ha grado totale %d.",vertex,returnValue);
+        }
+        else {
+          printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
+        }
+        break;
     }
 }
 
@@ -222,8 +250,13 @@ void out_degree(upo_dirgraph_t graph) {
             printf("\n\tCalcolo annullato, il grafo e' nullo.");
             break;
         default :
-            printf("\n\tIl vertice con indice %d ha grado uscente %d.",vertex,returnValue);
-            break;
+        if(upo_has_vertex(graph, vertex) == 1) {
+          printf("\n\tIl vertice con indice %d ha grado uscente %d.",vertex,returnValue);
+        }
+        else {
+          printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
+        }
+        break;
     }
 }
 
@@ -235,10 +268,15 @@ void in_degree(upo_dirgraph_t graph) {
     int returnValue = upo_get_in_degree(graph,vertex);
     switch (returnValue) {
         case -1 :
-            printf("\n\tCalcolo annullato, il grafo è nullo.");
+            printf("\n\tCalcolo annullato, il grafo e' nullo.");
             break;
         default :
-            printf("\n\tIl vertice con indice %d ha grado entrante %d.",vertex,returnValue);
+            if(upo_has_vertex(graph, vertex) == 1) {
+              printf("\n\tIl vertice con indice %d ha grado entrante %d.",vertex,returnValue);
+            }
+            else {
+              printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
+            }
             break;
     }
 }
@@ -398,14 +436,8 @@ void edges_operations(upo_dirgraph_t* graph) {
             case 6 :
                 inc_edg(*graph);
                 break;
-            case 7 :
-
-                break;
-            case 8 :
-
-                break;
             default :
-                printf("%c non e' un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
@@ -444,7 +476,7 @@ void vertex_operations(upo_dirgraph_t* graph) {
                 are_adj(*graph);
                 break;
             default :
-                printf("%c non e' un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
@@ -478,7 +510,7 @@ void graph_operations(upo_dirgraph_t* graph) {
             case 0 :
                 return;
             default :
-                printf("%c non e' un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
@@ -508,7 +540,7 @@ int main(void) {
                 }
                 return 0;
             default :
-                printf("%d non è un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
