@@ -36,7 +36,7 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_dirgraph_destroy(upo_dirgraph_t graph){ /**< Non ritorna mai 0, poichè non si può verificare l'andamento della free. */
+int upo_dirgraph_destroy(upo_dirgraph_t graph){
     if(graph == NULL){
       return -1;
     }
@@ -50,7 +50,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){ /**< Non ritorna mai 0, poichè 
       return 1;
     }
     else{
-      return 0;
+      return 0; /**< Non ritorna mai 0, poichè non si può verificare l'andamento della free. */
     }
 }
 
@@ -160,7 +160,7 @@ int upo_is_graph_empty(upo_dirgraph_t graph) {
       return 1;
     }
     else{
-      return 0;
+      return 0; /**< Nel caso in cui il garfo contenga dei vertici. */
     }
 }
 
@@ -288,7 +288,7 @@ int upo_add_vertex(upo_dirgraph_t graph) {
         assert(graph->adj[n]!=NULL);
         return 1;
     }
-    return 0;
+    return 0; /**< Non ritorna mai 0, ma previsto per eventuali implementazioni future e per conformità con il resto del codice. */
 }
 
 /**
@@ -349,7 +349,7 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
       return 1;
   }
   else {
-      return 0;
+      return 0; /**< Negli stessi casi previsti da upo_has_vertex. */
   }
 }
 
@@ -365,11 +365,11 @@ int upo_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
   if (graph == NULL) {
       return -1;
   }
-  else if (upo_has_edge(graph, vertex1, vertex2) == 0) {
+  else if (upo_has_vertex(graph, vertex1) && upo_has_vertex(graph, vertex2) && upo_has_edge(graph, vertex1, vertex2) == 0) {
           graph->adj[vertex1][vertex2] = 1;
           return 1;
   }
-  return 0;
+  return 0; /**< Negli stessi casi di upo_has_edge. */
 }
 
 /**
@@ -389,7 +389,7 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
           return 1;
       }
   }
-  return 0;
+  return 0; /**< Se esiste gia l'arco tra vertex1 e vertex2, oppure se il grafo non contiene uno o entrambi i vertici. */
 }
 
 /**
@@ -408,7 +408,7 @@ int upo_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       graph->adj[vertex1][vertex2] = 0;
       return 1;
   }
-  return 0;
+  return 0; /**< Negli stessi casi di upo_has_edge. */
 }
 
 /**
