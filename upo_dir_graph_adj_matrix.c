@@ -37,7 +37,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){ /**< Non ritorna mai 0, poichè 
     if(graph == NULL){
       return -1;
     }
-    else if(graph != NULL){                                       /**< Deallocazione della matrice di adiacenza e successivamente del grafo. */
+    else if(graph != NULL){ /**< Deallocazione della matrice di adiacenza e successivamente del grafo. */
       int row = upo_num_vertices(graph) - 1;
         for(; row >= 0; row--){
         free(graph->adj[row]);
