@@ -439,11 +439,11 @@ char* upo_print_graph(upo_dirgraph_t graph) {
   char* graphToString = calloc(DIM_STRING,sizeof(char)); /**< Allocazione della stringa da ritornare e controllo con assert. */
   assert(graphToString!=NULL);
   if (graph != NULL) {
-      for (int vertex = 0; vertex < graph->n; vertex++) {
+      for (int vertex = 0; vertex < graph->n; vertex++) { /**< Scorrimento di tutti i vertici del grafo. */
           char buffer1 [DIM_BUF];
           sprintf(buffer1,"Vertice: %d;\n",vertex);
           strcat(graphToString,buffer1);
-          upo_list_t adjVert = upo_get_adj_vert(graph, vertex);
+          upo_list_t adjVert = upo_get_adj_vert(graph, vertex); /**< Recupero dei vertici adiacenti al vertice che si sta controllando. */
           while (upo_list_size(adjVert) != 0) {
               int nextAdjVert = *((int*)upo_remove_first(adjVert));
               char buffer2 [DIM_BUF];
