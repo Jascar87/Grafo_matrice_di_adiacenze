@@ -320,19 +320,19 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
   }
   else if (upo_has_vertex (graph, vertex) == 1) {
       int n = upo_num_vertices(graph);
-      int** newMatrix = malloc (sizeof(int**[(n-1)])); /**< Allocazione della nuova matrice di adiacenza. */
+      int** newMatrix = malloc (sizeof(int**[(n-1)])); /**< Allocazione della nuova matrice di adiacenza e controllo con assert. */
       assert(newMatrix1!=NULL);
       int oldRow = 0;
       int oldColumn = 0;
       int newRow = 0;
       int newColumn = 0;
-      for (oldRow = 0; oldRow < n; oldRow++) {
+      for (oldRow = 0; oldRow < n; oldRow++) { /**< Scorrimento delle righe della vecchia matrice. */
           if (oldRow != vertex) {
               newMatrix[newRow] = malloc (sizeof(int*[n-1]));
               assert(newMatrix[newRow]!=NULL);
-              for (oldColumn = 0; oldColumn < n; oldColumn++) {
+              for (oldColumn = 0; oldColumn < n; oldColumn++) { /**< Scorrimento delle colonne della vecchia matrice. */
                   if (oldColumn != vertex) {
-                      newMatrix[newRow][newColumn] = graph->adj[oldRow][oldColumn]; /**< Copia della vecchia matrice nella nuova. */
+                      newMatrix[newRow][newColumn] = graph->adj[oldRow][oldColumn]; /**< Copia del vecchio valore nella nuova matrice. */
                       newColumn++;
                   }
               }
