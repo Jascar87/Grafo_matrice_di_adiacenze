@@ -382,7 +382,7 @@ int upo_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       return -1;
   }
   else if (upo_has_vertex( graph, vertex1) == 1 && upo_has_vertex( graph, vertex2) == 1) {
-      if (graph->adj[vertex1][vertex2] == 1) {
+      if (graph->adj[vertex1][vertex2] == 1) { /**< Controllo separato per evitare accesso a zone di memoria esterne che porterebbero ad un segmentation fault. */
           return 1;
       }
   }
