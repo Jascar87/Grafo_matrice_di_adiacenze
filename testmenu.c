@@ -10,11 +10,11 @@ void selection(int* digit) {
 }
 
 void print_edg_menu_list() {
-  printf("\n\t\tMenu archi:\n\t1\tCrea un arco tra due vertici\n\t2\tRimuovi un arco\n\t3\tControlla la presenza di un arco\n\t4\tStampa gli archi uscenti da un dato vertice\n\t5\tStampa gli archi entranti in un dato vertice\n\t6\tStampa gli archi incidenti un dato vertice\n\t0\tTorna al menu precedente\n");
+  printf("\n\t\tMenu archi:\n\t1\tCrea un arco tra due vertici\n\t2\tRimuovi un arco\n\t3\tControlla la presenza di un arco\n\t4\tStampa gli archi uscenti da un dato vertice\n\t5\tStampa gli archi entranti in un dato vertice\n\t6\tStampa gli archi incidenti un dato vertice\n\t9\tTorna al menu precedente\n");
 }
 
 void print_vert_menu_list() {
-    printf("\n\t\tMenu vertici:\n\t1\tAggiungi un nuovo vertice\n\t2\tRimuovi un vertice\n\t3\tControlla la presenza di un vertice\n\t4\tCalcola il grado entrante di un vertice\n\t5\tCalcola il grado uscente di un vertice\n\t6\tCalcola il grado di un vertice\n\t7\tStampa la lista di adiacenza di un vertice\n\t8\tVerifica se due vertici sono adiacenti\n\t0\tTorna al menu precedente\n");
+    printf("\n\t\tMenu vertici:\n\t1\tAggiungi un nuovo vertice\n\t2\tRimuovi un vertice\n\t3\tControlla la presenza di un vertice\n\t4\tCalcola il grado entrante di un vertice\n\t5\tCalcola il grado uscente di un vertice\n\t6\tCalcola il grado di un vertice\n\t7\tStampa la lista di adiacenza di un vertice\n\t8\tVerifica se due vertici sono adiacenti\n\t9\tTorna al menu precedente\n");
 }
 
 void print_graph_menu_list() {
@@ -22,7 +22,7 @@ void print_graph_menu_list() {
 }
 
 void print_menu_list() {
-    printf("\n\t\tMenu principale:\n\t1\tOperazioni sul grafo\n\t2\tOperazioni sui vertici\n\t3\tOperazioni sugli archi\n\t0\tEsci\n");
+    printf("\n\t\tMenu principale:\n\t1\tOperazioni sul grafo\n\t2\tOperazioni sui vertici\n\t3\tOperazioni sugli archi\n\t9\tEsci\n");
 }
 
 void print_graph(upo_dirgraph_t graph) {
@@ -416,7 +416,7 @@ void edges_operations(upo_dirgraph_t* graph) {
         print_edg_menu_list();
         selection(&digit);
         switch (digit) {
-            case 0 :
+            case 9 :
                 return;
             case 1 :
                 add_edge(graph);
@@ -449,7 +449,7 @@ void vertex_operations(upo_dirgraph_t* graph) {
         print_vert_menu_list();
         selection(&digit);
         switch (digit) {
-            case 0 :
+            case 9 :
                 return;
             case 1 :
                 add_vertex(graph);
@@ -532,7 +532,7 @@ int main(void) {
             case 3 :
                 edges_operations(&graph);
                 break;
-            case 0 :
+            case 9 :
                 printf("\n\tEsci\n");
                 if (graph != NULL) {
                     destroy_graph(&graph);
