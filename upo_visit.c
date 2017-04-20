@@ -60,7 +60,7 @@ int* upo_BFS(upo_dirgraph_t graph, int source) {
  *
  */
 
-int* upo_DFS_tot(upo_dirgraph_t graph) {
+int* upo_DFS_tot(upo_dirgraph_t graph) { // RIFARE RICORSIVA
   if(upo_is_graph_empty(graph)!=0) return NULL;/**controllo che esista e non sia vuoto il grafo*/
   upo_list_t adj_vector[graph->n];/**vettore di puntatori a liste di adiacienza*/
   int color[graph->n];/**vettore per identificare i colori dei nodi*/
