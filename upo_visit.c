@@ -62,22 +62,23 @@ int* upo_BFS(upo_dirgraph_t graph, int source) {
 
 int* upo_DFS_tot(upo_dirgraph_t graph) {
   if(upo_is_graph_empty(graph)!=0) return NULL;/**controllo che esista e non sia vuoto il grafo*/
-  upo_list_t adj_vector[graph->n];/**vettore di puntatori a liste di adiacienza*/
   int color[graph->n];/**vettore per identificare i colori dei nodi*/
+  int d[graph->n]; /**vettore per tenere traccia del tempio di scoperta del nodo i-esimo*/
+  int f[graph->n];/**vettore per tenere traccia del tempio di chiusura del nodo i-esimo*/
   int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
   int i;
+  int timer = 0;
   int end = 0;
   int *padri=malloc(graph->n*sizeof(int));/**puntatore per il vettore dei padri*/
   int dim_visitati=0;
   for (i=0; i<graph->n; i++){/**ciclo che inizializza a WHITE gli elementi di color e adj_vector  a NULL*/
     color[graph->n]=WHITE;
-    adj_vector[graph->n]=NULL;
   }
   do{
-    upo_DFS_par(graph, vertex, color, padri, &dim_padri)
-    for(i=vertex; i<graph->n; || color[i]!=WHITE; i++);
-    if (i=graph->n) end=1;
-    else if (color[i]==WHITE) vertex = i;
+    timer = upo_DFS_par(graph, vertex, color, padri, &dim_visitati, timer, d, f);
+    for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
+    if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
+    else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
   }
   while(end==0);
   return padri;
@@ -92,25 +93,30 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
  * @param color è il vettore che memorizza lo stato dei vettori
  * @param padri è il vettore che tiene l'ordina di visita
  * @param dim_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
+ * @param timer è la variabile che tiene traccia del tempo
+ * @param vettore per tenere traccia del tempio di scoperta del nodo i-esimo
+ * @param vettore per tenere traccia del tempio di chiusura del nodo i-esimo
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* dim_visitati){
-  if(upo_is_graph_empty(graph)!=0) return ;/**controllo che esista e non sia vuoto il grafo*/
-  if (((*dim_visitati)+1)==graph->n) return ;/**caso di terminazione ho visitato tutti i nodi*/
+int upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* dim_visitati, int timer, int* d, int* f){
+  if(upo_is_graph_empty(graph)!=0) return timer;/**controllo che esista e non sia vuoto il grafo*/
+  if (((*dim_visitati)+1)==graph->n) return timer;/**caso di terminazione ho visitato tutti i nodi*/
   upo_list_node* adj_list_copy=adj_list->head;
   color[vertex]=GREY;
+  d[vertex] = ++timer;
   padri[((*dim_visitati)++)]=vertex;
   upo_list_t adj_list=upo_get_adj_vert(graph, vertex);
   while (adj_list!=NULL) {
     if (adj_list_copy->element!=NULL){
-      if (color[adj_list_copy->element]==WHITE) upo_DFS_par(graph, adj_list_copy->element, color, padri, dim_visitati);
+      if (color[adj_list_copy->element]==WHITE) timer = upo_DFS_par(graph, adj_list_copy->element, color, padri, dim_visitati, timer, d, f);
     }
-
   }
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
+  f[vertex] = ++timer;
+  return timer;
 }
 
 /**
@@ -178,7 +184,8 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color){
  */
  int upo_is_DAG(upo_dirgraph_t graph) {
      if (graph==NULL) return -1;
-     return !upo_cyclic(graph);
+     if (upo_cyclic(graph) == FALSE) return TRUE; /**se il grafo non ha cicli allora è un DAG*/
+     else return FALSE;
  }
 
 /**
@@ -189,8 +196,29 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color){
  *
  */
 int* upo_topological_sort(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+  int color[graph->n];/**vettore per identificare i colori dei nodi*/
+  int d[graph->n]; /**vettore per tenere traccia del tempio di scoperta del nodo i-esimo*/
+  int f[graph->n];/**vettore per tenere traccia del tempio di chiusura del nodo i-esimo*/
+  int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
+  int i;
+  int timer = 0;
+  int end = 0;
+  int *ord_topologico=malloc(graph->n*sizeof(int));/**puntatore per il vettore da restituire*/
+  int temp[graph->n]; /** vettore per invertire l'ordine di ord_topologico*/
+  int dim_visitati=0;
+  for (i=0; i<graph->n; i++){/**ciclo che inizializza a WHITE gli elementi di color e adj_vector  a NULL*/
+    color[graph->n]=WHITE;
+  }
+  do{
+    timer = upo_DFS_par(graph, vertex, color, ord_topologico, &dim_visitati, timer, d, f);
+    for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
+    if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
+    else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
+  }
+  while(end==0);
+  for (i=0; ì<graph->n; i++) temp[graph->n-(i+1)]= ord_topologico[i]; /**copio in ordine invertito in temp*/
+  for (i=0; ì<graph->n; i++) ord_topologico[i]= temp[i]; /** copio in ordine in ord_topologico*/
+  return ord_topologico;
 }
 
 /**
