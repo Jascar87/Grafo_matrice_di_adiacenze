@@ -415,12 +415,6 @@ void edges_operations(upo_dirgraph_t* graph) {
             case 6 :
                 inc_edg(*graph);
                 break;
-            case 7 :
-
-                break;
-            case 8 :
-
-                break;
             default :
                 printf("%c non e' un comando valido.",digit);
                 break;
@@ -503,13 +497,16 @@ void graph_operations(upo_dirgraph_t* graph) {
 
 void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
+    int d = 0;
+    int padri[graph->n];
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
         switch (digit) {
-
             case 1 :
-                upo_BFS(graph);
+                printf("Inserire la sorgente\n");
+                scanf("%d", &d);
+                padri = upo_BFS(graph, d);
                 break;
             case 2 :
                 destroy_graph(graph);
