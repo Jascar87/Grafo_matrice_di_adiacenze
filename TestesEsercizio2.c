@@ -26,6 +26,10 @@ void print_graph_menu_list() {
     printf("\n\t\tMenu grafo:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tControlla se il grafo e' vuoto\n\t4\tVerifica il numero di vertici\n\t5\tVerifica il numero di archi\n\t6\tStampa il grafo\n\t0\tTorna al menu precedente\n");
 }
 
+void print_graph_proprietis_menu_list() {
+    printf("\n\t\tMenu grafo:\n\t1\tVisita in ampiezza semplice\n\t2\tVisita in profondita' totale\n\t3\tControlla se il grafo contiene cicli\n\t4\tVerifica se il grafo e' un DAG\n\t5\tCalcola un ordinamento topologico\n\t6\tRestituisce la componente fortemente connessa\n\t0\tTorna al menu precedente\n");
+}
+
 void print_menu_list() {
     printf("\n\t\tMenu principale:\n\t1\tOperazioni sul grafo\n\t2\tOperazioni sui vertici\n\t3\tOperazioni sugli archi\n\t0\tEsci\n");
 }
@@ -489,6 +493,40 @@ void graph_operations(upo_dirgraph_t* graph) {
     }
 }
 
+void graph_proprietis_operations(upo_dirgraph_t* graph) {
+    int digit = 0;
+    while (TRUE) {
+        print_graph_proprietis_menu_list();
+        selection(&digit);
+        switch (digit) {
+
+            case 1 :
+                upo_BFS(graph);
+                break;
+            case 2 :
+                destroy_graph(graph);
+                break;
+            case 3 :
+                check_if_empty(*graph);
+                break;
+            case 4 :
+                num_vertices(*graph);
+                break;
+            case 5 :
+                num_edges(*graph);
+                break;
+            case 6 :
+                print_graph(*graph);
+                break;
+            case 0 :
+                return;
+            default :
+                printf("%c non e' un comando valido.",digit);
+                break;
+        }
+    }
+}
+
 int main(void) {
     upo_dirgraph_t graph = NULL;
     int digit = 0;
@@ -505,6 +543,9 @@ int main(void) {
             case 3 :
                 edges_operations(&graph);
                 break;
+            case 4 :
+                graph_proprietis_operation(&graph);
+                break;
             case 0 :
                 printf("\n\tEsci\n");
                 if (graph != NULL) {
@@ -517,11 +558,4 @@ int main(void) {
                 break;
         }
     }
-}
-
-void upo_BFS(){
-  upo_dirgraph_t graph = NULL;
-  graph = upo_dirgraph_create()
-  int padri[graph->n];
-
 }
