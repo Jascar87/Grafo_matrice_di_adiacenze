@@ -192,13 +192,21 @@ void adj_vert(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t adjVert = upo_get_adj_vert(graph, vertex);
     if (adjVert == NULL) {
-        printf("\n\tCreazione della lista di adiacenza annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tCreazione della lista di adiacenza annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tCreazione della lista di adiacenza annullata, il grafo e' vuoto.");
+        }
     }
     else {
-        printf("Vertice: %d;\n",vertex);
-        while (upo_list_size(adj_vert) != 0) {
-            int nextAdjVert = *((int*)upo_remove_first(adjVert));
+        printf("\nVertice: %d;\n",vertex);
+        int nextAdjVert = 0;
+        int listSize = upo_list_size(adjVert);
+        while ( listSize != 0) {
+            nextAdjVert = *((int*)upo_remove_first(adjVert));
             printf(" %d -> %d;\n", vertex, nextAdjVert);
+            listSize--;
         }
         upo_destroy_list(adjVert);
     }
