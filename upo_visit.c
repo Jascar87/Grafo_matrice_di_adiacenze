@@ -176,10 +176,10 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color){
  * @return 1 se il grafo e' un DAG, 0 se non lo e', -1 se il grafo e' nullo
  *
  */
-int upo_is_DAG(upo_dirgraph_t graph) {
-    fprintf(stderr, "To be implemented!\n");
-    abort();
-}
+ int upo_is_DAG(upo_dirgraph_t graph) {
+     if (graph==NULL) return -1;
+     return !upo_cyclic(graph);
+ }
 
 /**
  * @brief Calcola un ordinamento topologico di un grafo graph
