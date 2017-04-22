@@ -497,31 +497,38 @@ void graph_operations(upo_dirgraph_t* graph) {
 
 void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
-    int d = 0;
-    int padri[graph->n];
+    int source = 0;
+    int ciclo = 0;
+    int* padri = NULL;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
         switch (digit) {
             case 1 :
                 printf("Inserire la sorgente\n");
-                scanf("%d", &d);
-                padri = upo_BFS(graph, d);
+                scanf("%d", &source);
+                *padri = upo_BFS(*graph, source);
                 break;
             case 2 :
-                destroy_graph(graph);
+                upo_DFS_tot(graph);
                 break;
             case 3 :
-                check_if_empty(*graph);
+                ciclo = upo_cyclic(graph);
+                if(ciclo == 0){
+                  printf("Il grafo non contiene cicli\n");
+                }
+                else{
+                  printf("Il grafo contiene cicli\n");
+                }
                 break;
             case 4 :
-                num_vertices(*graph);
+                upo_is_DAG(graph);
                 break;
             case 5 :
-                num_edges(*graph);
+                //upo_topological_sort(graph);
                 break;
             case 6 :
-                print_graph(*graph);
+                //upo_strongly_connected_components(graph);
                 break;
             case 0 :
                 return;
