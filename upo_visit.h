@@ -48,7 +48,7 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
 int upo_cyclic(upo_dirgraph_t graph);
 
 /**
- * @brief controlla se esistono archi all' indietro 
+ * @brief controlla se esistono archi all' indietro
  *
  * @param graph il grafo da esaminare
  * @param vertex è il vertice che stiamo considerando
@@ -88,4 +88,13 @@ int* upo_topological_sort(upo_dirgraph_t graph);
  */
 int* upo_strongly_connected_components(upo_dirgraph_t graph);
 
+/**
+ * @brief Crea un grafo trasposto
+ *
+ * @param sorgente è il grafo da cui  si crea il grafo traspost
+ * @param trasposto è il puntatore in cui restituire il grafo traspoto creato
+ * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
+ *
+ */
+int upo_dirgraph_trasposto (upo_dirgraph_t sorgente, upo_dirgraph_t trasposto);
 #endif /* UPO_VISIT_H */
