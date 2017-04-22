@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "upo_dir_graph_adj_matrix.c"
 #include "upo_list.c"
-#include "upo_visit.h"
+#include "upo_visit.c"
 #include <assert.h>
 #define TRUE 1
 #define FALSE 0
@@ -499,7 +499,6 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
     int source = 0;
     int ciclo = 0;
-    int* padri = NULL;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
@@ -507,13 +506,13 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
-                *padri = upo_BFS(*graph, source);
+                upo_BFS(*graph, source);
                 break;
             case 2 :
-                upo_DFS_tot(graph);
+                upo_DFS_tot(*graph);
                 break;
             case 3 :
-                ciclo = upo_cyclic(graph);
+                ciclo = upo_cyclic(*graph);
                 if(ciclo == 0){
                   printf("Il grafo non contiene cicli\n");
                 }
@@ -522,7 +521,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 4 :
-                upo_is_DAG(graph);
+                upo_is_DAG(*graph);
                 break;
             case 5 :
                 //upo_topological_sort(graph);
