@@ -498,7 +498,6 @@ void graph_operations(upo_dirgraph_t* graph) {
 void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
     int source = 0;
-    int ciclo = 0;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
@@ -512,8 +511,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 upo_DFS_tot(*graph);
                 break;
             case 3 :
-                ciclo = upo_cyclic(*graph);
-                if(ciclo == 0){
+                if(upo_cyclic(*graph) == FALSE){
                   printf("Il grafo non contiene cicli\n");
                 }
                 else{
@@ -521,7 +519,12 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 4 :
-                upo_is_DAG(*graph);
+                if(upo_is_DAG(*graph) == TRUE){
+                  printf("Il grafo e' un DAG\n");
+                }
+                else{
+                  printf("Il grafo non e' un DAG\n");
+                }
                 break;
             case 5 :
                 //upo_topological_sort(graph);
