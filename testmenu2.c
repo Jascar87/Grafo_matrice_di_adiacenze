@@ -1,13 +1,8 @@
 #include <stdio.h>
 #include "upo_dir_graph_adj_matrix.c"
 #include "upo_list.c"
-#include "upo_visit.c"
-#include <assert.h>
 #define TRUE 1
 #define FALSE 0
-#define WHITE 0
-#define GREY 1
-#define BLACK 2
 
 void selection(int* digit) {
     printf("\nScegliere un comando: ");
@@ -26,12 +21,12 @@ void print_graph_menu_list() {
     printf("\n\t\tMenu grafo:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tControlla se il grafo e' vuoto\n\t4\tVerifica il numero di vertici\n\t5\tVerifica il numero di archi\n\t6\tStampa il grafo\n\t0\tTorna al menu precedente\n");
 }
 
-void print_graph_proprietis_menu_list() {
-    printf("\n\t\tMenu grafo:\n\t1\tVisita in ampiezza semplice\n\t2\tVisita in profondita' totale\n\t3\tControlla se il grafo contiene cicli\n\t4\tVerifica se il grafo e' un DAG\n\t5\tCalcola un ordinamento topologico\n\t6\tRestituisce la componente fortemente connessa\n\t0\tTorna al menu precedente\n");
+void print_menu_list() {
+    printf("\n\t\tMenu principale:\n\t1\tOperazioni sul grafo\n\t2\tOperazioni sui vertici\n\t3\tOperazioni sugli archi\n\t4\tProprieta' dei grafi\n\t0\tEsci\n");
 }
 
-void print_menu_list() {
-    printf("\n\t\tMenu principale:\n\t1\tOperazioni sul grafo\n\t2\tOperazioni sui vertici\n\t3\tOperazioni sugli archi\n\t0\tEsci\n");
+void print_graph_proprietis_menu_list() {
+    printf("\n\t\tMenu proprieta' grafo:\n\t1\tVisita in ampiezza semplice\n\t2\tVisita in profondita' totale\n\t3\tControlla se il grafo contiene cicli\n\t4\tVerifica se il grafo e' un DAG\n\t5\tCalcola un ordinamento topologico\n\t6\tRestituisce la componente fortemente connessa\n\t0\tTorna al menu precedente\n");
 }
 
 void print_graph(upo_dirgraph_t graph) {
@@ -48,7 +43,12 @@ void inc_edg(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t incEdg = upo_get_inc_edg(graph, vertex);
     if (incEdg == NULL) {
-        printf("\n\tStampa annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tStampa annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tStampa annullata, il grafo e' vuoto.");
+        }
     }
     else {
         printf("Vertice: %d;\n",vertex);
@@ -67,7 +67,12 @@ void inc_in_edg(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t incInEdg = upo_get_inc_in_edg(graph, vertex);
     if (incInEdg == NULL) {
-        printf("\n\tStampa annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tStampa annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tStampa annullata, il grafo e' vuoto.");
+        }
     }
     else {
         printf("Vertice: %d;\n",vertex);
@@ -86,7 +91,12 @@ void inc_out_edg(upo_dirgraph_t graph) {
     scanf("%d",&vertex);
     upo_list_t incOutEdg = upo_get_inc_out_edg(graph, vertex);
     if (incOutEdg == NULL) {
-        printf("\n\tStampa annullata, il grafo e' nullo.");
+        if(upo_is_graph_empty(graph) == -1) {
+          printf("\n\tStampa annullata, il grafo e' nullo.");
+        }
+        else {
+          printf("\n\tStampa annullata, il grafo e' vuoto.");
+        }
     }
     else {
         printf("Vertice: %d;\n",vertex);
@@ -109,10 +119,10 @@ void has_edge(upo_dirgraph_t graph) {
     int returnValue = upo_has_edge(graph, vertex1, vertex2);
     switch (returnValue) {
         case -1 :
-            printf("\n\tRicerca annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tRicerca annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tIl grafo non contiene almeno uno dei due vertici.");
+            printf("\n\tIl grafo non contiene l'arco cercato o almeno uno dei due vertici.");
             break;
         case 1 :
             printf("\n\tIl grafo contiene l'arco %d -> %d.", vertex1, vertex2);
@@ -153,10 +163,10 @@ void add_edge(upo_dirgraph_t* graph) {
     int returnValue = upo_add_edge(*graph, vertex1, vertex2);
     switch (returnValue) {
         case -1 :
-            printf("\n\tCreazione annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tCreazione annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tCreazione annullata, almeno uno dei due vertici non esiste oppure l'arco indicato e' gia presente."); //chiedere al professore
+            printf("\n\tCreazione annullata, almeno uno dei due vertici non esiste oppure l'arco indicato e' gia presente.");
             break;
       case 1 :
             printf("\n\tAggiunta completata.");
@@ -175,7 +185,7 @@ void are_adj(upo_dirgraph_t graph) {
     int returnValue = upo_are_adj(graph, vertex1, vertex2);
     switch (returnValue) {
         case 0 :
-            printf("\n\tI vertici %d e %d non sono adiacenti.");
+            printf("\n\tI vertici %d e %d non esistono o non sono adiacenti.");
             break;
         case 1 :
             printf("\n\tI vertici %d e %d sono adiacenti.");
@@ -223,8 +233,13 @@ void degree(upo_dirgraph_t graph) {
             printf("\n\tCalcolo annullato, il grafo e' nullo.");
             break;
         default :
-            printf("\n\tIl vertice con indice %d ha grado totale %d.",vertex,returnValue);
-            break;
+        if(upo_has_vertex(graph, vertex) == 1) {
+          printf("\n\tIl vertice con indice %d ha grado totale %d.",vertex,returnValue);
+        }
+        else {
+          printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
+        }
+        break;
     }
 }
 
@@ -239,8 +254,13 @@ void out_degree(upo_dirgraph_t graph) {
             printf("\n\tCalcolo annullato, il grafo e' nullo.");
             break;
         default :
-            printf("\n\tIl vertice con indice %d ha grado uscente %d.",vertex,returnValue);
-            break;
+        if(upo_has_vertex(graph, vertex) == 1) {
+          printf("\n\tIl vertice con indice %d ha grado uscente %d.",vertex,returnValue);
+        }
+        else {
+          printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
+        }
+        break;
     }
 }
 
@@ -252,10 +272,15 @@ void in_degree(upo_dirgraph_t graph) {
     int returnValue = upo_get_in_degree(graph,vertex);
     switch (returnValue) {
         case -1 :
-            printf("\n\tCalcolo annullato, il grafo è nullo.");
+            printf("\n\tCalcolo annullato, il grafo e' nullo.");
             break;
         default :
-            printf("\n\tIl vertice con indice %d ha grado entrante %d.",vertex,returnValue);
+            if(upo_has_vertex(graph, vertex) == 1) {
+              printf("\n\tIl vertice con indice %d ha grado entrante %d.",vertex,returnValue);
+            }
+            else {
+              printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
+            }
             break;
     }
 }
@@ -268,7 +293,7 @@ void has_vertex(upo_dirgraph_t graph) {
     int returnValue = upo_has_vertex(graph, vertex);
     switch (returnValue) {
         case -1 :
-            printf("\n\tRicerca annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tRicerca annullata, il grafo e' nullo.");
             break;
         case 0 :
             printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
@@ -288,7 +313,7 @@ void remove_vertex(upo_dirgraph_t* graph) {
     int returnValue = upo_remove_vertex(*graph, vertex);
     switch (returnValue) {
         case -1 :
-            printf("\n\tRimozione annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tRimozione annullata, il grafo e' nullo.");
             break;
         case 0 :
             printf("\n\tIl grafo non contiene il vertice con indice %d.",vertex);
@@ -305,10 +330,10 @@ void add_vertex(upo_dirgraph_t* graph) {
     int returnValue = upo_add_vertex(*graph);
     switch (returnValue) {
         case -1 :
-            printf("\n\tAggiunta annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tAggiunta annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tAggiunta annullata per un errore ignoto."); //chiedere al professore
+            printf("\n\tAggiunta annullata per un errore ignoto.");
             break;
         case 1 :
             printf("\n\tAggiunta completata.");
@@ -366,10 +391,10 @@ void destroy_graph(upo_dirgraph_t* graph) {
     int returnValue = upo_dirgraph_destroy(*graph);
     switch (returnValue) {
         case -1 :
-            printf("\n\tDistruzione annullata, il grafo e' nullo."); //o non esiste?
+            printf("\n\tDistruzione annullata, il grafo e' nullo.");
             break;
         case 0 :
-            printf("\n\tDistruzione annullata per un errore ignoto."); //chiedere al professore
+            printf("\n\tDistruzione annullata per un errore ignoto.");
             break;
         case 1 :
             *graph = NULL;
@@ -416,7 +441,7 @@ void edges_operations(upo_dirgraph_t* graph) {
                 inc_edg(*graph);
                 break;
             default :
-                printf("%c non e' un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
@@ -455,7 +480,7 @@ void vertex_operations(upo_dirgraph_t* graph) {
                 are_adj(*graph);
                 break;
             default :
-                printf("%c non e' un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
@@ -489,7 +514,7 @@ void graph_operations(upo_dirgraph_t* graph) {
             case 0 :
                 return;
             default :
-                printf("%c non e' un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
@@ -506,29 +531,29 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
-                upo_BFS(*graph, source);
+                //upo_BFS(*graph, source);
                 break;
             case 2 :
-                upo_DFS_tot(*graph);
+                //upo_DFS_tot(*graph);
                 break;
             case 3 :
-                if(upo_cyclic(*graph) == FALSE){
+                /*if(upo_cyclic(*graph) == 0){
                   printf("Il grafo non contiene cicli\n");
                 }
                 else{
                   printf("Il grafo contiene cicli\n");
-                }
+                }*/
                 break;
             case 4 :
-                if(upo_is_DAG(*graph) == TRUE){
+                /*if(upo_is_DAG(*graph) == 1){
                   printf("Il grafo e' un DAG\n");
                 }
                 else{
                   printf("Il grafo non e' un DAG\n");
-                }
+                }*/
                 break;
             case 5 :
-                upo_topological_sort(*graph);
+                //upo_topological_sort(*graph);
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
@@ -559,7 +584,7 @@ int main(void) {
                 edges_operations(&graph);
                 break;
             case 4 :
-                graph_proprietis_operation(&graph);
+                graph_proprietis_operations(&graph);
                 break;
             case 0 :
                 printf("\n\tEsci\n");
@@ -569,7 +594,7 @@ int main(void) {
                 }
                 return 0;
             default :
-                printf("%d non è un comando valido.",digit);
+                printf("%d non e' un comando valido.",digit);
                 break;
         }
     }
