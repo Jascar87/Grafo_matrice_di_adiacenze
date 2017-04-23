@@ -496,6 +496,7 @@ void graph_operations(upo_dirgraph_t* graph) {
 }
 
 void graph_proprietis_operations(upo_dirgraph_t* graph) {
+    upo_dirgraph_t* graph_T;
     int digit = 0;
     int source = 0;
     while (TRUE) {
@@ -527,7 +528,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 5 :
-                //upo_topological_sort(graph);
+                upo_topological_sort(*graph);
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
