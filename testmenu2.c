@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "upo_dir_graph_adj_matrix.c"
+#include "upo_visit.c"
 #include "upo_list.c"
 #define TRUE 1
 #define FALSE 0
@@ -531,18 +532,18 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
-                //upo_BFS(*graph, source);
+                //upo_BFS(graph, source);
                 break;
             case 2 :
                 //upo_DFS_tot(*graph);
                 break;
             case 3 :
-                /*if(upo_cyclic(*graph) == 0){
+                if(upo_cyclic(graph) == 0){
                   printf("Il grafo non contiene cicli\n");
                 }
                 else{
                   printf("Il grafo contiene cicli\n");
-                }*/
+                }
                 break;
             case 4 :
                 /*if(upo_is_DAG(*graph) == 1){
