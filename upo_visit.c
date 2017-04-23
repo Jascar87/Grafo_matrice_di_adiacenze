@@ -1,5 +1,5 @@
 #include "upo_visit.h"
-#include "upo_dir_graph_adj_matrix"
+#include "upo_dir_graph_adj_matrix.c"
 #include <assert.h>
 #define WHITE 0
 #define GREY 1
