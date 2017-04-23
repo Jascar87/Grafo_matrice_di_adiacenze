@@ -1,5 +1,6 @@
 #include "upo_visit.h"
 #include "upo_dir_graph_adj_matrix.c"
+#include "upo_list.c"
 #include <assert.h>
 #define WHITE 0
 #define GREY 1
@@ -23,27 +24,31 @@ int* upo_BFS(upo_dirgraph_t graph, int source) {
     int tail_queue = 0; /**contatore alla fine della coda*/
     int *padri=NULL;/**puntatore per il vettore dei padri*/
     int i;
+    int* vertex_pointer=NULL;
     queue[(graph->n)+1]=-1;/**limite massimo della coda*/
-    upo_list_t edge = NULL; /**puntatore alla lista degli archi*/
-    upo_list_node* edge_copy = NULL;
+    upo_list_t adj_list=NULL;
+    upo_list_node* adj_list_copy=NULL;
     for(i=0; i<graph->n; i++);{/**ciclo che inizializza a WHITE gli elementi di color e queue  a -1*/
       color[i]= WHITE;
-      queue[i]=-2;
+      queue[i]=-1;
     }
     color[source]=GREY;/**source diventa GREY*/
     queue[tail_queue++]=source;/**inserisco in coda source e incremento tail_quee*/
     while(queue[head_queue]!=-1){
-      edge=upo_get_inc_out_edg(graph, queue[head_queue]);/**creo la lista degli archi uscenti dal vertice in testa alla coda*/
-      edge_copy=edge->head;
-      while (edge!=NULL){
-        if (color[edge_copy->element->to]==WHITE){/**se il colore del vertice puntato WHITE*/
-          color[edge_copy->element->to]=GREY;/**coloro il vertice di GREY*/
-          queue[tail_queue++]=edge_copy->element->to;/**inserisco il vertice in coda e incremento la fine coda*/
+      adj_list=upo_get_adj_vert(graph, source);
+      adj_list_copy=adj_list->head;
+      while (adj_list_copy!=NULL){
+        if(adj_list_copy->element!=NULL){
+          vertex_pointer=(int*)adj_list_copy->element;
+          if (color[(*vertex_pointer)]==WHITE){/**se il colore del vertice puntato WHITE*/
+            color[(*vertex_pointer)]=GREY;/**coloro il vertice di GREY*/
+            queue[tail_queue++]=(*vertex_pointer);/**inserisco il vertice in coda e incremento la fine coda*/
+          }
+          adj_list_copy=adj_list_copy->next;
+          color[queue[head_queue++]] = BLACK;/**coloro di BLACK il nodo in testa alla coda e faccio avanzare la coda*/
         }
-        edge_copy=edge_copy->next;
-        color[queue[head_queue++]] = BLACK;/**coloro di BLACK il nodo in testa alla coda e faccio avanzare la coda*/
       }
-      upo_destroy_list(edge);
+      upo_destroy_list(adj_list);
     }
     padri=malloc(sizeof(int)*(tail_queue+1));
     assert(padri!=NULL);
@@ -106,9 +111,11 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
   padri[((*vertex_visitati)++)]=vertex;
   upo_list_t adj_list=upo_get_adj_vert(graph, vertex);
   upo_list_node* adj_list_copy=adj_list->head;
+  int* vertex_pointer=NULL;
   while (adj_list!=NULL) {
     if (adj_list_copy->element!=NULL){
-      if (color[adj_list_copy->element]==WHITE) upo_DFS_par(graph, adj_list_copy->element, color, padri, vertex_visitati, last_free, f);
+      vertex_pointer= (int*)adj_list_copy->element;
+      if (color[(*vertex_pointer)]==WHITE) upo_DFS_par(graph, (*vertex_pointer), color, padri, vertex_visitati, last_free, f);
     }
   }
   upo_destroy_list(adj_list);
@@ -151,21 +158,25 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color){
   color[vertex]=GREY;
   int i;
   upo_list_node* adj_list_copy=NULL;
+  int* vertex_pointer=NULL;
   upo_list_t adj_list=upo_get_adj_vert(graph, vertex);
   adj_list_copy=adj_list->head;
   for (i=0; i<adj_list->logicalLength; i++){
-    if (color[adj_list_copy->element]==WHITE){
-      if (upo_visit_ric_cyclic(graph, adj_list_copy->element, color)==TRUE){
-        /** non capisco lo pseudocodice Pgreca[v]<-u */
+    if(adj_list_copy->element!=NULL){
+      vertex_pointer=(int*)adj_list_copy->element;
+      if (color[(*vertex_pointer)]==WHITE){
+        if (upo_visit_ric_cyclic(graph, (*vertex_pointer), color)==TRUE){
+          /** non capisco lo pseudocodice Pgreca[v]<-u */
+          upo_destroy_list(adj_list);
+          return TRUE;
+        }
+      }
+      else if (color[(*vertex_pointer)]==WHITE){
         upo_destroy_list(adj_list);
         return TRUE;
       }
+      adj_list_copy=adj_list_copy->next;
     }
-    else if (color[adj_list_copy->element]==WHITE){
-      upo_destroy_list(adj_list);
-      return TRUE;
-    }
-    adj_list_copy=adj_list_copy->next;
   }
   color[vertex]=BLACK;
   upo_destroy_list(adj_list);
