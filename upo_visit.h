@@ -36,7 +36,7 @@ int* upo_DFS_tot(upo_dirgraph_t graph);
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* dim_visitati);
+void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, int* last_free, int* f);
 
 /**
  * @brief Controlla se un grafo graph contiene dei cicli

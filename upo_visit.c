@@ -28,17 +28,17 @@ int* upo_BFS(upo_dirgraph_t graph, int source) {
     upo_list_node* edge_copy = NULL;
     for(i=0; i<graph->n; i++);{/**ciclo che inizializza a WHITE gli elementi di color e queue  a -1*/
       color[i]= WHITE;
-      queue[i]=-1;
+      queue[i]=-2;
     }
     color[source]=GREY;/**source diventa GREY*/
     queue[tail_queue++]=source;/**inserisco in coda source e incremento tail_quee*/
-    while(queue[head_quee]!=-1){
+    while(queue[head_queue]!=-1){
       edge=upo_get_inc_out_edg(graph, queue[head_queue]);/**creo la lista degli archi uscenti dal vertice in testa alla coda*/
       edge_copy=edge->head;
       while (edge!=NULL){
         if (color[edge_copy->element->to]==WHITE){/**se il colore del vertice puntato WHITE*/
           color[edge_copy->element->to]=GREY;/**coloro il vertice di GREY*/
-          quee[tail_queue++]=edge_copy->element->to;/**inserisco il vertice in coda e incremento la fine coda*/
+          queue[tail_queue++]=edge_copy->element->to;/**inserisco il vertice in coda e incremento la fine coda*/
         }
         edge_copy=edge_copy->next;
         color[queue[head_queue++]] = BLACK;/**coloro di BLACK il nodo in testa alla coda e faccio avanzare la coda*/
@@ -102,13 +102,13 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
 void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, int* last_free, int* f){
   if(upo_is_graph_empty(graph)!=0) return ;/**controllo che esista e non sia vuoto il grafo*/
   if (((*vertex_visitati)+1)==graph->n);/**caso di terminazione ho visitato tutti i nodi*/
-  upo_list_node* adj_list_copy=adj_list->head;
   color[vertex]=GREY;
   padri[((*vertex_visitati)++)]=vertex;
   upo_list_t adj_list=upo_get_adj_vert(graph, vertex);
+  upo_list_node* adj_list_copy=adj_list->head;
   while (adj_list!=NULL) {
     if (adj_list_copy->element!=NULL){
-      if (color[adj_list_copy->element]==WHITE) timer = upo_DFS_par(graph, adj_list_copy->element, color, padri, vertex_visitati, last_free, f);
+      if (color[adj_list_copy->element]==WHITE) upo_DFS_par(graph, adj_list_copy->element, color, padri, vertex_visitati, last_free, f);
     }
   }
   upo_destroy_list(adj_list);
@@ -134,7 +134,7 @@ int upo_cyclic(upo_dirgraph_t graph) {
   for(vertex = 0; vertex<graph->n; vertex++){
     if (color[vertex]==WHITE && upo_visit_ric_cyclic(graph, vertex, color)) return TRUE;
   }
-  else return FALSE;
+  return FALSE;
 }
 
 /**
@@ -155,7 +155,7 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color){
   adj_list_copy=adj_list->head;
   for (i=0; i<adj_list->logicalLength; i++){
     if (color[adj_list_copy->element]==WHITE){
-      if (upo_visit_ric_cyclic(graph, adj_list_copy->element)){
+      if (upo_visit_ric_cyclic(graph, adj_list_copy->element, color)==TRUE){
         /** non capisco lo pseudocodice Pgreca[v]<-u */
         upo_destroy_list(adj_list);
         return TRUE;
@@ -215,8 +215,8 @@ int* upo_topological_sort(upo_dirgraph_t graph) {
     else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
   }
   while(end==0);
-  for (i=0; ì<graph->n; i++) temp[graph->n-(i+1)]= ord_topologico[i]; /**copio in ordine invertito in temp*/
-  for (i=0; ì<graph->n; i++) ord_topologico[i]= temp[i]; /** copio ordinatamente in ord_topologico*/
+  for (i=0; i<graph->n; i++) temp[graph->n-(i+1)]= ord_topologico[i]; /**copio in ordine invertito in temp*/
+  for (i=0; i<graph->n; i++) ord_topologico[i]= temp[i]; /** copio ordinatamente in ord_topologico*/
   return ord_topologico;
 }
 
@@ -248,7 +248,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     }
 
     do{
-      upo_DFS_par(graph, vertex, color, temp, &vertex_visitati, last_free, f);
+      upo_DFS_par(graph, vertex, color, temp, &vertex_visitati, &last_free, f);
       for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
       if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
       else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
@@ -273,7 +273,8 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
  */
 int upo_dirgraph_trasposto (upo_dirgraph_t sorgente, upo_dirgraph_t trasposto){
   int i=0;
-  if(upo_is_graph_empty(graph)!=FALSE)  return -1;
+  int j=0;
+  if(upo_is_graph_empty(sorgente)!=FALSE)  return -1;
   trasposto=upo_dirgraph_create(sorgente->n);
   for (i=0; i<sorgente->n; i++) upo_add_vertex(trasposto);
   for (i=0; i<sorgente->n; i++){
