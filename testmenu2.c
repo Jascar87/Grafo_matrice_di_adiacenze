@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "upo_dir_graph_adj_matrix.c"
+//#include "upo_dir_graph_adj_matrix.c" /*ELIMINARE*/
 #include "upo_visit.c"
-#include "upo_list.c"
+//#include "upo_list.c" /*ELIMINARE*/
 #define TRUE 1
 #define FALSE 0
 
