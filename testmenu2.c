@@ -1,7 +1,5 @@
 #include <stdio.h>
-//#include "upo_dir_graph_adj_matrix.c" /*ELIMINARE*/
 #include "upo_visit.c"
-//#include "upo_list.c" /*ELIMINARE*/
 #define TRUE 1
 #define FALSE 0
 
@@ -522,9 +520,10 @@ void graph_operations(upo_dirgraph_t* graph) {
 }
 
 void graph_proprietis_operations(upo_dirgraph_t* graph) {
-    upo_dirgraph_t* graph_T;
+    upo_dirgraph_t* graph_T; /* grafo trasposto */
     int digit = 0;
     int source = 0;
+    int* padri;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
@@ -532,7 +531,8 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
-                //upo_BFS(graph, source);
+                padri = upo_BFS(graph, source);
+                
                 break;
             case 2 :
                 //upo_DFS_tot(*graph);
