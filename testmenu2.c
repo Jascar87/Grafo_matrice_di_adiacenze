@@ -8,6 +8,18 @@ void selection(int* digit) {
     scanf("%d", digit);
 }
 
+void stampa_vet(int* vet, int dim){
+  int i;
+  for(i = 0; i < dim; i++){
+    if(i == dim-1){
+      printf("%d\n", vet[i]);
+    }
+    else{
+      printf("%d |/t", vet[i]);
+    }
+  }
+}
+
 void print_edg_menu_list() {
   printf("\n\t\tMenu archi:\n\t1\tCrea un arco tra due vertici\n\t2\tRimuovi un arco\n\t3\tControlla la presenza di un arco\n\t4\tStampa gli archi uscenti da un dato vertice\n\t5\tStampa gli archi entranti in un dato vertice\n\t6\tStampa gli archi incidenti un dato vertice\n\t0\tTorna al menu precedente\n");
 }
@@ -524,6 +536,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
     int source = 0;
     int* padri;
+    int num_elementi;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
@@ -531,14 +544,19 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
-                padri = upo_BFS(graph, source);
-                
+                padri = upo_BFS(*graph, source);
+                num_elementi = sizeof(padri)/sizeof(int);
+                printf("Vettore dei padri:\n");
+                stampa_vet(padri, num_elementi);
                 break;
             case 2 :
-                //upo_DFS_tot(*graph);
+                padri = upo_DFS_tot(*graph);
+                num_elementi = sizeof(padri)/sizeof(int);
+                printf("Vettore dei padri:\n");
+                stampa_vet(padri, num_elementi);
                 break;
             case 3 :
-                if(upo_cyclic(graph) == 0){
+                if(upo_cyclic(*graph) == 0){
                   printf("Il grafo non contiene cicli\n");
                 }
                 else{
@@ -546,12 +564,12 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 4 :
-                /*if(upo_is_DAG(*graph) == 1){
+                if(upo_is_DAG(*graph) == 1){
                   printf("Il grafo e' un DAG\n");
                 }
                 else{
                   printf("Il grafo non e' un DAG\n");
-                }*/
+                }
                 break;
             case 5 :
                 //upo_topological_sort(*graph);
