@@ -535,7 +535,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
     upo_dirgraph_t* graph_T; /* grafo trasposto */
     int digit = 0;
     int source = 0;
-    int* padri;
+    int* vet;
     int num_elementi;
     while (TRUE) {
         print_graph_proprietis_menu_list();
@@ -544,16 +544,16 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
-                padri = upo_BFS(*graph, source);
+                *vet = upo_BFS(*graph, source);
                 num_elementi = sizeof(padri)/sizeof(int);
                 printf("Vettore dei padri:\n");
-                stampa_vet(padri, num_elementi);
+                stampa_vet(*vet, num_elementi);
                 break;
             case 2 :
-                padri = upo_DFS_tot(*graph);
+                *vet = upo_DFS_tot(*graph);
                 num_elementi = sizeof(padri)/sizeof(int);
                 printf("Vettore dei padri:\n");
-                stampa_vet(padri, num_elementi);
+                stampa_vet(*vet, num_elementi);
                 break;
             case 3 :
                 if(upo_cyclic(*graph) == 0){
@@ -572,7 +572,10 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 5 :
-                //upo_topological_sort(*graph);
+                *vet = upo_topological_sort(*graph);
+                num_elementi = sizeof(padri)/sizeof(int);
+                printf("Ordinamento Topologico:\n");
+                stampa_vet(*vet, num_elementi);
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
