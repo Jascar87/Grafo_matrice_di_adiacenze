@@ -36,22 +36,30 @@
      padri[scoperti-1]=source;
 
      while(upo_list_size(queue)>0){
+       for(i=0; i<graph->n;i++) printf("vert %d color %d\n",i,color[i]);//debug
+       printf("\n");//debug
        adj_list=upo_get_adj_vert(graph, *((int*)upo_get_first(queue)));
+       printf("vert %d adj_list_size %d\n\n", *((int*)upo_get_first(queue)), upo_list_size(adj_list));//debug
        while (upo_list_size(adj_list)>0){/**scorro tutta la lista di adiacienza del nodo analizzato*/
          vertex=*((int*)upo_remove_first(adj_list));
          if (color[vertex]==WHITE){/**se il colore del vertice considerato e' WHITE*/
            color[vertex]=GREY;/**coloro il vertice di GREY*/
-           upo_add_last(queue, &vertex);/**inserisco il vertice in coda*/
+           int *newTail = malloc(sizeof(int));
+           *newTail = vertex;
+           upo_add_last(queue, &(*newTail));/**inserisco il vertice in coda*/
+            printf("\t\tnew tail %d\n", *((int*)upo_get_last(queue)));
            scoperti++;
            padri=realloc(padri, sizeof(int)*scoperti);
            assert(padri!=NULL);
            padri[scoperti-1]=vertex;
          }
        }
+
        color[*((int*)upo_remove_first(queue))] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
      }
 
-     for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
+     //for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
+     for(i=0; i<graph->n;i++) printf("vert %d color %d\n",i,color[i]);
      padri=realloc(padri, sizeof(int)*(scoperti+1));
      assert(padri!=NULL);
      padri[scoperti]=-1;
