@@ -51,7 +51,7 @@
      padri=malloc(sizeof(int)*scoperti);
      assert(padri!=NULL);
 
-     for(i=0; i<upo_list_size(list_scoperti), i++) padri[i++]=*((int*)upo_remove_first(list_scoperti));/**copio i valori dalla lista al vettore dei padri*/
+     for(i=0; i<upo_list_size(list_scoperti), i++) padri[i]=*((int*)upo_remove_first(list_scoperti));/**copio i valori dalla lista al vettore dei padri*/
      for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
      return padri;/**restiruisco i padri*/
  }
