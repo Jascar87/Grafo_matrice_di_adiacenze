@@ -55,7 +55,9 @@
          }
        }
 
-       color[*((int*)upo_remove_first(queue))] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
+       color[*((int*)upo_get_first(queue))] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
+       
+       free(upo_remove_first(queue));
      }
 
      //for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
