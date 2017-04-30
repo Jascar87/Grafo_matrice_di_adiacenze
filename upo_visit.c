@@ -63,6 +63,7 @@
      padri=realloc(padri, sizeof(int)*(scoperti+1));
      assert(padri!=NULL);
      padri[scoperti]=-1;
+     upo_destroy_list(queue);
      return padri;/**restiruisco i padri*/
  }
 
