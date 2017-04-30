@@ -31,8 +31,9 @@
      color[source]=GREY;/**source diventa GREY*/
      upo_add_last(queue, &source);/**inserisco in coda source*/
      scoperti++;
-     list_scoperti=upo_create_list(sizeof(int),NULL);
-     upo_add_last(list_scoperti, &source);
+     padri=realloc(padri, sizeof(int)*scoperti);
+     assert(padri!=NULL);
+     padri[scoperti-1]=source;
 
      while(upo_list_size(queue)>0){
        adj_list=upo_get_adj_vert(graph, *((int*)upo_get_first(queue)));
@@ -42,16 +43,14 @@
            color[vertex]=GREY;/**coloro il vertice di GREY*/
            upo_add_last(queue, &vertex);/**inserisco il vertice in coda*/
            scoperti++;
-           upo_add_last(list_scoperti, &vertex);/**inserisco il vertice nella lista scoperti*/
+           padri=realloc(padri, sizeof(int)*scoperti);
+           assert(padri!=NULL);
+           padri[scoperti-1]=vertex;
          }
        }
        color[*((int*)upo_remove_first(queue))] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
      }
 
-     padri=malloc(sizeof(int)*scoperti);
-     assert(padri!=NULL);
-
-     for(i=0; i<upo_list_size(list_scoperti); i++) padri[i]=*((int*)upo_remove_first(list_scoperti));/**copio i valori dalla lista al vettore dei padri*/
      for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
      return padri;/**restiruisco i padri*/
  }
