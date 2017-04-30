@@ -16,45 +16,44 @@
  * @return il vettore dei padri dell'albero di visita, NULL se il grafo e' vuoto.
  *
  */
-int* upo_BFS(upo_dirgraph_t graph, int source) {
-    if(upo_is_graph_empty(graph)!=0) return NULL;/**controllo che esista e non sia vuoto il grafo*/
-    int color[graph->n];/**vettore per identificare i colori dei nodi*/
-    upo_list_t queue = NULL;
-    int *padri=NULL;/**puntatore per il vettore dei padri*/
-    int i;
-    int vertex=-1;
-    int scoperti=0;
-    upo_list_t list_scoperti=NULL;
-    upo_list_t adj_list=NULL;
-    queue = upo_create_list(sizeof(int),NULL);
-    for(i=0; i<graph->n; i++) color[i]= WHITE;/**ciclo che inizializza a WHITE gli elementi di color*/
-    color[source]=GREY;/**source diventa GREY*/
-    upo_add_last(queue, &source);/**inserisco in coda source*/
-    scoperti++;
-    list_scoperti=upo_create_list(sizeof(int),NULL);
-    upo_add_last(list_scoperti, &source);
+ int* upo_BFS(upo_dirgraph_t graph, int source) {
+     if(upo_is_graph_empty(graph)!=0) return NULL;/**controllo che esista e non sia vuoto il grafo*/
+     int color[graph->n];/**vettore per identificare i colori dei nodi*/
+     upo_list_t queue = NULL;
+     int *padri=NULL;/**puntatore per il vettore dei padri*/
+     int i;
+     int vertex=-1;
+     int scoperti=0;
+     upo_list_t list_scoperti=NULL;
+     upo_list_t adj_list=NULL;
+     queue = upo_create_list(sizeof(int),NULL);
+     for(i=0; i<graph->n; i++) color[i]= WHITE;/**ciclo che inizializza a WHITE gli elementi di color*/
+     color[source]=GREY;/**source diventa GREY*/
+     upo_add_last(queue, &source);/**inserisco in coda source*/
+     scoperti++;
+     list_scoperti=upo_create_list(sizeof(int),NULL);
+     upo_add_last(list_scoperti, &source);
 
-    while(((int)upo_list_size(queue))>0){
-      adj_list=upo_get_adj_vert(graph, (int)upo_get_first(queue));
-      while (((int)upo_list_size(adj_list))>0){/**scorro tutta la lista di adiacienza del nodo analizzato*/
-        vertex=(int)upo_get_first(adj_list);
-        if (color[vertex]==WHITE){/**se il colore del vertice considerato e' WHITE*/
-          color[vertex]=GREY;/**coloro il vertice di GREY*/
-          upo_add_last(queue, &vertex);/**inserisco il vertice in coda*/
-          scoperti++;
-          upo_add_last(list_scoperti, &vertex);/**inserisco il vertice nella lista scoperti*/
-        }
-        upo_remove_first(adj_list);/**finito il ciclo rimuovo l'elemento considerato dalla lista di adj*/
-      }
+     while(upo_list_size(queue)>0){
+       adj_list=upo_get_adj_vert(graph, *((int*)upo_get_first(queue)));
+       while (upo_list_size(adj_list)>0){/**scorro tutta la lista di adiacienza del nodo analizzato*/
+         vertex=*((int*)upo_remove_first(adj_list));
+         if (color[vertex]==WHITE){/**se il colore del vertice considerato e' WHITE*/
+           color[vertex]=GREY;/**coloro il vertice di GREY*/
+           upo_add_last(queue, &vertex);/**inserisco il vertice in coda*/
+           scoperti++;
+           upo_add_last(list_scoperti, &vertex);/**inserisco il vertice nella lista scoperti*/
+         }
+       }
+       color[*((int*)upo_remove_first(queue))] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
+     }
 
-      color[(int)upo_remove_first(queue)] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
-    }
-
-    padri=malloc(sizeof(int)*scoperti);
-    assert(padri!=NULL);
-    while(((int)upo_list_size(list_scoperti))>0) padri[i++]=(int)upo_remove_first(list_scoperti);/**copio i valori dalla lista al vettore dei padri*/
-    return padri;/**restiruisco i padri*/
-}
+     padri=malloc(sizeof(int)*scoperti);
+     assert(padri!=NULL);
+     while(((int)upo_list_size(list_scoperti))>0) padri[i++]=*((int*)upo_remove_first(list_scoperti));/**copio i valori dalla lista al vettore dei padri*/
+     for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
+     return padri;/**restiruisco i padri*/
+ }
 
 /**
  * @brief Effettua una visita in profondita' DFS totale ricorsiva di un grafo graph
