@@ -52,6 +52,9 @@
      }
 
      for(i=0; i<scoperti; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
+     padri=realloc(padri, sizeof(int)*(scoperti+1));
+     assert(padri!=NULL);
+     padri[scoperti]=-1;
      return padri;/**restiruisco i padri*/
  }
 
