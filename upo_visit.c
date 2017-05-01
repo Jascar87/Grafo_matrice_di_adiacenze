@@ -87,14 +87,20 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
   int vett_elemento_corrente[graph->n];
   for (i=0; i<graph->n; i++) color[i]=WHITE;/**ciclo che inizializza a WHITE gli elementi di color e adj_vector  a NULL*/
 
-  do{
-    upo_DFS_par(graph, &vertex, color, padri, &vertex_visitati, NULL);
+  while(end==0){
+    printf("vertex %d\n", vertex);
+    printf("TOT vertex_visitati = %d\n", vertex_visitati);
+    padri=realloc(padri, (sizeof(int)*(vertex_visitati+1)));/**alloco lo spazio per un nuovo elemento del vettore dei padri*/
+    assert(padri!=NULL);
+    padri[vertex_visitati] = vertex;
+    printf("padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);
+    upo_DFS_par(graph, vertex, color, padri, &vertex_visitati, NULL);
+    color[vertex]=BLACK;
     for(i=vertex; i<graph->n && color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
     if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
-    else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
+    else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE individuato*/
     printf("\t\t vertex: %d\n", vertex);
   }
-  while(end==0);
 
   for(i=0; i<graph->n; i++) printf("vert %d color %d\n",i,color[i]);
   for(i=0; i<graph->n; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
@@ -110,34 +116,42 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
  * @param color e' il vettore che memorizza lo stato dei vettori
  * @param padri e' il vettore che tiene l'ordina di visita
  * @param vertex_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
- * @param f è la lista che tiene traccia del ordine di chiusura dei nodi, l'ordine e'decrescente
+ * @param f è la lista che tiene traccia del ordine di chiusura dei nodi, l'ordine e'decrescente (viene gestita la lista se e solo se f è una lista "creata")
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int* vertex, int* color, int* padri, int* vertex_visitati, upo_list_t f){
+void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, upo_list_t f){
   int* vertex_corrente=NULL;
   upo_list_t adj_list=NULL;
   if(upo_is_graph_empty(graph)!=0) return;/**controllo che esista e non sia vuoto il grafo*/
   if (((*vertex_visitati)+1)==graph->n) return;/**caso di terminazione ho visitato tutti i nodi*/
   adj_list = upo_create_list(sizeof(int),NULL);
-  printf("vertex: %d\n", *vertex);
-  color[*vertex]=GREY;
+  printf("vertex: %d\n", vertex);
+  color[vertex]=GREY;
+  printf("color di indice %d e' %d\n", vertex, color[vertex]);
   (*vertex_visitati)++;
-  padri=realloc(padri, sizeof(int)*(*vertex_visitati));
-  assert(padri!=NULL);
-  padri[(*vertex_visitati)-1]= (*vertex);
-  printf("padri di indice %d e' %d\n", *vertex_visitati, padri[*vertex_visitati]);
-  adj_list=upo_get_adj_vert(graph, *vertex);
+/**
+ * visita di vertex
+ */
+  adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
     vertex_corrente=upo_get_first(adj_list);
-    printf("vertex_corrente %d\n", *vertex_corrente);
-    if (color[(*vertex_corrente)]==WHITE) upo_DFS_par(graph, vertex_corrente, color, padri, vertex_visitati, f);
+    if (color[(*vertex_corrente)]==WHITE){
+      printf("vertex_corrente %d\n", *vertex_corrente);
+        printf("\tPAR vertex_visitati = %d\n", *vertex_visitati);
+      padri=realloc(padri, sizeof(int)*((*vertex_visitati)+1));/**alloco lo spazio per un nuovo elemento del vettore dei padri*/
+      assert(padri!=NULL);
+      padri[*vertex_visitati] = (*vertex_corrente);
+      printf("padri di indice %d e' %d\n", *vertex_visitati, padri[*vertex_visitati]);
+      upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, f);
+    }
     upo_remove_first(adj_list);
   }
   upo_destroy_list(adj_list);
-  color[*vertex]=BLACK;
-  if(f!=NULL) upo_add_first(f, vertex);
+  color[vertex]=BLACK;
+  printf("color di indice %d e' %d\n", vertex, color[vertex]);
+  if(f!=NULL) upo_add_first(f, &vertex);
 }
 
 /**
@@ -233,7 +247,7 @@ int* upo_topological_sort(upo_dirgraph_t graph) {
     vett_elemento_corrente[i]=i;
   }
   do{
-    upo_DFS_par(graph, &vett_elemento_corrente[vertex], color, ord_topologico, &vertex_visitati, f);
+    upo_DFS_par(graph, vett_elemento_corrente[vertex], color, ord_topologico, &vertex_visitati, f);
     for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
     if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
     else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
@@ -272,7 +286,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     }
 
     do{
-      upo_DFS_par(graph, &vett_elemento_corrente[vertex], color, temp, &vertex_visitati, f);
+      upo_DFS_par(graph, vett_elemento_corrente[vertex], color, temp, &vertex_visitati, f);
       for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
       if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
       else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
