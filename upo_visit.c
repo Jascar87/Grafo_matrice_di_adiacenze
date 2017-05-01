@@ -174,7 +174,7 @@ int upo_cyclic(upo_dirgraph_t graph) {
   for(vertex = 0; vertex<graph->n; vertex++) {
     if (color[vertex]==WHITE && (upo_visit_ric_cyclic(graph, vertex, color, predecessori)==TRUE)) return TRUE;
   }
-  return FALSE;
+   return FALSE;
 }
 
 /**
@@ -203,7 +203,7 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* pred
         return TRUE;
       }
     }
-    else if (*vertex_corrente!=predecessori[vertex]){
+    else if (color[*vertex_corrente]==GREY){
       upo_destroy_list(adj_list);
       return TRUE;
     }
