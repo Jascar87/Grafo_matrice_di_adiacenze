@@ -139,7 +139,7 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
     vertex_corrente=upo_get_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
       printf("vertex_corrente %d\n", *vertex_corrente);
-        printf("\tPAR vertex_visitati = %d\n", *vertex_visitati);
+      printf("\tPAR vertex_visitati = %d\n", *vertex_visitati);
       padri=realloc(padri, sizeof(int)*((*vertex_visitati)+1));/**alloco lo spazio per un nuovo elemento del vettore dei padri*/
       assert(padri!=NULL);
       padri[*vertex_visitati] = (*vertex_corrente);
@@ -164,13 +164,15 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
 int upo_cyclic(upo_dirgraph_t graph) {
   if (graph==NULL) return -1;
   int i = 0;
+  int predecessori[graph->n];
   int color[graph->n];/**vettore per identificare i colori dei nodi*/
   int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
   for(i = 0; i<graph->n; i++){
-    color[i]=GREY;
+    color[i]=WHITE;
+    predecessori[1]=-1;
   }
-  for(vertex = 0; vertex<graph->n; vertex++){
-    if (color[vertex]==WHITE && upo_visit_ric_cyclic(graph, vertex, color)) return TRUE;
+  for(vertex = 0; vertex<graph->n; vertex++) {
+    if (color[vertex]==WHITE && (upo_visit_ric_cyclic(graph, vertex, color, predecessori)==TRUE)) return TRUE;
   }
   return FALSE;
 }
@@ -181,26 +183,27 @@ int upo_cyclic(upo_dirgraph_t graph) {
  * @param graph il grafo da esaminare
  * @param vertex è il vertice che stiamo considerando
  * @param color è il vettore che memorizza lo stato dei vettori
+ * @param predecessori è il vettore che memorizza i predecessori
  * @return 1 se il grafo presenta un arco all'indietro se no 0
  *
  */
 
-int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color){
+int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* predecessori){
   color[vertex]=GREY;
   int i;
-  upo_list_node* adj_list_copy=NULL;
-  int* vertex_pointer=NULL;
-  upo_list_t adj_list=upo_get_adj_vert(graph, vertex);
-  adj_list=upo_create_list(sizeof(int),NULL);
+  int* vertex_corrente=NULL;
+  upo_list_t adj_list=upo_create_list(sizeof(int),NULL);
+  adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
-    vertex_pointer=upo_remove_first(adj_list);
-    if (color[(*vertex_pointer)]==WHITE){
-      if (upo_visit_ric_cyclic(graph, (*vertex_pointer), color)==TRUE){
+    vertex_corrente=upo_remove_first(adj_list);
+    if (color[(*vertex_corrente)]==WHITE){
+      predecessori[*vertex_corrente]=vertex;
+      if (upo_visit_ric_cyclic(graph, *vertex_corrente, color, predecessori)==TRUE){
         upo_destroy_list(adj_list);
         return TRUE;
       }
     }
-    else if (color[(*vertex_pointer)]==WHITE){
+    else if (*vertex_corrente!=predecessori[vertex]){
       upo_destroy_list(adj_list);
       return TRUE;
     }

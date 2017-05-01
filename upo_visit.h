@@ -54,11 +54,12 @@ int upo_cyclic(upo_dirgraph_t graph);
  * @param graph il grafo da esaminare
  * @param vertex è il vertice che stiamo considerando
  * @param color è il vettore che memorizza lo stato dei vettori
+ * @param predecessori è il vettore che memorizza i predecessori
  * @return 1 se il grafo presenta un arco all'indietro se no 0
  *
  */
 
-int upo_visit_ric_cyclic(upo_dirgraph_t graph,int vertex,int* color);
+int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* predecessori);
 
 /**
  * @brief Controlla se un grafo graph e' un DAG (partendo dall'assunzione che sia diretto)
