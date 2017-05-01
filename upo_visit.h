@@ -28,15 +28,16 @@ int* upo_DFS_tot(upo_dirgraph_t graph);
  * @brief Effettua una visita in profondita' DFS parziale ricorsiva di un grafo graph
  *
  * @param graph il grafo da visitare
- * @param vertex è il verice sorgente
- * @param color è il vettore che memorizza lo stato dei vettori
- * @param padri è il vettore che tiene l'ordina di visita
- * @param dim_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
+ * @param vertex e' il puntatore del vertice sorgente
+ * @param color e' il vettore che memorizza lo stato dei vettori
+ * @param padri e' il vettore che tiene l'ordina di visita
+ * @param vertex_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
+ * @param f è la lista che tiene traccia del ordine di chiusura dei nodi, l'ordine e'decrescente
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, int* last_free, int* f);
+void upo_DFS_par(upo_dirgraph_t graph, int* vertex, int* color, int* padri, int* vertex_visitati, upo_list_t f);
 
 /**
  * @brief Controlla se un grafo graph contiene dei cicli
