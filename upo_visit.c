@@ -22,47 +22,48 @@
      upo_list_t queue = NULL;
      int *padri=NULL;/**puntatore per il vettore dei padri*/
      int i;
-     int vertex=-1;
+     int *vertex=NULL;
+     int *vertex_corrente=NULL;
      int scoperti=0;
+     int vett_elemento_corrente[graph->n];/**vettore che associa alla cella i-esima il numero i-esimo*/
      upo_list_t adj_list=NULL;
+     padri=malloc(sizeof(int)*(graph->n));
+     assert(padri!=NULL);
      queue = upo_create_list(sizeof(int),NULL);
-     for(i=0; i<graph->n; i++) color[i]= WHITE;/**ciclo che inizializza a WHITE gli elementi di color*/
+     for(i=0; i<graph->n; i++) {/**ciclo che inizializza a WHITE gli elementi di color e il vetore dei padri a -1 e il vettore degli elementi correnti*/
+       color[i]= WHITE;
+       padri[i]=-1;
+       vett_elemento_corrente[i]=i;
+     }
      color[source]=GREY;/**source diventa GREY*/
      upo_add_last(queue, &source);/**inserisco in coda source*/
-     scoperti++;
-     padri=realloc(padri, sizeof(int)*scoperti);
-     assert(padri!=NULL);
-     padri[scoperti-1]=source;
-
      while(upo_list_size(queue)>0){
        for(i=0; i<graph->n;i++) printf("vert %d color %d\n",i,color[i]);//debug
        printf("\n");//debug
-       adj_list=upo_get_adj_vert(graph, *((int*)upo_get_first(queue)));
-       printf("vert %d adj_list_size %d\n\n", *((int*)upo_get_first(queue)), upo_list_size(adj_list));//debug
+       vertex=upo_remove_first(queue);
+       printf("INIZIO CICLO WHILE ESTERNO vertex: %d\n", *vertex);//debug
+       adj_list=upo_get_adj_vert(graph, *vertex);
+       printf("INIZIO CICLO WHILE ESTERNO vert %d adj_list_size %d\n\n", *vertex, upo_list_size(adj_list));//debug
        while (upo_list_size(adj_list)>0){/**scorro tutta la lista di adiacienza del nodo analizzato*/
-         vertex=*((int*)upo_remove_first(adj_list));
-         if (color[vertex]==WHITE){/**se il colore del vertice considerato e' WHITE*/
-           color[vertex]=GREY;/**coloro il vertice di GREY*/
-           int *newTail = malloc(sizeof(int));
-           *newTail = vertex;
-           upo_add_last(queue, &(*newTail));/**inserisco il vertice in coda*/
-            printf("\t\tnew tail %d\n", *((int*)upo_get_last(queue)));
-           scoperti++;
-           padri=realloc(padri, sizeof(int)*scoperti);
-           assert(padri!=NULL);
-           padri[scoperti-1]=vertex;
+         vertex_corrente=upo_remove_first(adj_list);
+         printf("\tINIZIO CICLO WHILE INTERNO vertex_corrente \n", *vertex_corrente);//debug
+         if (color[*vertex_corrente]==WHITE){/**se il colore del vertice considerato e' WHITE*/
+           color[*vertex_corrente]=GREY;/**coloro il vertice di GREY*/
+           printf("\t\t RAMO IF color[%d]: %d\n", *vertex_corrente, color[*vertex_corrente]);//debug
+           upo_add_last(queue, &vett_elemento_corrente[*vertex_corrente]);/**inserisco la copia del valore puntato da vertex_corrente in coda*/
+           printf("\t\t RAMO IF indirizzo vett_elemento_corrente[0]: %d\n",  &vett_elemento_corrente[0]);//debug
+           printf("\t\t RAMO IF vett_elemento_corrente[%d]: %d, indirizzo di memoria: %d \n", *vertex_corrente, vett_elemento_corrente[*vertex_corrente], &vett_elemento_corrente[*vertex_corrente]);//debug
+           padri[*vertex_corrente] = *vertex;
+           printf("\t\t RAMO IF padri[%d]: %d\n", *vertex_corrente, padri[*vertex_corrente]);//debug
          }
        }
-
-       color[*((int*)upo_get_first(queue))] = BLACK;/**finito il ciclo rimuovo l'elemento considerato dalla coda e lo coloro di BLACK*/
-
-       free(upo_remove_first(queue));
+       color[*vertex] = BLACK;/**finito il ciclo l'elemento considerato lo coloro di BLACK*/
+       printf("FINE CICLO WHILE ESTERNO color[%d]: %d\n", *vertex, color[*vertex] );//debug
      }
-
-     padri=realloc(padri, sizeof(int)*(scoperti+1));
-     assert(padri!=NULL);
-     padri[scoperti]=-1;
+     upo_destroy_list(adj_list);
      upo_destroy_list(queue);
+     for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
+     for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
      return padri;/**restiruisco i padri*/
  }
 
@@ -82,28 +83,29 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
   int i;
   int last_free = graph->n -1;/**variabile che tiene traccia dell'ultima posizione libera di last_free*/
   int end = 0;
-  int *padri=NULL;/**puntatore per il vettore dei padri*/
+  int* padri=NULL;/**puntatore al vettore dei padri*/
   int vertex_visitati=0;
   int vett_elemento_corrente[graph->n];
-  for (i=0; i<graph->n; i++) color[i]=WHITE;/**ciclo che inizializza a WHITE gli elementi di color e adj_vector  a NULL*/
-
+  padri=malloc(sizeof(int)*(graph->n));
+  assert(padri!=NULL);
+  for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
+    color[i]=WHITE;
+    padri[i]=-1;
+  }
   while(end==0){
-    printf("vertex %d\n", vertex);
-    printf("TOT vertex_visitati = %d\n", vertex_visitati);
-    padri=realloc(padri, (sizeof(int)*(vertex_visitati+1)));/**alloco lo spazio per un nuovo elemento del vettore dei padri*/
-    assert(padri!=NULL);
-    padri[vertex_visitati] = vertex;
-    printf("padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);
+    printf("TOT inizio ciclo vertex: %d\n", vertex);//debug
+    printf("TOT inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
+    printf("TOT padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
     upo_DFS_par(graph, vertex, color, padri, &vertex_visitati, NULL);
     color[vertex]=BLACK;
     for(i=vertex; i<graph->n && color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
     if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
     else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE individuato*/
-    printf("\t\t vertex: %d\n", vertex);
+    printf("TOT fine ciclo vertex: %d\n", vertex);//debug
   }
 
-  for(i=0; i<graph->n; i++) printf("vert %d color %d\n",i,color[i]);
-  for(i=0; i<graph->n; i++) printf("elemento %d = %d\n", i+1, padri[i]);//debug
+  for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
+  for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
   return padri;
 
 }
@@ -127,9 +129,9 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
   if(upo_is_graph_empty(graph)!=0) return;/**controllo che esista e non sia vuoto il grafo*/
   if (((*vertex_visitati)+1)==graph->n) return;/**caso di terminazione ho visitato tutti i nodi*/
   adj_list = upo_create_list(sizeof(int),NULL);
-  printf("vertex: %d\n", vertex);
+  printf("\t RICORSIVA vertex: %d\n", vertex);//debug
   color[vertex]=GREY;
-  printf("color di indice %d e' %d\n", vertex, color[vertex]);
+  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
   (*vertex_visitati)++;
 /**
  * visita di vertex
@@ -138,19 +140,17 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
   while(upo_list_size(adj_list)>0){
     vertex_corrente=upo_get_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
-      printf("vertex_corrente %d\n", *vertex_corrente);
-      printf("\tPAR vertex_visitati = %d\n", *vertex_visitati);
-      padri=realloc(padri, sizeof(int)*((*vertex_visitati)+1));/**alloco lo spazio per un nuovo elemento del vettore dei padri*/
-      assert(padri!=NULL);
-      padri[*vertex_visitati] = (*vertex_corrente);
-      printf("padri di indice %d e' %d\n", *vertex_visitati, padri[*vertex_visitati]);
+      printf("\t RICORSIVA vertex_corrente %d\n", *vertex_corrente);//debug
+      printf("\t RICORSIVA vertex_visitati = %d\n", *vertex_visitati);//debug
+      padri[*vertex_corrente] = vertex;
+      printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
       upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, f);
     }
     upo_remove_first(adj_list);
   }
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
-  printf("color di indice %d e' %d\n", vertex, color[vertex]);
+  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
   if(f!=NULL) upo_add_first(f, &vertex);
 }
 
