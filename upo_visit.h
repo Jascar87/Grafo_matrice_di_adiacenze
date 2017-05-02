@@ -81,6 +81,17 @@ int upo_is_DAG(upo_dirgraph_t graph);
 int* upo_topological_sort(upo_dirgraph_t graph);
 
 /**
+ * @brief Crea una copia del grafo sorgente
+ *
+ * @param sorgente è il grafo da cui  si crea la copia
+ * @param copy è il puntatore in cui restituire la copia del grafo creata
+ * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
+ *
+ */
+
+int upo_dirgraph_copy(upo_dirgraph_t sorgente, upo_dirgraph_t copy);
+
+/**
  * @brief Calcola le componenti fortemente connesse di un grafo graph con l'algoritmo di Kosaraju
  * Nota: per comodita', restituiamo la foresta delle cfc. Quando la stampate pero' fate capire che e' un multiinsieme e non una foresta
  *

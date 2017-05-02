@@ -233,32 +233,67 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* pred
  * @return il vettore ord dell'ordinamento topologico di graph
  *
  */
+
 int* upo_topological_sort(upo_dirgraph_t graph) {
-  int color[graph->n];/**vettore per identificare i colori dei nodi*/
-  int d[graph->n]; /**vettore per tenere traccia del tempo di scoperta del nodo i-esimo*/
-  upo_list_t f;/**lista per tenere traccia dell'ordine di chiusura dei nodi*/
-  int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
-  int i;
-  int vett_elemento_corrente[graph->n];
-  int end = 0;
+  upo_dirgraph_t copy_graph=NULL;
+  upo_dirgraph_copy(graph, copy_graph);
   int *ord_topologico=NULL;/**puntatore per il vettore da restituire*/
-  int temp[graph->n]; /**vettore per invertire l'ordine di ord_topologico*/
-  int vertex_visitati=0;
-  f=upo_create_list(sizeof(int),NULL);
-  for (i=0; i<graph->n; i++){/**ciclo che inizializza a WHITE gli elementi di color e vett_elemento_corrente  a NULL*/
-    color[graph->n]=WHITE;
-    vett_elemento_corrente[i]=i;
+  int end_for=0;
+  int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
+  int first_free=0;/**variabile che tiene traccia della prima posizione libera di ord_topologico*/
+  int counter=0; /**variabile che tiene conto delle iterazioni del ciclo for, se diventa == a graph-> posso dedurre che il grafo non e' un DAG*/
+  int i=0;
+  ord_topologico=malloc(sizeof(int)*(copy_graph->n));
+  assert(ord_topologico!=NULL);
+  for (i=0, i<graph->n, i++) ord_topologico[i]=-1 /**inizializzo tutti gli elementi di ord_topologico a -1*/
+  while (first_free<grph->n || counter<copy_graph->n){
+    counter=0;
+    end_for=0;
+    for(vertex=0; vertex<graph->n && end_for == 0; vertex++){
+      if(upo_get_in_degree(copy_graph, vertex)==0){
+        /**
+        * trovare il modo ci calcolare il vertex giusto da associare a ord_topologico
+        * ogni volta che si trova un vertice si va a rimuovere dal grafo copiato
+        * ma in questo modo si abbassa di 1 il "nome" dei vertici maggiori del vertice
+        * rimosso, quindi bisogno ricalcolare il valore corretto.
+        */
+        ord_topologico[first_free++]=vertex;
+        upo_remove_vertex(copy_graph, vertex);
+        end_for=1;
+      }
+      else counter++;
+    }
   }
-  do{
-    upo_DFS_par(graph, vett_elemento_corrente[vertex], color, ord_topologico, &vertex_visitati, f);
-    for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
-    if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
-    else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
+  if (counter==copy_graph->n){/**posso dedurre che il grafo non è un DAG, restituisco NULL*/
+    free(ord_topologico);
+    upo_dirgraph_destroy(copy_graph);
+    return NULL;
   }
-  while(end==0);
-  for (i=0; i<graph->n; i++) temp[graph->n-(i+1)]= ord_topologico[i]; /**copio in ordine invertito in temp*/
-  for (i=0; i<graph->n; i++) ord_topologico[i]= temp[i]; /** copio ordinatamente in ord_topologico*/
+  upo_dirgraph_destroy(copy_graph);
   return ord_topologico;
+}
+
+/**
+ * @brief Crea una copia del grafo sorgente
+ *
+ * @param sorgente è il grafo da cui  si crea la copia
+ * @param copy è il puntatore in cui restituire la copia del grafo creata
+ * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
+ *
+ */
+
+int upo_dirgraph_copy(upo_dirgraph_t sorgente, upo_dirgraph_t copy){
+  int i=0;
+  int j=0;
+  if(upo_is_graph_empty(sorgente)!=FALSE)  return -1;
+  copy=upo_dirgraph_create(sorgente->n);
+  for (i=0; i<sorgente->n; i++) upo_add_vertex(copy);
+  for (i=0; i<sorgente->n; i++){
+    for(j=0; j<sorgente->n; j++){
+      if (sorgente->adj[i][j]==1) copy->adj[i][j]=1;/**se esiste l'arco in sorgente[i][j] allora lo creo in copy[i][j]*/
+    }
+  }
+  return 1;
 }
 
 /**
