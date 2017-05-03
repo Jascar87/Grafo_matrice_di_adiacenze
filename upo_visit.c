@@ -91,18 +91,15 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
     color[i]=WHITE;
     padri[i]=-1;
   }
-  while(end==0){
+  for(i=0; i<graph->n; i++){
     printf("TOT inizio ciclo vertex: %d\n", vertex);//debug
     printf("TOT inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
     printf("TOT padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
-    upo_DFS_par(graph, vertex, color, padri, &vertex_visitati, NULL, NULL);
-    for(i=vertex; i<graph->n && color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
-    if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
-    else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE individuato*/
-    printf("TOT fine ciclo vertex: %d\n", vertex);//debug
+    if(color[i]==WHITE) upo_DFS_par(graph, i, color, padri, &vertex_visitati, NULL, NULL);
+    printf("TOT fine ciclo i: %d\n", i);//debug
   }
 
-  for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
+  for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n", i, color[i]);//debug
   for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
   return padri;
 
