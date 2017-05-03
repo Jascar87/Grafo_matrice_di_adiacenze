@@ -572,7 +572,12 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 5 :
                   ord_topologico = upo_topological_sort(*graph);
                   printf("Ordinamento Topologico:\n");
-                  stampa_vet(ord_topologico, *graph);
+                  if(ord_topologico != NULL){
+                    stampa_vet(ord_topologico, *graph);
+                  }
+                  else{
+                    printf("Il grafo analizzato non e' un DAG\n");
+                  }
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
