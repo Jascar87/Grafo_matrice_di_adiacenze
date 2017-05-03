@@ -32,12 +32,11 @@ int* upo_DFS_tot(upo_dirgraph_t graph);
  * @param color e' il vettore che memorizza lo stato dei vettori
  * @param padri e' il vettore che tiene l'ordina di visita
  * @param vertex_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
- * @param f è la lista che tiene traccia del ordine di chiusura dei nodi, l'ordine e'decrescente
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, upo_list_t f);
+void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati);
 
 /**
  * @brief Controlla se un grafo graph contiene dei cicli
@@ -81,15 +80,22 @@ int upo_is_DAG(upo_dirgraph_t graph);
 int* upo_topological_sort(upo_dirgraph_t graph);
 
 /**
- * @brief Crea una copia del grafo sorgente
+ * @brief Calcola ricorsivamente l'ordine topologico
  *
- * @param sorgente è il grafo da cui  si crea la copia
- * @param copy è il puntatore in cui restituire la copia del grafo creata
- * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
+ * @param graph il grafo da esaminare
+ * @param vertex è il vertice che stiamo considerando
+ * @param ord_topologico è il vettore che memorizza l'ordine topologico
+ * @param predecessori è il vettore che memorizza i predecessori
+ * @param color è il vettore che memorizza lo stato dei vettori
+ * @param last_free è il puntatore alla variabile che memorizza l'ultima cella libera di ord_topologico
+ * @param timer è il puntatore alla variabile che memorizza il tempo
+ * @param d è il puntatore al vettore che tiene traccia del tempo di scoperta dei nodi
+ * @param f è il puntatore al vettore che tiene traccia del tempo di chiusura dei nodi
+ * @return
  *
  */
 
-int upo_dirgraph_copy(upo_dirgraph_t sorgente, upo_dirgraph_t copy);
+void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,int* padri, int*color, int* last_free, int* timer, int* d, int* f);
 
 /**
  * @brief Calcola le componenti fortemente connesse di un grafo graph con l'algoritmo di Kosaraju
@@ -99,6 +105,7 @@ int upo_dirgraph_copy(upo_dirgraph_t sorgente, upo_dirgraph_t copy);
  * @return la foresta delle componenti fortemente connesse restituita dall'algoritmo di Kosaraju
  *
  */
+
 int* upo_strongly_connected_components(upo_dirgraph_t graph);
 
 /**

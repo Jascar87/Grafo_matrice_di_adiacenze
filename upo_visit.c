@@ -81,7 +81,6 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
   int color[graph->n];/**vettore per identificare i colori dei nodi*/
   int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
   int i;
-  int last_free = graph->n -1;/**variabile che tiene traccia dell'ultima posizione libera di last_free*/
   int end = 0;
   int* padri=NULL;/**puntatore al vettore dei padri*/
   int vertex_visitati=0;
@@ -96,8 +95,7 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
     printf("TOT inizio ciclo vertex: %d\n", vertex);//debug
     printf("TOT inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
     printf("TOT padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
-    upo_DFS_par(graph, vertex, color, padri, &vertex_visitati, NULL);
-    color[vertex]=BLACK;
+    upo_DFS_par(graph, vertex, color, padri, &vertex_visitati);
     for(i=vertex; i<graph->n && color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
     if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
     else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE individuato*/
@@ -118,12 +116,11 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
  * @param color e' il vettore che memorizza lo stato dei vettori
  * @param padri e' il vettore che tiene l'ordina di visita
  * @param vertex_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
- * @param f è la lista che tiene traccia del ordine di chiusura dei nodi, l'ordine e'decrescente (viene gestita la lista se e solo se f è una lista "creata")
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, upo_list_t f){
+void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati){
   int* vertex_corrente=NULL;
   upo_list_t adj_list=NULL;
   if(upo_is_graph_empty(graph)!=0) return;/**controllo che esista e non sia vuoto il grafo*/
@@ -144,14 +141,13 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
       printf("\t RICORSIVA vertex_visitati = %d\n", *vertex_visitati);//debug
       padri[*vertex_corrente] = vertex;
       printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
-      upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, f);
+      upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati);
     }
     upo_remove_first(adj_list);
   }
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
   printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
-  if(f!=NULL) upo_add_first(f, &vertex);
 }
 
 /**
@@ -235,66 +231,79 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* pred
  */
 
 int* upo_topological_sort(upo_dirgraph_t graph) {
-  upo_dirgraph_t copy_graph=NULL;
-  upo_dirgraph_copy(graph, copy_graph);
   int *ord_topologico=NULL;/**puntatore per il vettore da restituire*/
-  int end_for=0;
+  int color[graph->n];/**vettore per identificare i colori dei nodi*/
   int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
-  int first_free=0;/**variabile che tiene traccia della prima posizione libera di ord_topologico*/
-  int counter=0; /**variabile che tiene conto delle iterazioni del ciclo for, se diventa == a graph-> posso dedurre che il grafo non e' un DAG*/
-  int i=0;
-  ord_topologico=malloc(sizeof(int)*(copy_graph->n));
+  int i;
+  int end = 0;
+  int timer=0;
+  int last_free=graph->n-1;
+  int padri[graph->n];/**vettore dei padri*/
+  int d[graph->n]; /**vettor che memorizza il tempo di scoperta del nodo i-esimo nella cella i-esima*/
+  int f[graph->n]; /**vettor che memorizza il tempo di chiusura del nodo i-esimo nella cella i-esima*/
+  int vertex_visitati=0;
+  int vett_elemento_corrente[graph->n];
+  if(graph==NULL) return NULL;
+  if(upo_is_DAG(graph)==FALSE) return NULL; /**se il grafo non è un DAG restituisco NULL*/
+  ord_topologico=malloc(sizeof(int)*(graph->n));
   assert(ord_topologico!=NULL);
-  for (i=0, i<graph->n, i++) ord_topologico[i]=-1 /**inizializzo tutti gli elementi di ord_topologico a -1*/
-  while (first_free<grph->n || counter<copy_graph->n){
-    counter=0;
-    end_for=0;
-    for(vertex=0; vertex<graph->n && end_for == 0; vertex++){
-      if(upo_get_in_degree(copy_graph, vertex)==0){
-        /**
-        * trovare il modo ci calcolare il vertex giusto da associare a ord_topologico
-        * ogni volta che si trova un vertice si va a rimuovere dal grafo copiato
-        * ma in questo modo si abbassa di 1 il "nome" dei vertici maggiori del vertice
-        * rimosso, quindi bisogno ricalcolare il valore corretto.
-        */
-        ord_topologico[first_free++]=vertex;
-        upo_remove_vertex(copy_graph, vertex);
-        end_for=1;
-      }
-      else counter++;
-    }
+  for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
+    color[i]=WHITE;
+    ord_topologico[i]=-1;
+    padri[i]=-1;
+    f[i]=-1;
+    d[i]=-1;
   }
-  if (counter==copy_graph->n){/**posso dedurre che il grafo non è un DAG, restituisco NULL*/
-    free(ord_topologico);
-    upo_dirgraph_destroy(copy_graph);
-    return NULL;
+  for(i=0; i<graph->n; i++){
+    if(color[i]==WHITE) upo_DFS_topological(graph, i, ord_topologico, padri, color, &last_free, &timer, d, f);
   }
-  upo_dirgraph_destroy(copy_graph);
+  for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
+  for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
+  for(i=0; i<graph->n; i++) printf("\t\tFINE ord_topologico[%d] = %d\n", i, ord_topologico[i]);//debug
   return ord_topologico;
 }
 
 /**
- * @brief Crea una copia del grafo sorgente
+ * @brief Calcola ricorsivamente l'ordine topologico
  *
- * @param sorgente è il grafo da cui  si crea la copia
- * @param copy è il puntatore in cui restituire la copia del grafo creata
- * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
+ * @param graph il grafo da esaminare
+ * @param vertex è il vertice che stiamo considerando
+ * @param ord_topologico è il vettore che memorizza l'ordine topologico
+ * @param predecessori è il vettore che memorizza i predecessori
+ * @param color è il vettore che memorizza lo stato dei vettori
+ * @param last_free è il puntatore alla variabile che memorizza l'ultima cella libera di ord_topologico
+ * @param timer è il puntatore alla variabile che memorizza il tempo
+ * @param d è il puntatore al vettore che tiene traccia del tempo di scoperta dei nodi
+ * @param f è il puntatore al vettore che tiene traccia del tempo di chiusura dei nodi
+ * @return
  *
  */
 
-int upo_dirgraph_copy(upo_dirgraph_t sorgente, upo_dirgraph_t copy){
-  int i=0;
-  int j=0;
-  if(upo_is_graph_empty(sorgente)!=FALSE)  return -1;
-  copy=upo_dirgraph_create(sorgente->n);
-  for (i=0; i<sorgente->n; i++) upo_add_vertex(copy);
-  for (i=0; i<sorgente->n; i++){
-    for(j=0; j<sorgente->n; j++){
-      if (sorgente->adj[i][j]==1) copy->adj[i][j]=1;/**se esiste l'arco in sorgente[i][j] allora lo creo in copy[i][j]*/
+void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,int* padri, int*color, int* last_free, int* timer, int* d, int* f){
+  int* vertex_corrente=NULL;
+  upo_list_t adj_list=NULL;
+  adj_list = upo_create_list(sizeof(int),NULL);
+  printf("\t RICORSIVA vertex: %d\n", vertex);//debug
+  color[vertex]=GREY;
+  d[vertex]= ++(*timer);
+  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
+  adj_list=upo_get_adj_vert(graph, vertex);
+  while(upo_list_size(adj_list)>0){
+    vertex_corrente=upo_get_first(adj_list);
+    if (color[(*vertex_corrente)]==WHITE){
+      printf("\t RICORSIVA vertex_corrente %d\n", *vertex_corrente);//debug
+      padri[*vertex_corrente] = vertex;
+      printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
+      upo_DFS_topological(graph, *vertex_corrente, ord_topologico, padri, color, last_free, timer, d, f);
     }
+    upo_remove_first(adj_list);
   }
-  return 1;
-}
+  upo_destroy_list(adj_list);
+  color[vertex]=BLACK;
+  f[vertex]= ++(*timer);
+  ord_topologico[(*last_free)--]=vertex;
+  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
+  }
 
 /**
  * @brief Calcola le componenti fortemente connesse di un grafo graph con l'algoritmo di Kosaraju
@@ -311,25 +320,23 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     int color[graph->n];/**vettore per identificare i colori dei nodi*/
     upo_list_t f;/**lista per tenere traccia dei tempi di chiusura dei nodi */
     int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
-    int vett_elemento_corrente[graph->n];
-    int i, j;
-    int last_free = graph->n -1;
+    int i;
+    int padri[graph->n];
     int end = 0;
-    int temp[graph->n]; /** vettore */
     int vertex_visitati=0;
+    f=upo_create_list(sizeof(int), NULL);
     upo_dirgraph_t trasposto = NULL;
-    for (i=0; i<graph->n; i++){/**ciclo che inizializza a WHITE gli elementi di color e vett_elemento_corrente*/
-      color[graph->n]=WHITE;
-      vett_elemento_corrente[i]=i;
+    for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
+      color[i]=WHITE;
+      padri[i]=-1;
     }
-
-    do{
-      upo_DFS_par(graph, vett_elemento_corrente[vertex], color, temp, &vertex_visitati, f);
-      for(i=vertex; i<graph->n || color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
+    while(end==0){
+      upo_DFS_par(graph, vertex, color, padri, &vertex_visitati);
+      color[vertex]=BLACK;
+      for(i=vertex; i<graph->n && color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
       if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
-      else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE*/
+      else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE individuato*/
     }
-    while(end==0);
     upo_dirgraph_trasposto(graph, trasposto);
 
 
