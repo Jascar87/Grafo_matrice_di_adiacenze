@@ -8,25 +8,12 @@ void selection(int* digit) {
     scanf("%d", digit);
 }
 
-void stampa_vet(int* vet){
-  int i = 0;
-  while(vet[i] != -1) {
+void stampa_vet(int* vet, upo_dirgraph_t graph){
+  int i;
+  for(i = 0; i < graph->n; i++) {
     printf("%d |\t", vet[i]);
-    i++;
   }
 }
-
-/*void stampa_vet(int* vet, int dim){
-  int i;
-  for(i = 0; i < dim-1; i++){
-    if(i == dim-1){
-      printf("%d\n", vet[i]);
-    }
-    else{
-      printf("%d |\t", vet[i]);
-    }
-  }
-}*/
 
 void print_edg_menu_list() {
   printf("\n\t\tMenu archi:\n\t1\tCrea un arco tra due vertici\n\t2\tRimuovi un arco\n\t3\tControlla la presenza di un arco\n\t4\tStampa gli archi uscenti da un dato vertice\n\t5\tStampa gli archi entranti in un dato vertice\n\t6\tStampa gli archi incidenti un dato vertice\n\t0\tTorna al menu precedente\n");
@@ -553,16 +540,14 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
                 vet = upo_BFS(*graph, source);
-                //num_elementi = num_elementi = upo_num_vertices(*graph);//sizeof(vet)/sizeof(int);
                 printf("Vettore dei padri:\n");
-                stampa_vet(vet);
-                //stampa_vet(vet, num_elementi);
+                stampa_vet(vet, *graph);
                 break;
             case 2 :
                 vet = upo_DFS_tot(*graph);
                 num_elementi = sizeof(vet)/sizeof(int);
                 printf("Vettore dei padri:\n");
-                //stampa_vet(vet, num_elementi);
+                stampa_vet(vet, *graph);
                 break;
             case 3 :
                 if(upo_cyclic(*graph) == 0){
@@ -584,7 +569,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 vet = upo_topological_sort(*graph);
                 num_elementi = sizeof(vet)/sizeof(int);
                 printf("Ordinamento Topologico:\n");
-                //stampa_vet(vet, num_elementi);
+                stampa_vet(vet, *graph);
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
