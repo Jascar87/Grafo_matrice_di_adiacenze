@@ -536,14 +536,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
     int source = 0;
     int* vet;
-    int vertex;
     int* ord_topologico;
-    int* padri;
-    int* color;
-    int* last_free;
-    int timer;
-    int* d;
-    int* f;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
@@ -577,16 +570,9 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 5 :
-                printf("Inserire il vertice\n");
-                scanf("%d", &vertex);
-                if(upo_has_vertex(*graph, vertex) != 1){
-                  printf("errore vertice inesistente\n");
-                }
-                else{
-                  upo_topological_sort(*graph, vertex, ord_topologico, padri, color, last_free, &timer, d, f);
+                  ord_topologico = upo_topological_sort(*graph);
                   printf("Ordinamento Topologico:\n");
                   stampa_vet(ord_topologico, *graph);
-                }
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
