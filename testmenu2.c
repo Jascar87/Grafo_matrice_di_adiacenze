@@ -10,8 +10,13 @@ void selection(int* digit) {
 
 void stampa_vet(int* vet, upo_dirgraph_t graph){
   int i;
-  for(i = 0; i < graph->n; i++) {
-    printf("%d |\t", vet[i]);
+  if(upo_is_graph_empty(graph) == 1){
+    printf("Il grafo analizzato e' vuoto\n");
+  }
+  else{
+    for(i = 0; i < graph->n; i++) {
+      printf("%d |\t", vet[i]);
+    }
   }
 }
 
@@ -531,7 +536,14 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
     int digit = 0;
     int source = 0;
     int* vet;
-    int num_elementi;
+    int vertex;
+    int* ord_topologico;
+    int* padri;
+    int* color;
+    int* last_free;
+    int timer;
+    int* d;
+    int* f;
     while (TRUE) {
         print_graph_proprietis_menu_list();
         selection(&digit);
@@ -545,7 +557,6 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 break;
             case 2 :
                 vet = upo_DFS_tot(*graph);
-                num_elementi = sizeof(vet)/sizeof(int);
                 printf("Vettore dei padri:\n");
                 stampa_vet(vet, *graph);
                 break;
@@ -566,10 +577,16 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 break;
             case 5 :
-                vet = upo_topological_sort(*graph);
-                num_elementi = sizeof(vet)/sizeof(int);
-                printf("Ordinamento Topologico:\n");
-                stampa_vet(vet, *graph);
+                printf("Inserire il vertice\n");
+                scanf("%d", &vertex);
+                if(upo_has_vertex(*graph, vertex) != 1){
+                  printf("errore vertice inesistente\n");
+                }
+                else{
+                  upo_topological_sort(*graph, vertex, ord_topologico, padri, color, last_free, &timer, d, f);
+                  printf("Ordinamento Topologico:\n");
+                  stampa_vet(ord_topologico, *graph);
+                }
                 break;
             case 6 :
                 //upo_strongly_connected_components(graph);
