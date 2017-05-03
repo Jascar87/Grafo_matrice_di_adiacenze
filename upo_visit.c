@@ -241,7 +241,6 @@ int* upo_topological_sort(upo_dirgraph_t graph) {
   int padri[graph->n];/**vettore dei padri*/
   int d[graph->n]; /**vettor che memorizza il tempo di scoperta del nodo i-esimo nella cella i-esima*/
   int f[graph->n]; /**vettor che memorizza il tempo di chiusura del nodo i-esimo nella cella i-esima*/
-  int vertex_visitati=0;
   int vett_elemento_corrente[graph->n];
   if(graph==NULL) return NULL;
   if(upo_is_DAG(graph)==FALSE) return NULL; /**se il grafo non è un DAG restituisco NULL*/
@@ -286,6 +285,7 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
   printf("\t RICORSIVA vertex: %d\n", vertex);//debug
   color[vertex]=GREY;
   d[vertex]= ++(*timer);
+  printf("\t RICORSIVA timer %d\n", *timer);
   printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
   adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
@@ -301,8 +301,10 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
   f[vertex]= ++(*timer);
+  printf("\t RICORSIVA timer %d\n", *timer);
   ord_topologico[(*last_free)--]=vertex;
-  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
+  printf("\t RICORSIVA last_free = %d\n", *last_free);
+  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[(*last_free)+1]);//debug
   }
 
 /**
@@ -319,7 +321,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     vector_strongly_connected = NULL;
     int color[graph->n];/**vettore per identificare i colori dei nodi*/
     upo_list_t fine_visita;/**lista per tenere traccia dei tempi di chiusura dei nodi */
-    int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
+    int* vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
     int i;
     int vett_elemento_corrente[graph->n];
     int padri[graph->n];
@@ -332,17 +334,20 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       padri[i]=-1;
       vett_elemento_corrente[i]=i;
     }
-    while(end==0){/**alla fine del ciclo fine_visita conterrà tutti i vertici in ordine decrescente di fine visita*/
-      printf("STRONGLY G1 inizio ciclo vertex: %d\n", vertex);//debug
+    for(i=0; i<graph->n; i++){/**alla fine del ciclo fine_visita conterrà tutti i vertici in ordine decrescente di fine visita*/
+      printf("STRONGLY G1 inizio ciclo i: %d\n", i);//debug
       printf("STRONGLY G1inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
       printf("STRONGLY G1 padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
-      upo_DFS_par(graph, vertex, color, padri, &vertex_visitati, fine_visita, vett_elemento_corrente);
-      for(i=vertex; i<graph->n && color[i]!=WHITE; i++);/** cicla fino a trovare il primo nodo WHITE*/
-      if (i==graph->n) end=1; /**controllo se ho terminato il ciclo perchè ho scoperto tutti i nodi*/
-      else if (color[i]==WHITE) vertex = i;/** imposto vertex al nuvo nodo WHITE individuato*/
-      printf("STRONGLY G1 fine ciclo vertex: %d\n", vertex);//debug
+      if(color[i]==WHITE) upo_DFS_par(graph, i, color, padri, &vertex_visitati, fine_visita, vett_elemento_corrente);
+      printf("STRONGLY G1 fine ciclo ix: %d\n", i);//debug
     }
     upo_dirgraph_trasposto(graph, trasposto);
+    for (i=0; i<graph->n; i++) color[i]=WHITE; /**ciclo che inizializza a WHITE gli elementi di color*/
+
+    while(upo_list_size(fine_visita)>0){
+      vertex=upo_get_first(fine_visita);
+      if (color[*vertex]==WHITE);
+    }
 
 
 
