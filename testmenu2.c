@@ -584,7 +584,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                   }
                 break;
             case 6 :
-                //upo_strongly_connected_components(graph);
+                vet = upo_strongly_connected_components(*graph);
                 break;
             case 0 :
                 return;

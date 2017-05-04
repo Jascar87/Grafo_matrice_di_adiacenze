@@ -316,7 +316,7 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
  *
  */
 int* upo_strongly_connected_components(upo_dirgraph_t graph) {
-    if (upo_is_graph_empty(graph)!=FALSE) return NULL;/**return NULL se il grafo è vuoto o non ha vertici*/
+    if (upo_is_graph_empty(graph)!= 0) return NULL;/**return NULL se il grafo è vuoto o non ha vertici*/
     int* vector_strongly_connected = NULL; /**vettore che indicherà in che componente fortemente connessa si trova il vertice i-esimo*/
     vector_strongly_connected = NULL;
     int color[graph->n];/**vettore per identificare i colori dei nodi*/
@@ -330,6 +330,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     fine_visita=upo_create_list(sizeof(int), NULL);
     upo_dirgraph_t trasposto = NULL;
     for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
+      printf("Ciclo che inizializza a WHITE padri\n");
       color[i]=WHITE;
       padri[i]=-1;
       vett_elemento_corrente[i]=i;
@@ -346,7 +347,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     for (i=0; i<graph->n; i++) color[i]=WHITE; /**ciclo che inizializza a WHITE gli elementi di color*/
 
     while(upo_list_size(fine_visita)>0){
-      vertex=upo_get_first(fine_visita);
+      vertex=upo_remove_first(fine_visita);
       if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, padri, &vertex_visitati, NULL, NULL);
     }
     upo_destroy_list(fine_visita);
