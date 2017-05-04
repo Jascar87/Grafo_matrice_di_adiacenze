@@ -318,7 +318,8 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
 int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     if (upo_is_graph_empty(graph)!= 0) return NULL;/**return NULL se il grafo è vuoto o non ha vertici*/
     int* vector_strongly_connected = NULL; /**vettore che indicherà in che componente fortemente connessa si trova il vertice i-esimo*/
-    vector_strongly_connected = NULL;
+    vector_strongly_connected = malloc(sizeof(int)*(graph->n));
+    assert(vector_strongly_connected!=NULL);
     int color[graph->n];/**vettore per identificare i colori dei nodi*/
     upo_list_t fine_visita;/**lista per tenere traccia dei tempi di chiusura dei nodi */
     int* vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
@@ -340,7 +341,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       printf("STRONGLY G1 inizio ciclo i: %d\n", i);//debug
       printf("STRONGLY G1inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
       printf("STRONGLY G1 padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
-      if(color[i]==WHITE) upo_DFS_par(graph, i, color, padri, &vertex_visitati, fine_visita, vett_elemento_corrente);
+      if(color[i]==WHITE) upo_DFS_par(graph, i, color, vector_strongly_connected, &vertex_visitati, fine_visita, vett_elemento_corrente);
       printf("STRONGLY G1 fine ciclo ix: %d\n", i);//debug
     }
     upo_dirgraph_trasposto(graph, trasposto);
@@ -348,7 +349,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
 
     while(upo_list_size(fine_visita)>0){
       vertex=upo_remove_first(fine_visita);
-      if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, padri, &vertex_visitati, NULL, NULL);
+      if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, vector_strongly_connected, &vertex_visitati, NULL, NULL);
     }
     upo_destroy_list(fine_visita);
     upo_dirgraph_destroy(trasposto);
