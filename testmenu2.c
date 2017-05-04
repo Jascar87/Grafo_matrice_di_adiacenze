@@ -8,12 +8,32 @@ void selection(int* digit) {
     scanf("%d", digit);
 }
 
-void stampa_vet(int* vet, upo_dirgraph_t graph){
+void stampa_scc(int* vet, upo_dirgraph_t graph) {
+  if(vet == NULL) {
+      if(upo_is_graph_empty(graph)==-1) {
+          printf("Il grafo non esiste\n");
+      }
+      else if(upo_is_graph_empty(graph)==1) {
+          printf("Il grafo e' vuoto\n");
+      }
+  }
+  int i;
+  for(i=0; i < graph->n; i++) {
+      if(vet[i] == -1) {
+          /*CHIAMA(andoooooonio) LA MALEDETTA FUNZIONE RICORSIVA*/
+      }
+  }
+}
+
+void stampa_vet(int source, int* vet, upo_dirgraph_t graph){
   int i;
   if(upo_is_graph_empty(graph) == 1){
     printf("Il grafo analizzato e' vuoto\n");
   }
   else{
+    if(source !=-1){
+      printf("La radice e' %d\n",source);
+    }
     for(i = 0; i < graph->n; i++) {
       printf("%d |\t", vet[i]);
     }
@@ -550,12 +570,12 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 }
                 vet = upo_BFS(*graph, source);
                 printf("Vettore dei padri:\n");
-                stampa_vet(vet, *graph);
+                stampa_vet(source, vet, *graph);
                 break;
             case 2 :
                 vet = upo_DFS_tot(*graph);
                 printf("Vettore dei padri:\n");
-                stampa_vet(vet, *graph);
+                stampa_vet(-1, vet, *graph);
                 break;
             case 3 :
                 if(upo_cyclic(*graph) == 0){
@@ -577,7 +597,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                   ord_topologico = upo_topological_sort(*graph);
                   printf("Ordinamento Topologico:\n");
                   if(ord_topologico != NULL){
-                    stampa_vet(ord_topologico, *graph);
+                    stampa_vet(-1, ord_topologico, *graph);
                   }
                   else{
                     printf("Il grafo analizzato non e' un DAG\n");
@@ -585,6 +605,7 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
                 break;
             case 6 :
                 vet = upo_strongly_connected_components(*graph);
+                stampa_scc(vet, *graph);
                 break;
             case 0 :
                 return;
