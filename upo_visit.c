@@ -18,6 +18,7 @@
  */
  int* upo_BFS(upo_dirgraph_t graph, int source) {
      if(upo_is_graph_empty(graph)!=0) return NULL;/**controllo che esista e non sia vuoto il grafo*/
+     if(source<0 || source >= graph->n) return NULL;
      int color[graph->n];/**vettore per identificare i colori dei nodi*/
      upo_list_t queue = NULL;
      int *padri=NULL;/**puntatore per il vettore dei padri*/
@@ -333,6 +334,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       color[i]=WHITE;
       padri[i]=-1;
       vett_elemento_corrente[i]=i;
+      vector_strongly_connected[i]=-1;
     }
     for(i=0; i<graph->n; i++){/**alla fine del ciclo fine_visita conterrà tutti i vertici in ordine decrescente di fine visita*/
       printf("STRONGLY G1 inizio ciclo i: %d\n", i);//debug
@@ -346,14 +348,11 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
 
     while(upo_list_size(fine_visita)>0){
       vertex=upo_get_first(fine_visita);
-      if (color[*vertex]==WHITE);
+      if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, padri, &vertex_visitati, NULL, NULL);
     }
-
-
-
-
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_destroy_list(fine_visita);
+    destroy_graph(trasposto);
+    for(i=0; i<graph->n; i++) printf("\t\tFINE vector_strongly_connected[%d] = %d\n", i, vector_strongly_connected[i]);//debug
     return vector_strongly_connected;
 }
 
