@@ -544,6 +544,10 @@ void graph_proprietis_operations(upo_dirgraph_t* graph) {
             case 1 :
                 printf("Inserire la sorgente\n");
                 scanf("%d", &source);
+                if(source < 0 || source >= graph->n){
+                    printf("Valore non valido\n");
+                    break;
+                }
                 vet = upo_BFS(*graph, source);
                 printf("Vettore dei padri:\n");
                 stampa_vet(vet, *graph);
