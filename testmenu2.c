@@ -8,6 +8,17 @@ void selection(int* digit) {
     scanf("%d", digit);
 }
 
+void scc(int padre, int* vet, int dim){
+  int i;
+  for(i = 0; i < dim; i++){
+    if(vet[i] == padre){
+      printf("%d |\t", i);
+      scc(i, vet, dim);
+    }
+  }
+  return;
+}
+
 void stampa_scc(int* vet, upo_dirgraph_t graph) {
   if(vet == NULL) {
       if(upo_is_graph_empty(graph)==-1) {
@@ -20,7 +31,10 @@ void stampa_scc(int* vet, upo_dirgraph_t graph) {
   int i;
   for(i=0; i < graph->n; i++) {
       if(vet[i] == -1) {
-          /*CHIAMA(andoooooonio) LA MALEDETTA FUNZIONE RICORSIVA*/
+        printf("Parte fortemente connessa\n");
+        printf("%d |\t", i);
+        scc(i, vet, graph->n);
+        printf("\n");
       }
   }
 }
