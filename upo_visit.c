@@ -338,11 +338,11 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       vector_strongly_connected[i]=-1;
     }
     for(i=0; i<graph->n; i++){/**alla fine del ciclo fine_visita conterrà tutti i vertici in ordine decrescente di fine visita*/
-      printf("STRONGLY G1 inizio ciclo i: %d\n", i);//debug
-      printf("STRONGLY G1inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
-      printf("STRONGLY G1 padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
+      //printf("STRONGLY G1 inizio ciclo i: %d\n", i);//debug
+      //printf("STRONGLY G1inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
+      //printf("STRONGLY G1 padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
       if(color[i]==WHITE) upo_DFS_par(graph, i, color, vector_strongly_connected, &vertex_visitati, fine_visita, vett_elemento_corrente);
-      printf("STRONGLY G1 fine ciclo ix: %d\n", i);//debug
+      //printf("STRONGLY G1 fine ciclo ix: %d\n", i);//debug
     }
     upo_dirgraph_trasposto(graph, trasposto);
     for (i=0; i<graph->n; i++) color[i]=WHITE; /**ciclo che inizializza a WHITE gli elementi di color*/
