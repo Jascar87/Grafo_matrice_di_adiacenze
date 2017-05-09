@@ -38,32 +38,33 @@
      color[source]=GREY;/**source diventa GREY*/
      upo_add_last(queue, &source);/**inserisco in coda source*/
      while(upo_list_size(queue)>0){
-       for(i=0; i<graph->n;i++) printf("vert %d color %d\n",i,color[i]);//debug
+       for(i=0; i<graph->n;i++)
+       //printf("vert %d color %d\n",i,color[i]);//debug
        printf("\n");//debug
        vertex=upo_remove_first(queue);
-       printf("INIZIO CICLO WHILE ESTERNO vertex: %d\n", *vertex);//debug
+       //printf("INIZIO CICLO WHILE ESTERNO vertex: %d\n", *vertex);//debug
        adj_list=upo_get_adj_vert(graph, *vertex);
-       printf("INIZIO CICLO WHILE ESTERNO vert %d adj_list_size %d\n\n", *vertex, upo_list_size(adj_list));//debug
+       //printf("INIZIO CICLO WHILE ESTERNO vert %d adj_list_size %d\n\n", *vertex, upo_list_size(adj_list));//debug
        while (upo_list_size(adj_list)>0){/**scorro tutta la lista di adiacienza del nodo analizzato*/
          vertex_corrente=upo_remove_first(adj_list);
-         printf("\tINIZIO CICLO WHILE INTERNO vertex_corrente \n", *vertex_corrente);//debug
+         //printf("\tINIZIO CICLO WHILE INTERNO vertex_corrente \n", *vertex_corrente);//debug
          if (color[*vertex_corrente]==WHITE){/**se il colore del vertice considerato e' WHITE*/
            color[*vertex_corrente]=GREY;/**coloro il vertice di GREY*/
-           printf("\t\t RAMO IF color[%d]: %d\n", *vertex_corrente, color[*vertex_corrente]);//debug
+           //printf("\t\t RAMO IF color[%d]: %d\n", *vertex_corrente, color[*vertex_corrente]);//debug
            upo_add_last(queue, &vett_elemento_corrente[*vertex_corrente]);/**inserisco la copia del valore puntato da vertex_corrente in coda*/
-           printf("\t\t RAMO IF indirizzo vett_elemento_corrente[0]: %d\n",  &vett_elemento_corrente[0]);//debug
-           printf("\t\t RAMO IF vett_elemento_corrente[%d]: %d, indirizzo di memoria: %d \n", *vertex_corrente, vett_elemento_corrente[*vertex_corrente], &vett_elemento_corrente[*vertex_corrente]);//debug
+           //printf("\t\t RAMO IF indirizzo vett_elemento_corrente[0]: %d\n",  &vett_elemento_corrente[0]);//debug
+           //printf("\t\t RAMO IF vett_elemento_corrente[%d]: %d, indirizzo di memoria: %d \n", *vertex_corrente, vett_elemento_corrente[*vertex_corrente], &vett_elemento_corrente[*vertex_corrente]);//debug
            padri[*vertex_corrente] = *vertex;
-           printf("\t\t RAMO IF padri[%d]: %d\n", *vertex_corrente, padri[*vertex_corrente]);//debug
+           //printf("\t\t RAMO IF padri[%d]: %d\n", *vertex_corrente, padri[*vertex_corrente]);//debug
          }
        }
        color[*vertex] = BLACK;/**finito il ciclo l'elemento considerato lo coloro di BLACK*/
-       printf("FINE CICLO WHILE ESTERNO color[%d]: %d\n", *vertex, color[*vertex] );//debug
+       //printf("FINE CICLO WHILE ESTERNO color[%d]: %d\n", *vertex, color[*vertex] );//debug
      }
      upo_destroy_list(adj_list);
      upo_destroy_list(queue);
-     for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
-     for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
+     //for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
+     //for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
      return padri;/**restiruisco i padri*/
  }
 
@@ -92,15 +93,15 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
     padri[i]=-1;
   }
   for(i=0; i<graph->n; i++){
-    printf("TOT inizio ciclo vertex: %d\n", vertex);//debug
-    printf("TOT inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
-    printf("TOT padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
+    //printf("TOT inizio ciclo vertex: %d\n", vertex);//debug
+    //printf("TOT inizio ciclo vertex_visitati: %d\n", vertex_visitati);//debug
+    //printf("TOT padri di indice %d e' %d\n", vertex_visitati, padri[vertex_visitati]);//debug
     if(color[i]==WHITE) upo_DFS_par(graph, i, color, padri, &vertex_visitati, NULL, NULL);
-    printf("TOT fine ciclo i: %d\n", i);//debug
+    //printf("TOT fine ciclo i: %d\n", i);//debug
   }
 
-  for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n", i, color[i]);//debug
-  for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
+  //for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n", i, color[i]);//debug
+  //for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
   return padri;
 
 }
@@ -125,9 +126,9 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
   if(upo_is_graph_empty(graph)!=0) return;/**controllo che esista e non sia vuoto il grafo*/
   if (((*vertex_visitati)+1)==graph->n) return;/**caso di terminazione ho visitato tutti i nodi*/
   adj_list = upo_create_list(sizeof(int),NULL);
-  printf("\t RICORSIVA vertex: %d\n", vertex);//debug
+  //printf("\t RICORSIVA vertex: %d\n", vertex);//debug
   color[vertex]=GREY;
-  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
+  //printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
   (*vertex_visitati)++;
 /**
  * visita di vertex
@@ -136,17 +137,17 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
   while(upo_list_size(adj_list)>0){
     vertex_corrente=upo_get_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
-      printf("\t RICORSIVA vertex_corrente %d\n", *vertex_corrente);//debug
-      printf("\t RICORSIVA vertex_visitati = %d\n", *vertex_visitati);//debug
+      //printf("\t RICORSIVA vertex_corrente %d\n", *vertex_corrente);//debug
+      //printf("\t RICORSIVA vertex_visitati = %d\n", *vertex_visitati);//debug
       padri[*vertex_corrente] = vertex;
-      printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
+      //printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
       upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, fine_visita, vett_elemento_corrente);
     }
     upo_remove_first(adj_list);
   }
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
-  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
+  //printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
   if(fine_visita!=NULL) upo_add_first(fine_visita, &vett_elemento_corrente[vertex]);
 }
 
@@ -256,9 +257,9 @@ int* upo_topological_sort(upo_dirgraph_t graph) {
   for(i=0; i<graph->n; i++){
     if(color[i]==WHITE) upo_DFS_topological(graph, i, ord_topologico, padri, color, &last_free, &timer, d, f);
   }
-  for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
-  for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
-  for(i=0; i<graph->n; i++) printf("\t\tFINE ord_topologico[%d] = %d\n", i, ord_topologico[i]);//debug
+  //for(i=0; i<graph->n; i++) printf("\t\tFINE vert %d color %d\n",i,color[i]);//debug
+  //for(i=0; i<graph->n; i++) printf("\t\tFINE elemento %d = %d\n", i, padri[i]);//debug
+  //for(i=0; i<graph->n; i++) printf("\t\tFINE ord_topologico[%d] = %d\n", i, ord_topologico[i]);//debug
   return ord_topologico;
 }
 
@@ -282,18 +283,18 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
   int* vertex_corrente=NULL;
   upo_list_t adj_list=NULL;
   adj_list = upo_create_list(sizeof(int),NULL);
-  printf("\t RICORSIVA vertex: %d\n", vertex);//debug
+  //printf("\t RICORSIVA vertex: %d\n", vertex);//debug
   color[vertex]=GREY;
   d[vertex]= ++(*timer);
-  printf("\t RICORSIVA timer %d\n", *timer);
-  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
+  //printf("\t RICORSIVA timer %d\n", *timer);
+  //printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[vertex]);//debug
   adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
     vertex_corrente=upo_get_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
-      printf("\t RICORSIVA vertex_corrente %d\n", *vertex_corrente);//debug
+      //printf("\t RICORSIVA vertex_corrente %d\n", *vertex_corrente);//debug
       padri[*vertex_corrente] = vertex;
-      printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
+      //printf("\t RICORSIVA padri di indice %d e' %d\n", *vertex_corrente, padri[vertex]);//debug
       upo_DFS_topological(graph, *vertex_corrente, ord_topologico, padri, color, last_free, timer, d, f);
     }
     upo_remove_first(adj_list);
@@ -301,10 +302,10 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
   f[vertex]= ++(*timer);
-  printf("\t RICORSIVA timer %d\n", *timer);
+  //printf("\t RICORSIVA timer %d\n", *timer);
   ord_topologico[(*last_free)--]=vertex;
-  printf("\t RICORSIVA last_free = %d\n", *last_free);
-  printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[(*last_free)+1]);//debug
+  //printf("\t RICORSIVA last_free = %d\n", *last_free);
+  //printf("\t RICORSIVA color di indice %d e' %d\n", vertex, color[(*last_free)+1]);//debug
   }
 
 /**
@@ -331,7 +332,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     fine_visita=upo_create_list(sizeof(int), NULL);
     upo_dirgraph_t trasposto = NULL;
     for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
-      printf("Ciclo che inizializza a WHITE padri\n");
+      //printf("Ciclo che inizializza a WHITE padri\n");//debug
       color[i]=WHITE;
       padri[i]=-1;
       vett_elemento_corrente[i]=i;
@@ -353,7 +354,8 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     }
     upo_destroy_list(fine_visita);
     upo_dirgraph_destroy(trasposto);
-    for(i=0; i<graph->n; i++) printf("\t\tFINE vector_strongly_connected[%d] = %d\n", i, vector_strongly_connected[i]);//debug
+    for(i=0; i<graph->n; i++)
+    //printf("\t\tFINE vector_strongly_connected[%d] = %d\n", i, vector_strongly_connected[i]);//debug
     return vector_strongly_connected;
 }
 

@@ -17,7 +17,7 @@ void scc(int padre, int* vet, int dim){
   int i;
   for(i = 0; i < dim; i++){
     if(vet[i] == padre){
-      printf(YELLOW "%d," RESET, i);
+      printf(YELLOW ",%d" RESET, i);
       scc(i, vet, dim);
     }
   }
@@ -34,16 +34,17 @@ void stampa_scc(int* vet, upo_dirgraph_t graph) {
       }
   }
   int i;
+  printf(YELLOW "Parte fortemente connessa\n" RESET);
+  printf(YELLOW "{" RESET);
   for(i=0; i < graph->n; i++) {
       if(vet[i] == -1) {
-        printf(YELLOW "Parte fortemente connessa\n" RESET);
-        printf(YELLOW "{(" RESET);
-        printf(YELLOW "%d," RESET, i);
+        printf(YELLOW "(" RESET);
+        printf(YELLOW "%d" RESET, i);
         scc(i, vet, graph->n);
-        printf(");");
+        printf(YELLOW");"RESET);
       }
   }
-  printf("}");
+  printf(YELLOW"}"RESET);
 }
 
 void stampa_vet(int source, int* vet, upo_dirgraph_t graph){
