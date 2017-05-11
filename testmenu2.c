@@ -238,10 +238,10 @@ void are_adj(upo_dirgraph_t graph) {
     int returnValue = upo_are_adj(graph, vertex1, vertex2);
     switch (returnValue) {
         case 0 :
-            printf(RED"\n\tI vertici %d e %d non esistono o non sono adiacenti."RESET);
+            printf(RED"\n\tI vertici %d e %d non esistono o non sono adiacenti."RESET, vertex1, vertex2);
             break;
         case 1 :
-            printf(YELLOW"\n\tI vertici %d e %d sono adiacenti."RESET);
+            printf(YELLOW"\n\tI vertici %d e %d sono adiacenti."RESET, vertex1, vertex2);
             break;
         case -1 :
             printf(RED"\n\tControllo annullato, il grafo e' nullo."RESET);

@@ -43,6 +43,9 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
     }
     else if(graph != NULL){ /**< Deallocazione della matrice di adiacenza e successivamente del grafo. */
       int row = upo_num_vertices(graph) - 1;
+      if(row < 0) {
+          row = 0;
+      }
         for(; row >= 0; row--){
         free(graph->adj[row]);
       }
