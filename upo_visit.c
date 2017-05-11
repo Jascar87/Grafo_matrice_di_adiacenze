@@ -233,6 +233,8 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* pred
 
 int* upo_topological_sort(upo_dirgraph_t graph) {
   int *ord_topologico=NULL;/**puntatore per il vettore da restituire*/
+  if(graph==NULL) return NULL;
+  if(upo_is_DAG(graph)==FALSE) return NULL; /**se il grafo non è un DAG restituisco NULL*/
   int color[graph->n];/**vettore per identificare i colori dei nodi*/
   int vertex = 0; /**variabile che tiene il vertice che si stà considerando*/
   int i;
@@ -243,8 +245,6 @@ int* upo_topological_sort(upo_dirgraph_t graph) {
   int d[graph->n]; /**vettor che memorizza il tempo di scoperta del nodo i-esimo nella cella i-esima*/
   int f[graph->n]; /**vettor che memorizza il tempo di chiusura del nodo i-esimo nella cella i-esima*/
   int vett_elemento_corrente[graph->n];
-  if(graph==NULL) return NULL;
-  if(upo_is_DAG(graph)==FALSE) return NULL; /**se il grafo non è un DAG restituisco NULL*/
   ord_topologico=malloc(sizeof(int)*(graph->n));
   assert(ord_topologico!=NULL);
   for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
@@ -345,7 +345,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       if(color[i]==WHITE) upo_DFS_par(graph, i, color, vector_strongly_connected, &vertex_visitati, fine_visita, vett_elemento_corrente);
       //printf("STRONGLY G1 fine ciclo ix: %d\n", i);//debug
     }
-    upo_dirgraph_trasposto(graph, trasposto);
+    upo_dirgraph_trasposto(graph, &trasposto);
     for (i=0; i<graph->n; i++) color[i]=WHITE; /**ciclo che inizializza a WHITE gli elementi di color*/
 
     while(upo_list_size(fine_visita)>0){
@@ -353,6 +353,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, vector_strongly_connected, &vertex_visitati, NULL, NULL);
     }
     upo_destroy_list(fine_visita);
+    //printf("\t\tTRASP N %d\n",trasposto->n);
     upo_dirgraph_destroy(trasposto);
     for(i=0; i<graph->n; i++)
     //printf("\t\tFINE vector_strongly_connected[%d] = %d\n", i, vector_strongly_connected[i]);//debug
@@ -362,20 +363,20 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
 /**
  * @brief Crea un grafo trasposto
  *
- * @param sorgente è il grafo da cui  si crea il grafo traspost
+ * @param sorgente è il grafo da cui  si crea il grafo trasposto
  * @param trasposto è il puntatore in cui restituire il grafo traspoto creato
  * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
  *
  */
-int upo_dirgraph_trasposto (upo_dirgraph_t sorgente, upo_dirgraph_t trasposto){
+int upo_dirgraph_trasposto (upo_dirgraph_t sorgente, upo_dirgraph_t *trasposto){
   int i=0;
   int j=0;
   if(upo_is_graph_empty(sorgente)!=FALSE)  return -1;
-  trasposto=upo_dirgraph_create(sorgente->n);
-  for (i=0; i<sorgente->n; i++) upo_add_vertex(trasposto);
+  *trasposto=upo_dirgraph_create(sorgente->n);
+  for (i=0; i<sorgente->n; i++) upo_add_vertex(*trasposto);
   for (i=0; i<sorgente->n; i++){
     for(j=0; j<sorgente->n; j++){
-      if (sorgente->adj[i][j]==1)trasposto->adj[j][i]=1;/**se esiste l'arco in sorgente->adj[i][j] allora lo creo in trasposto->adj[j][i]*/
+      if (sorgente->adj[i][j]==1)(*trasposto)->adj[j][i]=1;/**se esiste l'arco in sorgente->adj[i][j] allora lo creo in trasposto->adj[j][i]*/
     }
   }
   return 1;

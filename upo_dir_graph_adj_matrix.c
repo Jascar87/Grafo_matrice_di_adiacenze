@@ -16,7 +16,7 @@ upo_dirgraph_t upo_dirgraph_create(int n) {
     graph = malloc(sizeof(upo_dirgraph_s)); /**< Allocazione della struttura grafo e controllo con assert. */
     assert(graph!=NULL);
     graph->n = 0;
-    if(n < 1){ /**< Controllo che n abbia unn valore valido. */
+    if(n < 1){ /**< Controllo che n abbia un valore valido. */
       n = 1;
     }
     graph->adj=NULL;
@@ -43,7 +43,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph){
     }
     else if(graph != NULL){ /**< Deallocazione della matrice di adiacenza e successivamente del grafo. */
       int row = upo_num_vertices(graph) - 1;
-      if(row < 0) {
+      if(row < 0) { /**< Modifica dalla prima versione. */
           row = 0;
       }
         for(; row >= 0; row--){
@@ -110,10 +110,12 @@ int upo_get_in_degree(upo_dirgraph_t graph, int vertex) {
     int inDegree = 0;
     int n = upo_num_vertices(graph);
     int row = 0;
-    for(; row < n; row++){
-      if(graph->adj[row][vertex] == 1){
-        inDegree++;
-      }
+    if(upo_has_vertex(graph, vertex)){
+        for(; row < n; row++){
+            if(graph->adj[row][vertex] == 1){
+                inDegree++;
+            }
+        }
     }
     return inDegree;
 }
@@ -132,10 +134,12 @@ int upo_get_out_degree(upo_dirgraph_t graph, int vertex) {
     int outDegree = 0;
     int n = upo_num_vertices(graph);
     int column = 0;
-    for(; column < n; column++){
-      if(graph->adj[vertex][column] == 1){
-        outDegree++;
-      }
+    if(upo_has_vertex(graph, vertex)){
+        for(; column < n; column++){
+            if(graph->adj[vertex][column] == 1){
+                outDegree++;
+            }
+        }
     }
     return outDegree;
 }
@@ -181,7 +185,7 @@ int upo_is_graph_empty(upo_dirgraph_t graph) {
  */
 upo_list_t upo_get_adj_vert(upo_dirgraph_t graph, int vertex) {
     upo_list_t adjVert = NULL;
-      if(upo_is_graph_empty(graph) == 0){
+      if(upo_is_graph_empty(graph) == 0 && upo_has_vertex(graph, vertex) == 1){
         adjVert = upo_create_list(sizeof(int),NULL); /**< Creazione della lista. */
         int n = upo_num_vertices(graph);
         int column = 0;
@@ -338,6 +342,11 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex) {
   }
   else if (upo_has_vertex (graph, vertex) == 1) {
       int n = upo_num_vertices(graph);
+      if(n == 1) {
+          graph->adj[0][0] = 0;
+          graph->n--;
+          return 1;
+      }
       int** newMatrix = malloc (sizeof(int**[(n-1)])); /**< Allocazione della nuova matrice di adiacenza e controllo con assert. */
       assert(newMatrix!=NULL);
       int oldRow = 0;

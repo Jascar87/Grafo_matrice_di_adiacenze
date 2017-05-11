@@ -118,5 +118,5 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph);
  * @return -1  se il grafo è vuoto o non esiste, 1 se il grafo e' stato creato correttamente
  *
  */
-int upo_dirgraph_trasposto (upo_dirgraph_t sorgente, upo_dirgraph_t trasposto);
+int upo_dirgraph_trasposto (upo_dirgraph_t sorgente, upo_dirgraph_t* trasposto);
 #endif /* UPO_VISIT_H */
