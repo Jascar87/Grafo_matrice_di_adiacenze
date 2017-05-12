@@ -5,8 +5,7 @@
   2) implementare l'algoritmo di Daijkstra                                      - gg
 ********************************************************************************
 //Daniele:
-  1) Modificare la gestione della creazione dei vertici e dei relativi pesi e
-        della rimozione di vertici                                              - 14/05
+  1) Modificare la gestione della creazione dei vertici e dei relativi pesi     - 14/05
   2) Modificare la gestione dela creazione degli archi che deve                 - 16/05
       prendere in ingresso il peso degli archi
   3) Implementare una funzione che dato due vertici se esiste                   - 18/05
