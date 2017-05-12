@@ -2,6 +2,8 @@
 #include <assert.h>
 #define DIM_STRING 1024
 #define DIM_BUF 20
+#define LOW_BOUND -2147483648
+
 
 /**
  * @brief Crea un nuovo grafo orientato
@@ -296,7 +298,7 @@ int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
         for(; row < n; row++){ /**< Ingrandimento della matrice di adiacenza di una colonna. */
             graph->adj[row] = realloc(graph->adj[row], (sizeof(int*[n+1])));
             assert(graph->adj[row]!=NULL);
-            graph->adj[row][n] = (-128); /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 8 bit. */
+            graph->adj[row][n] = LOW_BOUND; /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 32 bit. */
         }
         graph->adj = realloc(graph->adj, (sizeof(int**[n+1]))); /**< Ingrandimento della matrice di adiacenza di una riga. */
         assert(graph->adj!=NULL);
@@ -391,7 +393,7 @@ int upo_w_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2, int weight) {
   if (graph == NULL) {
       return -1;
   }
-  else if (upo_has_vertex(graph, vertex1) && upo_has_vertex(graph, vertex2) && upo_w_has_edge(graph, vertex1, vertex2) == 0) {
+  else if (upo_has_vertex(graph, vertex1) && upo_has_vertex(graph, vertex2) && upo_w_has_edge(graph, vertex1, vertex2) == 0 && weight != LOW_BOUND) {
           graph->adj[vertex1][vertex2] = weight; /**< Nella casella corrispondente dell'arco salvo il peso. */
           return 1;
   }
@@ -411,7 +413,7 @@ int upo_w_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       return -1;
   }
   else if (upo_has_vertex( graph, vertex1) == 1 && upo_has_vertex( graph, vertex2) == 1) {
-      if (graph->adj[vertex1][vertex2] != (-128)) { /**< Controllo separato per evitare accesso a zone di memoria esterne che porterebbero ad un segmentation fault. */
+      if (graph->adj[vertex1][vertex2] != LOW_BOUND) { /**< Controllo separato per evitare accesso a zone di memoria esterne che porterebbero ad un segmentation fault. */
           return 1;
       }
   }
@@ -431,7 +433,7 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       return -1;
   }
   else if (upo_w_has_edge(graph, vertex1, vertex2) == 1) {
-      graph->adj[vertex1][vertex2] = (-128);
+      graph->adj[vertex1][vertex2] = LOW;
       return 1;
   }
   return 0; /**< Negli stessi casi di upo_has_edge. */
