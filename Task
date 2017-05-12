@@ -1,0 +1,17 @@
+*************************Pratico 3 algo2 scadenza 5/06**************************
+                                                                                Scadenze Task:
+//Riccardo:
+  1) Gestire una coda di priorità                                               - 20/05
+  2) implementare l'algoritmo di Daijkstra                                      - gg
+********************************************************************************
+//Daniele:
+  1) Modificare la gestione della creazione dei vertici e dei relativi pesi     - 14/05
+  2) Modificare la gestione dela creazione degli archi che deve                 - 16/05
+      prendere in ingresso il peso degli archi
+  3) Implementare una funzione che dato due vertici se esiste                   - 18/05
+      un arco restituisce il peso
+********************************************************************************
+//Yuri:
+  1) Implementare un test statico                                               - 19/05
+  2) Implementare un test dinamico                                              - gg
+********************************************************************************
