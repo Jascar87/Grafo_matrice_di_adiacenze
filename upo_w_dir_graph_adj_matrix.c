@@ -304,6 +304,10 @@ int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
         assert(graph->adj!=NULL);
         graph->adj[n] = calloc (n+1, sizeof(int));
         assert(graph->adj[n]!=NULL);
+        int line = 0;
+        for(; line < n; ){
+          graph->adj[n][line] = LOW_BOUND; /**< Inizializzazione della nuova riga al piu' grande numero negativo rappresentabile su 32 bit. */
+        }
         return 1;
     }
     else if(n == 0) {
@@ -447,7 +451,7 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @param vertex2 dove entra l'arco
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
+int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2) { /**TASK 3*/
   if (graph == NULL) {
       return -1;
   }
