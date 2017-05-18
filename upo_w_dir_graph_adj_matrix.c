@@ -507,3 +507,97 @@ char* upo_w_print_graph(upo_dirgraph_t graph) {
 
   return graphToString;
 }
+
+/**
+ * @brief Restituisce una stringa rappresentante il grafo, nella forma Vertice: v;\n v -> i;\n v -> j\n dove i e j sono i vertici adiacenti a v
+ *
+ * @param graph e' il grafo pesato
+ * @param source e' la sorgenta da cui calcolare i cammini minimi
+ * @param p_padri e' il puntatore al vettore dei padri
+ * @param p_distanze e' il puntatore al vettore delle distanze
+ * @return 1 se l'operazione e' andata a buon fine, restituisce un valore negativo in caso contrario
+ */
+int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_distanze){
+  if (upo_w_is_graph_empty(graph)==-1) return -1; /**il grafo e' NULL*/
+  if (upo_w_is_graph_empty(graph)==1) return -2; /**il grafo e' vuoto*/
+  if (upo_w_has_vertex(graph, source)!=1)return -3; /**source non esiste */
+  if (p_padri==NULL) return -4;/**il puntatore del vettore dei padri punta a NULL*/
+  if (p_distanze==NULL) return -5;/**il puntatore del vettore delle distanze punta a NULL*/
+  int* padri=NULL;
+  int* distanze=NULL;
+  int i=0;
+  int vertex=-1;
+  int vertex_find=-1;
+  int weight=-1;
+  int negativ_weight=0;
+  int counter=0;
+  upo_list_t adj_list=NULL;
+  int priority[graph->n];
+  padri=malloc(sizeof(int)*graph->n);
+  if(padri==NULL) return -6;/**allocazione del vettore dei padri fallita*/
+  distanze=malloc(sizeof(int)*graph->n);
+  if(distanze==NULL) return -6;/**allocazione del vettore delle distanze fallita*/
+  for(i=0; i<graph->n; i++){/**cilo di inizializzazione settando tutti i padri a -1, le distanze e le priorita' a infinito*/
+    padri[i]=-1;
+    distanze[i]=LOW_BOUND;
+    priority[i]=LOW_BOUND;
+  }
+  d[source]=0;
+  adj_list=upo_create_list(sizeof(int), NULL);
+  adj_list=upo_w_get_adj_vert(graph, source);
+  while(upo_list_size(adj_list)>0){
+     vertex=upo_get_first(adj_list);
+     weight=upo_w_has_vertex(graph, source, vertex);
+     if(weight<0) negativ_weight=1;
+     else priority[vertex]=weight;
+     padri[vertex]=source;
+     counter++;
+     upo_remove_first(adj_list);
+   }
+   while(counter>0 || negativ_weight==1){
+     vertex=upo_get_min(priority);
+     counter--;
+     d[vertex]=upo_w_has_vertex(graph, padri[vertex], vertex);
+     adj_list=upo_w_get_adj_vert(graph, vertex);
+     while(upo_list_size>0){
+       vertex_find=upo_get_first(adj_list);
+       weight=upo_w_has_vertex(graph, vertex, vertex_find);
+       if(weight<0) negativ_weight=1;
+       if(distanze[vertex_find]==LOW_BOUND||distanze[vertex_find]>distanze[vertex]+weight){
+         priority[vertex_find]=weight;
+         padri[vertex_find]=vertex;
+         distanze[vertex_find]=distanze[vertex]+weight;
+       }
+       upo_remove_first(adj_list);
+     }
+   }
+   upo_destroy_list(adj_list);
+   if(negativ_weight==1){
+     free(padri);
+     free(distanze);
+     return -7; /**si e' incontrato un peso negativo quindi non si puo' procedere con l'operazione*/
+   }
+   else {
+     *p_padri=padri;
+     *p_distanze=distanze;
+   }
+   return 1;
+}
+
+/**
+Dijkstra (G, W, s)
+  INIZIALIZZA (G)  **OK
+  D <- empty_priority_queue()   **OK
+  d[s] <- 0 **OK
+  for ogni v in V[G]  **OK
+    enqueue(D,v,d[v])  **OK
+  while NotEmpty(D) do begin
+    u <- dequeue_min(D)  **OK
+    S <- S ∪ {u} //aggiungo u all’albero definitivamente  **OK
+    for ogni v adj ad u then  **OK
+      if d[v] > d[u] + W(u,v) then **OK
+      π[v] <- u **OK
+      d[v] <- d[u] + W(u,v)  **OK
+      decrease_key(D,v,d[v]) **OK
+    end for
+  end*/
