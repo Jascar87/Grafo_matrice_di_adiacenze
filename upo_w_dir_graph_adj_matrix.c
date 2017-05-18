@@ -453,13 +453,12 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  */
 int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2) { /**TASK 3*/
   if (graph == NULL) {
-      return -1;
+      return LOW_BOUND;
   }
   else if (upo_w_has_edge(graph, vertex1, vertex2) == 1) {
-      printf("%d\n", graph->adj[vertex1][vertex2]);
-      return 1;
+      return graph->adj[vertex1][vertex2];
   }
-  return 0; /**< Negli stessi casi di upo_has_edge. */
+  return LOW_BOUND; /**< Negli stessi casi di upo_has_edge. */
 }
 
 /**

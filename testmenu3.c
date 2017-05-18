@@ -734,6 +734,94 @@ void static_w_test(upo_dirgraph_t* graph) {
       printf(RED " ERRORE\n" RESET);
       return;
     }
+    printf(MAGENTA "\n\tRicerca del cammino minimo su grafo non vuoto..." RESET);
+    *graph = upo_w_dirgraph_create(0);
+    for (n = 0; n < 10; n++) {
+      returnValue = upo_w_add_vertex(*graph);
+      if (returnValue != 1) {
+        printf(RED " ERRORE AGGIUNTA VERTICE %d\n" RESET, n);
+        return;
+      }
+    }
+    returnValue = upo_w_add_edge(*graph, 0, 1, 1);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 0->1\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 1, 5, 2);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 1->5\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 0, 2, 3);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 0->2\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 2, 3, 8);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 2->3\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 3, 6, 108);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 3->6\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 6, 7, 4);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 6->7\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 7, 9, 13);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 7->9\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 7, 5, 5);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 7->5\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 5, 9, 1);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 5->9\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 9, 8, 2);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 9->8\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 8, 4, 1);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 8->4\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 4, 1, 2);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 4->1\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 5, 7, 2);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 5->7\n" RESET);
+      return;
+    }
+    returnValue = upo_w_add_edge(*graph, 7, 6, 109);
+    if (returnValue != 1) {
+      printf(RED " ERRORE AGGIUNTA ARCO 7->6\n" RESET);
+      return;
+    }
+    int* padri = NULL;
+    int* distanze = NULL;
+    returnValue = upo_cmDijkstra(*graph, 0, &padri, &distanze);
+    if (returnValue != 1) {
+        //implementare uno switch sui valori di ritorno
+    }
+    printf(YELLOW " OK\n" RESET);
+    printf(MAGENTA "\n\tControllo della correttezza dei vettori restituiti dall'algoritmo di Dijkstra..." RESET);
+    
 }
 
 void graph_properties_operations(upo_dirgraph_t* graph) {
