@@ -134,5 +134,25 @@ int upo_is_graph_empty(upo_dirgraph_t graph);
  */
 char* upo_print_graph(upo_dirgraph_t graph);
 
+/**
+ * @brief alloca e valorizza il vettore delle distane e dei padri per una ricerca dei cammini minimi a partire da una sorgente
+ *
+ * @param graph e' il grafo pesato
+ * @param source e' la sorgenta da cui calcolare i cammini minimi
+ * @param p_padri e' il puntatore al vettore dei padri
+ * @param p_distanze e' il puntatore al vettore delle distanze
+ * @return 1 se l'operazione e' andata a buon fine, restituisce un valore negativo in caso contrario
+ */
+int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_distanze);
+
+/**
+ * @brief cerca il valroe minimo nella coda di priorita' e restituisce la sua posizione
+ *
+ * @param graph e' il grafo pesato
+ * @param priority e' il puntatore al vettore della coda di priorita'
+ * @return -1 se non si trovano altri elementi in coda o restituisce la posizione con priorita' maggiore(valore minore)
+ */
+int upo_get_min(int* priority);
+
 
 #endif /* GRAPH_H */

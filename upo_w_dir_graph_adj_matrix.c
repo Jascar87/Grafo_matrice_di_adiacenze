@@ -1,8 +1,9 @@
 #include "upo_dir_graph_adj_matrix.h"
 #include <assert.h>
+#include <limits.h>
 #define DIM_STRING 1024
 #define DIM_BUF 20
-#define LOW_BOUND -2147483648
+
 
 
 /**
@@ -15,6 +16,7 @@
 
 upo_dirgraph_t upo_w_dirgraph_create(int n) {
     upo_dirgraph_t graph = NULL;
+    low_bound=(sizeof(int)/2)
     graph = malloc(sizeof(upo_dirgraph_s)); /**< Allocazione della struttura grafo e controllo con assert. */
     assert(graph!=NULL);
     graph->n = 0;
@@ -298,7 +300,7 @@ int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
         for(; row < n; row++){ /**< Ingrandimento della matrice di adiacenza di una colonna. */
             graph->adj[row] = realloc(graph->adj[row], (sizeof(int*[n+1])));
             assert(graph->adj[row]!=NULL);
-            graph->adj[row][n] = LOW_BOUND; /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 32 bit. */
+            graph->adj[row][n] = INT_MIN; /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 32 bit. */
         }
         graph->adj = realloc(graph->adj, (sizeof(int**[n+1]))); /**< Ingrandimento della matrice di adiacenza di una riga. */
         assert(graph->adj!=NULL);
@@ -306,7 +308,7 @@ int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
         assert(graph->adj[n]!=NULL);
         int line = 0;
         for(; line < n; line++){
-          graph->adj[n][line] = LOW_BOUND; /**< Inizializzazione della nuova riga al piu' grande numero negativo rappresentabile su 32 bit. */
+          graph->adj[n][line] = INT_MIN; /**< Inizializzazione della nuova riga al piu' grande numero negativo rappresentabile su 32 bit. */
         }
         return 1;
     }
@@ -417,7 +419,7 @@ int upo_w_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       return -1;
   }
   else if (upo_w_has_vertex( graph, vertex1) == 1 && upo_w_has_vertex( graph, vertex2) == 1) {
-      if (graph->adj[vertex1][vertex2] != LOW_BOUND) { /**< Controllo separato per evitare accesso a zone di memoria esterne che porterebbero ad un segmentation fault. */
+      if (graph->adj[vertex1][vertex2] != INT_MIN) { /**< Controllo separato per evitare accesso a zone di memoria esterne che porterebbero ad un segmentation fault. */
           return 1;
       }
   }
@@ -437,7 +439,7 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
       return -1;
   }
   else if (upo_w_has_edge(graph, vertex1, vertex2) == 1) {
-      graph->adj[vertex1][vertex2] = LOW_BOUND;
+      graph->adj[vertex1][vertex2] = INT_MIN;
       return 1;
   }
   return 0; /**< Negli stessi casi di upo_has_edge. */
@@ -453,12 +455,12 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  */
 int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2) { /**TASK 3*/
   if (graph == NULL) {
-      return LOW_BOUND;
+      return INT_MIN;
   }
   else if (upo_w_has_edge(graph, vertex1, vertex2) == 1) {
       return graph->adj[vertex1][vertex2];
   }
-  return LOW_BOUND; /**< Negli stessi casi di upo_has_edge. */
+  return INT_MIN; /**< Negli stessi casi di upo_has_edge. */
 }
 
 /**
@@ -509,7 +511,7 @@ char* upo_w_print_graph(upo_dirgraph_t graph) {
 }
 
 /**
- * @brief Restituisce una stringa rappresentante il grafo, nella forma Vertice: v;\n v -> i;\n v -> j\n dove i e j sono i vertici adiacenti a v
+ * @brief alloca e valorizza il vettore delle distane e dei padri per una ricerca dei cammini minimi a partire da una sorgente
  *
  * @param graph e' il grafo pesato
  * @param source e' la sorgenta da cui calcolare i cammini minimi
@@ -539,35 +541,36 @@ int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_dista
   if(distanze==NULL) return -6;/**allocazione del vettore delle distanze fallita*/
   for(i=0; i<graph->n; i++){/**cilo di inizializzazione settando tutti i padri a -1, le distanze e le priorita' a infinito*/
     padri[i]=-1;
-    distanze[i]=LOW_BOUND;
-    priority[i]=LOW_BOUND;
+    distanze[i]=INT_MIN;
+    priority[i]=INT_MAX;
   }
   d[source]=0;
+  priority[source]=INT_MIN;
   adj_list=upo_create_list(sizeof(int), NULL);
   adj_list=upo_w_get_adj_vert(graph, source);
-  while(upo_list_size(adj_list)>0){
+  while(upo_list_size(adj_list)>0){ /**imposto le distanze, le priorita' e le distanze dei vertici adiacenti a source */
      vertex=upo_get_first(adj_list);
      weight=upo_w_has_vertex(graph, source, vertex);
-     if(weight<0) negativ_weight=1;
+     if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
      else priority[vertex]=weight;
      padri[vertex]=source;
-     counter++;
+     distanze[vertex]=weight;
      upo_remove_first(adj_list);
    }
-   while(counter>0 || negativ_weight==1){
+   i=0;
+   while(i<graph->n || negativ_weight==1){
      vertex=upo_get_min(priority);
-     counter--;
-     d[vertex]=upo_w_has_vertex(graph, padri[vertex], vertex);
      adj_list=upo_w_get_adj_vert(graph, vertex);
      while(upo_list_size>0){
        vertex_find=upo_get_first(adj_list);
        weight=upo_w_has_vertex(graph, vertex, vertex_find);
-       if(weight<0) negativ_weight=1;
-       if(distanze[vertex_find]==LOW_BOUND||distanze[vertex_find]>distanze[vertex]+weight){
+       if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
+       if(distanze[vertex_find]==INT_MIN||distanze[vertex_find]>distanze[vertex]+weight){
          priority[vertex_find]=weight;
          padri[vertex_find]=vertex;
          distanze[vertex_find]=distanze[vertex]+weight;
        }
+       i++;
        upo_remove_first(adj_list);
      }
    }
@@ -584,6 +587,26 @@ int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_dista
    return 1;
 }
 
+/**
+ * @brief cerca il valroe minimo nella coda di priorita' e restituisce la sua posizione
+ *
+ * @param graph e' il grafo pesato
+ * @param priority e' il puntatore al vettore della coda di priorita'
+ * @return -1 se non si trovano altri elementi in coda o restituisce la posizione con priorita' maggiore(valore minore)
+ */
+int upo_get_min(int* priority){
+  int min=INT_MAX;
+  int posizione=-1;
+  int i=0;
+  int dim=sizeof(priority)/sizeof(int);
+  for(i=0; i<dim, i++){
+    if (priority[i]<min && priority[i]!=LOW_BOUND){
+      min=priority[i];
+      posizione=i;
+    }
+  }
+  return posizione;
+}
 /**
 Dijkstra (G, W, s)
   INIZIALIZZA (G)  **OK
