@@ -821,7 +821,7 @@ void static_w_test(upo_dirgraph_t* graph) {
     }
     printf(YELLOW " OK\n" RESET);
     printf(MAGENTA "\n\tControllo della correttezza dei vettori restituiti dall'algoritmo di Dijkstra..." RESET);
-    
+
 }
 
 void graph_properties_operations(upo_dirgraph_t* graph) {

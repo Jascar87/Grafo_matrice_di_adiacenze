@@ -29,6 +29,9 @@ upo_dirgraph_t upo_w_dirgraph_create(int n) {
     int row = 0;
     for(; row < n; row++){
       graph->adj[row] = calloc (n, sizeof(int));
+      for(row = 0; row < n; row++){
+        graph->adj[row] = INT_MIN; /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 32 bit. */
+      }
       assert(graph->adj[row]!=NULL);
     }
     return graph;
@@ -588,7 +591,7 @@ int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_dista
 }
 
 /**
- * @brief cerca il valroe minimo nella coda di priorita' e restituisce la sua posizione
+ * @brief cerca il valore minimo nella coda di priorita' e restituisce la sua posizione
  *
  * @param graph e' il grafo pesato
  * @param priority e' il puntatore al vettore della coda di priorita'
