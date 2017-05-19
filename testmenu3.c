@@ -847,7 +847,14 @@ void static_w_test(upo_dirgraph_t* graph) {
           return;
     }
     printf(MAGENTA "\n\tControllo della correttezza dei vettori restituiti dall'algoritmo di Dijkstra..." RESET);
-
+    printf("\n\tPADRI\n\t");
+    for(n = 0; n < (*graph)->n; n++) {
+        printf("%d;", padri[n]);
+    }
+    printf("\n\tDISTANZE\n\t");
+    for(n = 0; n < (*graph)->n; n++) {
+        printf("%d;", distanze[n]);
+    }
 }
 
 void graph_properties_operations(upo_dirgraph_t* graph) {
