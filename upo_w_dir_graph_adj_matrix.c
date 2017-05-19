@@ -523,15 +523,15 @@ char* upo_w_print_graph(upo_dirgraph_t graph) {
  * @param p_distanze e' il puntatore al vettore delle distanze
  * @return 1 se l'operazione e' andata a buon fine, restituisce un valore negativo in caso contrario
  */
-int upo_cmDijkstra(upo_dirgraph_t graph, int source, int* p_padri, int* p_distanze){
+int upo_cmDijkstra(upo_dirgraph_t graph, int source, int** p_padri, int** p_distanze){
   if (upo_w_is_graph_empty(graph)==-1) return -1; /**il grafo e' NULL*/
   if (upo_w_is_graph_empty(graph)==1) return -2; /**il grafo e' vuoto*/
   if (upo_w_has_vertex(graph, source)!=1)return -3; /**source non esiste */
   int* padri=NULL;
   int* distanze=NULL;
   int i=0;
-  int vertex=-1;
-  int vertex_find=-1;
+  int* vertex=NULL;
+  int* vertex_find=NULL;
   int weight=-1;
   int negativ_weight=0;
   int counter=0;
@@ -548,34 +548,43 @@ int upo_cmDijkstra(upo_dirgraph_t graph, int source, int* p_padri, int* p_distan
   }
   distanze[source]=0;
   priority[source]=INT_MIN;
+  printf("1\n");//debug
   adj_list=upo_create_list(sizeof(int), NULL);
   adj_list=upo_w_get_adj_vert(graph, source);
   while(upo_list_size(adj_list)>0){ /**imposto le distanze, le priorita' e le distanze dei vertici adiacenti a source */
+     printf("\tCICO WHILE: Dimensione adj_list: %d \n", upo_list_size(adj_list));//debug
      vertex=upo_get_first(adj_list);
-     weight=upo_w_has_weight_edge(graph,source, vertex);
+     printf("\tCICO WHILE: vertex %d \n", *vertex);//debug
+     weight=upo_w_has_weight_edge(graph,source, *vertex);
+     printf("\tCICO WHILE: weight: %d \n", weight);//debug
      if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
-     else priority[vertex]=weight;
-     padri[vertex]=source;
-     distanze[vertex]=weight;
+     else priority[*vertex]=weight;
+     padri[*vertex]=source;
+     distanze[*vertex]=weight;
      upo_remove_first(adj_list);
+     printf("\tCICO WHILE FINE: Dimensione adj_list: %d \n", upo_list_size(adj_list));//debug
    }
+   printf("2\n");//debug
    i=0;
    while(i<graph->n || negativ_weight==1){
-     vertex=upo_get_min(priority);
-     adj_list=upo_w_get_adj_vert(graph, vertex);
-     while(upo_list_size>0){
+     printf("\t SECONDO CICLO WHILE i: %d\n", i);//debug
+     *vertex=upo_get_min(priority);
+     adj_list=upo_w_get_adj_vert(graph, *vertex);
+     while(upo_list_size(adj_list)>0){
+       printf("\t\tCICLO WHILE ANNIDATO adj_list: %d\n", upo_list_size(adj_list));//debug
        vertex_find=upo_get_first(adj_list);
-       weight=upo_w_has_weight_edge(graph, vertex, vertex_find);
+       weight=upo_w_has_weight_edge(graph, *vertex, *vertex_find);
        if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
-       if(distanze[vertex_find]==INT_MIN||distanze[vertex_find]>distanze[vertex]+weight){
-         priority[vertex_find]=weight;
-         padri[vertex_find]=vertex;
-         distanze[vertex_find]=distanze[vertex]+weight;
+       if(distanze[*vertex_find]==INT_MIN||distanze[*vertex_find]>distanze[*vertex]+weight){
+         priority[*vertex_find]=weight;
+         padri[*vertex_find]=*vertex;
+         distanze[*vertex_find]=distanze[*vertex]+weight;
        }
        i++;
        upo_remove_first(adj_list);
      }
    }
+   printf("3\n");//debug
    upo_destroy_list(adj_list);
    if(negativ_weight==1){
      free(padri);
@@ -586,6 +595,7 @@ int upo_cmDijkstra(upo_dirgraph_t graph, int source, int* p_padri, int* p_distan
      *p_padri=padri;
      *p_distanze=distanze;
    }
+   printf("4\n");//debug
    return 1;
 }
 
