@@ -198,7 +198,7 @@ upo_list_t upo_w_get_adj_vert(upo_dirgraph_t graph, int vertex) {
         int n = upo_w_num_vertices(graph);
         int column = 0;
         for(; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca dei vertici adiacenti ad un dato vertice. */
-          if(graph->adj[vertex][column] == 1){ /**< Selezione dei vertici da inserire nella lista. */
+          if(graph->adj[vertex][column] != INT_MIN){ /**< Selezione dei vertici da inserire nella lista. */
             int *value = malloc(sizeof(int)); /**< Allocazione di memoria per contenere il vertice da passare alla lista per non perderlo all'uscita della funzione*/
             assert(value!=NULL);
             *value = column; /**< Salvataggio del valore del vertice nella memoria appena allocata. */
