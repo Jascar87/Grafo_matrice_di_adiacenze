@@ -566,7 +566,7 @@ int upo_cmDijkstra(upo_dirgraph_t graph, int source, int** p_padri, int** p_dist
    }
    printf("2\n");//debug
    i=0;
-   while(i<graph->n || negativ_weight==1){
+   while(i<graph->n-1 || negativ_weight==1){
      printf("\t SECONDO CICLO WHILE i: %d\n", i);//debug
      *vertex=upo_get_min(priority, graph->n);
      adj_list=upo_w_get_adj_vert(graph, *vertex);
@@ -576,13 +576,16 @@ int upo_cmDijkstra(upo_dirgraph_t graph, int source, int** p_padri, int** p_dist
        weight=upo_w_has_weight_edge(graph, *vertex, *vertex_find);
        if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
        if(distanze[*vertex_find]==INT_MIN||distanze[*vertex_find]>distanze[*vertex]+weight){
-         priority[*vertex_find]=weight;
+         printf("\t\t\tTROVATA NUOVA DISTANZA MINIMA\n");
+         priority[*vertex_find]=priority[*vertex]+weight;
          padri[*vertex_find]=*vertex;
          distanze[*vertex_find]=distanze[*vertex]+weight;
+         printf("\t\t\tpriority[%d] : %d, \t padri[%d] : %d, \t, distanze[%d] : %d\n", *vertex_find, priority[*vertex_find], *vertex_find, padri[*vertex_find], *vertex_find, distanze[*vertex_find]);//debug
        }
-       i++;
        upo_remove_first(adj_list);
      }
+     i++;
+     priority[*vertex]=INT_MIN;
    }
    printf("3\n");//debug
    upo_destroy_list(adj_list);
