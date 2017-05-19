@@ -146,13 +146,14 @@ char* upo_print_graph(upo_dirgraph_t graph);
 int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_distanze);
 
 /**
- * @brief cerca il valroe minimo nella coda di priorita' e restituisce la sua posizione
+ * @brief cerca il valore minimo nella coda di priorita' e restituisce la sua posizione
  *
  * @param graph e' il grafo pesato
  * @param priority e' il puntatore al vettore della coda di priorita'
+ * @param dim e' la dimensione del vettore della coda di priorita'
  * @return -1 se non si trovano altri elementi in coda o restituisce la posizione con priorita' maggiore(valore minore)
  */
-int upo_get_min(int* priority);
+int upo_get_min(int* priority, int dim);
 
 
 #endif /* GRAPH_H */

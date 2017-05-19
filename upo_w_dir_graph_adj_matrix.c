@@ -568,7 +568,7 @@ int upo_cmDijkstra(upo_dirgraph_t graph, int source, int** p_padri, int** p_dist
    i=0;
    while(i<graph->n || negativ_weight==1){
      printf("\t SECONDO CICLO WHILE i: %d\n", i);//debug
-     *vertex=upo_get_min(priority);
+     *vertex=upo_get_min(priority, graph->n);
      adj_list=upo_w_get_adj_vert(graph, *vertex);
      while(upo_list_size(adj_list)>0){
        printf("\t\tCICLO WHILE ANNIDATO adj_list: %d\n", upo_list_size(adj_list));//debug
@@ -599,26 +599,29 @@ int upo_cmDijkstra(upo_dirgraph_t graph, int source, int** p_padri, int** p_dist
    return 1;
 }
 
-/**
- * @brief cerca il valore minimo nella coda di priorita' e restituisce la sua posizione
- *
- * @param graph e' il grafo pesato
- * @param priority e' il puntatore al vettore della coda di priorita'
- * @return -1 se non si trovano altri elementi in coda o restituisce la posizione con priorita' maggiore(valore minore)
- */
-int upo_get_min(int* priority){
-  int min=INT_MAX;
-  int posizione=-1;
-  int i=0;
-  int dim=sizeof(priority)/sizeof(int);
-  for(i=0; i<dim; i++){
-    if (priority[i]<min && priority[i]!=INT_MIN){
-      min=priority[i];
-      posizione=i;
-    }
-  }
-  return posizione;
-}
+ /**
+  * @brief cerca il valore minimo nella coda di priorita' e restituisce la sua posizione
+  *
+  * @param graph e' il grafo pesato
+  * @param priority e' il puntatore al vettore della coda di priorita'
+  * @param dim e' la dimensione del vettore della coda di priorita'
+  * @return -1 se non si trovano altri elementi in coda o restituisce la posizione con priorita' maggiore(valore minore)
+  */
+ int upo_get_min(int* priority, int dim){
+   int min=INT_MAX;
+   int posizione=-1;
+   int i=0;
+   for(i=0; i<dim; i++){
+     printf("\tpriority[%d]: %d, min:%d, posizione: %d\n",i , priority[i], min, posizione);//debug
+     if (priority[i]<min && priority[i]!=INT_MIN){
+       min=priority[i];
+       posizione=i;
+       printf("\t\tpriority[%d]: %d, min:%d, posizione: %d\n",i , priority[i], min, posizione);//debug
+     }
+   }
+   printf("\tposizione prima del return di upo_get_min :%d\n",posizione );
+   return posizione;
+ }
 /**
 Dijkstra (G, W, s)
   INIZIALIZZA (G)  **OK
