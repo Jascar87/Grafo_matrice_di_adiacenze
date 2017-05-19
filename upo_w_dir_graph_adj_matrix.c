@@ -16,7 +16,6 @@
 
 upo_dirgraph_t upo_w_dirgraph_create(int n) {
     upo_dirgraph_t graph = NULL;
-    low_bound=(sizeof(int)/2)
     graph = malloc(sizeof(upo_dirgraph_s)); /**< Allocazione della struttura grafo e controllo con assert. */
     assert(graph!=NULL);
     graph->n = 0;
@@ -27,10 +26,11 @@ upo_dirgraph_t upo_w_dirgraph_create(int n) {
     graph->adj = malloc(sizeof(int**[n])); /**< Creazione della matrice di adiacenza e controllo con assert. */
     assert(graph->adj!=NULL);
     int row = 0;
+    int column = 0;
     for(; row < n; row++){
       graph->adj[row] = calloc (n, sizeof(int));
-      for(row = 0; row < n; row++){
-        graph->adj[row] = INT_MIN; /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 32 bit. */
+      for(; column < n; column++){
+        graph->adj[row][column] = INT_MIN; /**< Inizializzazione della nuova colonna al piu' grande numero negativo rappresentabile su 32 bit. */
       }
       assert(graph->adj[row]!=NULL);
     }
@@ -48,12 +48,13 @@ int upo_w_dirgraph_destroy(upo_dirgraph_t graph){
     if(graph == NULL){
       return -1;
     }
+
     else if(graph != NULL){ /**< Deallocazione della matrice di adiacenza e successivamente del grafo. */
       int row = upo_w_num_vertices(graph) - 1;
       if(row < 0) { /**< Modifica dalla prima versione. */
           row = 0;
       }
-        for(; row >= 0; row--){
+      for(; row >= 0; row--){
         free(graph->adj[row]);
       }
       free(graph->adj);
@@ -402,7 +403,7 @@ int upo_w_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2, int weight) {
   if (graph == NULL) {
       return -1;
   }
-  else if (upo_w_has_vertex(graph, vertex1) && upo_w_has_vertex(graph, vertex2) && upo_w_has_edge(graph, vertex1, vertex2) == 0 && weight != LOW_BOUND) {
+  else if (upo_w_has_vertex(graph, vertex1) && upo_w_has_vertex(graph, vertex2) && upo_w_has_edge(graph, vertex1, vertex2) == 0 && weight != INT_MIN) {
           graph->adj[vertex1][vertex2] = weight; /**< Nella casella corrispondente dell'arco salvo il peso. */
           return 1;
   }
@@ -522,12 +523,10 @@ char* upo_w_print_graph(upo_dirgraph_t graph) {
  * @param p_distanze e' il puntatore al vettore delle distanze
  * @return 1 se l'operazione e' andata a buon fine, restituisce un valore negativo in caso contrario
  */
-int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_distanze){
+int upo_cmDijkstra(upo_dirgraph_t graph, int source, int* p_padri, int* p_distanze){
   if (upo_w_is_graph_empty(graph)==-1) return -1; /**il grafo e' NULL*/
   if (upo_w_is_graph_empty(graph)==1) return -2; /**il grafo e' vuoto*/
   if (upo_w_has_vertex(graph, source)!=1)return -3; /**source non esiste */
-  if (p_padri==NULL) return -4;/**il puntatore del vettore dei padri punta a NULL*/
-  if (p_distanze==NULL) return -5;/**il puntatore del vettore delle distanze punta a NULL*/
   int* padri=NULL;
   int* distanze=NULL;
   int i=0;
@@ -539,21 +538,21 @@ int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_dista
   upo_list_t adj_list=NULL;
   int priority[graph->n];
   padri=malloc(sizeof(int)*graph->n);
-  if(padri==NULL) return -6;/**allocazione del vettore dei padri fallita*/
+  if(padri==NULL) return -4;/**allocazione del vettore dei padri fallita*/
   distanze=malloc(sizeof(int)*graph->n);
-  if(distanze==NULL) return -6;/**allocazione del vettore delle distanze fallita*/
+  if(distanze==NULL) return -5;/**allocazione del vettore delle distanze fallita*/
   for(i=0; i<graph->n; i++){/**cilo di inizializzazione settando tutti i padri a -1, le distanze e le priorita' a infinito*/
     padri[i]=-1;
     distanze[i]=INT_MIN;
     priority[i]=INT_MAX;
   }
-  d[source]=0;
+  distanze[source]=0;
   priority[source]=INT_MIN;
   adj_list=upo_create_list(sizeof(int), NULL);
   adj_list=upo_w_get_adj_vert(graph, source);
   while(upo_list_size(adj_list)>0){ /**imposto le distanze, le priorita' e le distanze dei vertici adiacenti a source */
      vertex=upo_get_first(adj_list);
-     weight=upo_w_has_vertex(graph, source, vertex);
+     weight=upo_w_has_weight_edge(graph,source, vertex);
      if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
      else priority[vertex]=weight;
      padri[vertex]=source;
@@ -566,7 +565,7 @@ int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_dista
      adj_list=upo_w_get_adj_vert(graph, vertex);
      while(upo_list_size>0){
        vertex_find=upo_get_first(adj_list);
-       weight=upo_w_has_vertex(graph, vertex, vertex_find);
+       weight=upo_w_has_weight_edge(graph, vertex, vertex_find);
        if(weight<0) negativ_weight=1; /**se incontro un arco di peso negativo ne tengo traccia per annullare l'operazione*/
        if(distanze[vertex_find]==INT_MIN||distanze[vertex_find]>distanze[vertex]+weight){
          priority[vertex_find]=weight;
@@ -581,7 +580,7 @@ int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_dista
    if(negativ_weight==1){
      free(padri);
      free(distanze);
-     return -7; /**si e' incontrato un peso negativo quindi non si puo' procedere con l'operazione*/
+     return -6; /**si e' incontrato un peso negativo quindi non si puo' procedere con l'operazione*/
    }
    else {
      *p_padri=padri;
@@ -602,8 +601,8 @@ int upo_get_min(int* priority){
   int posizione=-1;
   int i=0;
   int dim=sizeof(priority)/sizeof(int);
-  for(i=0; i<dim, i++){
-    if (priority[i]<min && priority[i]!=LOW_BOUND){
+  for(i=0; i<dim; i++){
+    if (priority[i]<min && priority[i]!=INT_MIN){
       min=priority[i];
       posizione=i;
     }

@@ -700,7 +700,7 @@ void static_w_test(upo_dirgraph_t* graph) {
       printf(RED " ERRORE AGGIUNTA ARCO 1->2\n" RESET);
       return;
     }
-    returnValue = upo_w_add_edge(*graph, 2, 3, LOW_BOUND);
+    returnValue = upo_w_add_edge(*graph, 2, 3, INT_MIN);
     if (returnValue == 1) {
       printf(RED " ERRORE AGGIUNTA ARCO 2->3\n" RESET);
       return;
@@ -711,8 +711,8 @@ void static_w_test(upo_dirgraph_t* graph) {
       return;
     }
     returnValue = upo_w_has_weight_edge(*graph, 1, 2);
-    if (returnValue != 1) {
-      printf(RED " ERRORE RICERCA ARCO 1->2\n" RESET);
+    if (returnValue != -10) {
+      printf(RED " ERRORE RICERCA PESO ARCO 1->2\n" RESET);
       return;
     }
     returnValue = upo_w_remove_edge(*graph, 0, 1);
@@ -813,13 +813,39 @@ void static_w_test(upo_dirgraph_t* graph) {
       printf(RED " ERRORE AGGIUNTA ARCO 7->6\n" RESET);
       return;
     }
+    printf(MAGENTA "\n\tCreato grafo di prova... " RESET);
     int* padri = NULL;
     int* distanze = NULL;
     returnValue = upo_cmDijkstra(*graph, 0, &padri, &distanze);
-    if (returnValue != 1) {
-        //implementare uno switch sui valori di ritorno
+    switch (returnValue) {
+      case 1 :
+          printf(YELLOW" OK\n" RESET);
+          break;
+      case -1 :
+          printf(RED " ERRORE IL GRAFO E' NULLO\n" RESET);
+          break;
+          return;
+      case -2 :
+          printf(RED " ERRORE IL GRAFO E' VUOTO\n" RESET);
+          break;
+          return;
+      case -3 :
+          printf(RED " ERRORE LA SORGENTE SCELTA NON ESISTE\n" RESET);
+          break;
+          return;
+      case -4 :
+          printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DEI PADRI\n" RESET);
+          break;
+          return;
+      case -5 :
+          printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DELLE DISTANZE\n" RESET);
+          break;
+          return;
+      case -6:
+          printf(RED " ERRORE UN PESO DI UN ARCO DEL GRAFO E' NEGATIVO\n" RESET);
+          break;
+          return;
     }
-    printf(YELLOW " OK\n" RESET);
     printf(MAGENTA "\n\tControllo della correttezza dei vettori restituiti dall'algoritmo di Dijkstra..." RESET);
 
 }
