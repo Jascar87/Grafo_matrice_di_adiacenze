@@ -93,7 +93,7 @@ void print_graph_menu_list() {
 }
 
 void print_menu_w_list() {
-    printf(MAGENTA "\n\t\tMenu grafo pesato:\n\t1\t...\n\t2\t...\n\t3\t...\n\t4\t...\n\t9\tTest statico\n\t0\tTorna al menu principale (causa la distruzione del grafo)\n" RESET);
+    printf(MAGENTA "\n\t\tMenu grafo pesato:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tAggiungi un nuovo vertice\n\t4\tRimuovi un vertice\n\t5\tCrea un arco pesato tra due vertici\n\t6\tRimuovi un arco\n\t7\tStampa il grafo\n\t9\tTest statico\n\t0\tTorna al menu principale (causa la distruzione del grafo)\n" RESET);
 }
 
 void print_menu_list() {
@@ -621,7 +621,185 @@ void create_graph(upo_dirgraph_t* graph) {
     }
 }
 
-void static_w_test(upo_dirgraph_t* graph) {
+
+
+void Dijkstra(upo_w_dirgraph_t graph) {
+  int* padri = NULL;
+  int* distanze = NULL;
+  int source = 0;
+  int returnValue = 0;
+  printf("\n\tIndicare il vertice sorgente: ");
+  scanf("%d",&source);
+  returnValue = upo_cmDijkstra(graph, source, &padri, &distanze);
+  switch (returnValue) {
+    case 1 :
+        printf(YELLOW" OK\n" RESET);
+        break;
+    case -1 :
+        printf(RED " ERRORE IL GRAFO E' NULLO\n" RESET);
+        break;
+        return;
+    case -2 :
+        printf(RED " ERRORE IL GRAFO E' VUOTO\n" RESET);
+        break;
+        return;
+    case -3 :
+        printf(RED " ERRORE LA SORGENTE SCELTA NON ESISTE\n" RESET);
+        break;
+        return;
+    case -4 :
+        printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DEI PADRI\n" RESET);
+        break;
+        return;
+    case -5 :
+        printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DELLE DISTANZE\n" RESET);
+        break;
+        return;
+    case -6:
+        printf(RED " ERRORE UN PESO DI UN ARCO DEL GRAFO E' NEGATIVO\n" RESET);
+        break;
+        return;
+  }
+  int n = 0;
+  printf("\n\tPADRI\n\t");
+  for(n = 0; n < graph->n; n++) {
+      printf("%d;", padri[n]);
+  }
+  printf("\n\tDISTANZE\n\t");
+  for(n = 0; n < graph->n; n++) {
+      printf("%d;", distanze[n]);
+  }
+}
+
+void print_w_graph(upo_w_dirgraph_t graph) {
+    char* graphToString = upo_w_print_graph(graph);
+    printf(YELLOW "\n\tStampa il grafo\n" RESET);
+    printf( YELLOW "\n%s" RESET, graphToString);
+    free(graphToString);
+}
+
+void remove_w_edge(upo_w_dirgraph_t* graph) {
+    printf("\n\tRimuovi un arco\n");
+    int vertex1 = 0;
+    int vertex2 = 0;
+    printf("\n\tInserire l'indice del vertice da cui parte l'arco: ");
+    scanf("%d",&vertex1);
+    printf("\n\tInserire l'indice del vertice in cui arriva l'arco: ");
+    scanf("%d",&vertex2);
+    int returnValue = upo_w_remove_edge(*graph, vertex1, vertex2);
+    switch (returnValue) {
+        case -1 :
+            printf("\a\"");
+            printf(RED"\n\tRimozione annullata, il grafo e' nullo\n"RESET);
+            break;
+        case 0 :
+            printf("\a\"");
+            printf(RED"\n\tIl grafo non contiene almeno uno dei due vertici oppure non esiste l'arco indicato\n"RESET);
+            break;
+        case 1 :
+            printf(YELLOW"\n\tRimozione dell'arco completata\n"RESET);
+            break;
+    }
+}
+
+void add_w_edge(upo_w_dirgraph_t* graph) {
+    printf("\n\tCrea un arco pesato tra due vertici\n");
+    int vertex1 = 0;
+    int vertex2 = 0;
+    int weight = 0;
+    printf("\n\tInserire l'indice del vertice da cui parte l'arco: ");
+    scanf("%d",&vertex1);
+    printf("\n\tInserire l'indice del vertice in cui arriva l'arco: ");
+    scanf("%d",&vertex2);
+    printf("\n\tInserire il peso dell'arco: ");
+    scanf("%d",&weight);
+    int returnValue = upo_w_add_edge(*graph, vertex1, vertex2, weight);
+    switch (returnValue) {
+        case -1 :
+            printf("\a\"");
+            printf(RED"\n\tCreazione annullata, il grafo e' nullo\n"RESET);
+            break;
+        case 0 :
+            printf("\a\"");
+            printf(RED"\n\tCreazione annullata, almeno uno dei due vertici non esiste oppure l'arco indicato e' gia presente\n"RESET);
+            break;
+      case 1 :
+            printf(YELLOW"\n\tAggiunta completata\n"RESET);
+            break;
+    }
+}
+
+void remove_w_vertex(upo_w_dirgraph_t* graph) {
+    printf("\n\tRimuovi un vertice\n");
+    int vertex = 0;
+    printf("\n\tInserire l'indice del vertice da rimuovere: ");
+    scanf("%d",&vertex);
+    int returnValue = upo_w_remove_vertex(*graph, vertex);
+    switch (returnValue) {
+        case -1 :
+            printf("\a\"");
+            printf(RED"\n\tRimozione annullata, il grafo e' nullo\n"RESET);
+            break;
+        case 0 :
+            printf("\a\"");
+            printf(RED"\n\tIl grafo non contiene il vertice con indice %d\n"RESET,vertex);
+            break;
+        case 1 :
+            printf(YELLOW"\n\tRimozione del vertice con indice %d completata\n"RESET,vertex);
+            break;
+    }
+}
+
+void add_w_vertex(upo_w_dirgraph_t* graph) {
+    printf("\n\tAggiungi un nuovo vertice\n");
+    int returnValue = upo_w_add_vertex(*graph);
+    switch (returnValue) {
+        case -1 :
+            printf("\a\"");
+            printf(RED"\n\tAggiunta annullata, il grafo e' nullo\n"RESET);
+            break;
+        case 0 :
+            printf("\a\"");
+            printf(RED"\n\tAggiunta annullata per un errore ignoto\n"RESET);
+            break;
+        case 1 :
+            printf(YELLOW"\n\tAggiunta completata\n"RESET);
+            break;
+    }
+}
+
+void destroy_w_graph(upo_w_dirgraph_t* graph) {
+    printf("\n\tDistruggi il grafo\n");
+    int returnValue = upo_w_dirgraph_destroy(*graph);
+    switch (returnValue) {
+        case -1 :
+            printf("\a\"");
+            printf(RED"\n\tDistruzione annullata, il grafo e' nullo\n"RESET);
+            break;
+        case 0 :
+            printf("\a\"");
+            printf(RED"\n\tDistruzione annullata per un errore ignoto\n"RESET);
+            break;
+        case 1 :
+            *graph = NULL;
+            printf(YELLOW"\n\tDistruzione completata\n"RESET);
+            break;
+    }
+}
+
+void create_w_graph(upo_w_dirgraph_t* graph) {
+    printf("\n\tCrea un nuovo grafo pesato\n");
+    if (*graph == NULL) {
+        *graph = upo_w_dirgraph_create(0);
+        printf(YELLOW"\n\tCreazione completata\n"RESET);
+    }
+    else {
+        printf("\a\"");
+        printf(RED"\n\tCreazione annullata, il grafo e' gia stato creato\n"RESET);
+    }
+}
+
+void static_w_test(upo_w_dirgraph_t* graph) {
     printf(MAGENTA "\n\tTest statico\n" RESET);
     printf(MAGENTA "\n\tCreazione grafo vuoto..." RESET);
     *graph = upo_w_dirgraph_create(0);
@@ -1001,23 +1179,35 @@ void graph_operations(upo_dirgraph_t* graph) {
     }
 }
 
-void graph_with_weights(upo_dirgraph_t* graph) {
+void graph_with_weights(upo_w_dirgraph_t* graph) {
   int digit = 0;
   while (TRUE) {
       print_menu_w_list();
       selection(&digit);
       switch (digit){
           case 1 :
-              //graph_w_operations(graph);
+              create_w_graph(graph);
               break;
           case 2 :
-              //vertex_w_operations(graph);
+              destroy_w_graph(graph);
               break;
           case 3 :
-              //edges_w_operations(graph);
+              add_w_vertex(graph);
               break;
           case 4 :
-              //graph_w_properties_operations(graph);
+              remove_w_vertex(graph);
+              break;
+          case 5 :
+              add_w_edge(graph);
+              break;
+          case 6 :
+              remove_w_edge(graph);
+              break;
+          case 7 :
+              print_w_graph(*graph);
+              break;
+          case 8 :
+              Dijkstra(*graph);
               break;
           case 9 :
               static_w_test(graph);
@@ -1072,6 +1262,7 @@ void graph_without_weights(upo_dirgraph_t* graph) {
 
 int main(void) {
     upo_dirgraph_t graph = NULL;
+    upo_w_dirgraph_t wGraph = NULL;
     int digit = 0;
     while (TRUE) {
         print_super_menu_list();
@@ -1081,12 +1272,16 @@ int main(void) {
                 graph_without_weights(&graph);
                 break;
             case 2 :
-                graph_with_weights(&graph);
+                graph_with_weights(&wGraph);
                 break;
             case 0 :
                 printf("\n\tEsci\n");
                 if (graph != NULL) {
                     destroy_graph(&graph);
+                    printf("\n");
+                }
+                if (wGraph != NULL) {
+                    destroy_w_graph(&wGraph);
                     printf("\n");
                 }
                 return 0;

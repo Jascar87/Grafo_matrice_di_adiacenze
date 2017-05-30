@@ -1,19 +1,19 @@
 #include <string.h>
 #include "upo_list.h"
 
-#ifndef UPO_DIR_GRAPH_H
-#define UPO_DIR_GRAPH_H
+#ifndef UPO_W_DIR_GRAPH_H
+#define UPO_W_DIR_GRAPH_H
 
-typedef struct upo_dirgraph_s* upo_dirgraph_t;
-typedef struct upo_dir_edge_s* upo_dir_edge_t;
+typedef struct upo_w_dirgraph_s* upo_w_dirgraph_t;
+typedef struct upo_w_dir_edge_s* upo_w_dir_edge_t;
 
 /**
  * @brief Definizione della struttura per rappresentare un arco diretto
  */
-typedef struct upo_dir_edge_s {
+typedef struct upo_w_dir_edge_s {
     int from; /**< Vertice da cui l'arco esce. */
     int to; /**< Vertice nel quale l'arco entra. */
-} upo_dir_edge_s;
+} upo_w_dir_edge_s;
 
 /**
  * @brief Crea un nuovo grafo orientato
@@ -22,7 +22,7 @@ typedef struct upo_dir_edge_s {
  * @return un nuovo grafo diretto vuoto
  *
  */
-upo_dirgraph_t upo_dirgraph_create(int n);
+upo_w_dirgraph_t upo_w_dirgraph_create(int n);
 
 /**
  * @brief Distrugge un grafo liberando tutta la memoria
@@ -31,7 +31,7 @@ upo_dirgraph_t upo_dirgraph_create(int n);
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_dirgraph_destroy(upo_dirgraph_t graph);
+int upo_w_dirgraph_destroy(upo_w_dirgraph_t graph);
 
 /**
  * @brief Restituisce il numero di vertici del grafo
@@ -39,7 +39,7 @@ int upo_dirgraph_destroy(upo_dirgraph_t graph);
  * @param graph il grafo
  * @return il numero di vertici del grafo, -1 se il grafo e' nullo
  */
-int upo_num_vertices(upo_dirgraph_t graph);
+int upo_w_num_vertices(upo_w_dirgraph_t graph);
 
 /**
  * @brief Restituisce il numero di archi del grafo
@@ -47,7 +47,7 @@ int upo_num_vertices(upo_dirgraph_t graph);
  * @param graph il grafo
  * @return il numero di archi del grafo, -1 se il grafo e' nullo
  */
-int upo_num_edges(upo_dirgraph_t graph);
+int upo_w_num_edges(upo_w_dirgraph_t graph);
 
 /**
  * @brief Aggiunge un nuovo vertice al grafo di indice size+1 (dove size è il numero di vertici)
@@ -56,7 +56,7 @@ int upo_num_edges(upo_dirgraph_t graph);
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_w_add_vertex(upo_dirgraph_t graph);
+int upo_w_add_vertex(upo_w_dirgraph_t graph);
 
 /**
  * @brief Controlla l'esistenza di un vertice di indice vertex nel grafo
@@ -65,7 +65,7 @@ int upo_w_add_vertex(upo_dirgraph_t graph);
  * @param vertex il vertice da cercare
  * @return 1 se il grafo contiene il vertice, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_has_vertex(upo_dirgraph_t graph, int vertex);
+int upo_w_has_vertex(upo_w_dirgraph_t graph, int vertex);
 
 /**
  * @brief Elimina un vertice di indice vertex dal grafo e tutti gli archi ad esso incidenti. Attenzione, le liste di adiacenza vanno aggiornate.
@@ -74,7 +74,7 @@ int upo_has_vertex(upo_dirgraph_t graph, int vertex);
  * @param vertex il vertice da eliminare
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_remove_vertex(upo_dirgraph_t graph, int vertex);
+int upo_w_remove_vertex(upo_w_dirgraph_t graph, int vertex);
 
 /**
  * @brief Aggiunge un arco al grafo. Se l'arco gia' esiste non fa nulla
@@ -84,7 +84,7 @@ int upo_remove_vertex(upo_dirgraph_t graph, int vertex);
  * @param vertex2 dove entra l'arco
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
+int upo_w_add_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2, int weight);
 
 /**
  * @brief Controlla l'esistenza di un arco nel grafo
@@ -94,7 +94,7 @@ int upo_w_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
  * @param vertex2 dove entra l'arco
  * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
+int upo_w_has_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2);
 
 /**
  * @brief Restituisce il peso di un'arco
@@ -104,7 +104,7 @@ int upo_w_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
  * @param vertex2 dove entra l'arco
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
+int upo_w_has_weight_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2);
 
 /**
  * @brief Rimuove un arco dal grafo
@@ -116,7 +116,7 @@ int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
  */
 
 
-int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
+int upo_w_remove_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2);
 
 /**
  * @brief Controlla se il grafo e' vuoto
@@ -124,7 +124,7 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2);
  * @param graph il grafo
  * @return 1 se il grafo e' vuoto, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_is_graph_empty(upo_dirgraph_t graph);
+int upo_w_is_graph_empty(upo_w_dirgraph_t graph);
 
 /**
  * @brief Restituisce una stringa rappresentante il grafo, nella forma Vertice: v;\n v -> i;\n v -> j\n dove i e j sono i vertici adiacenti a v
@@ -132,7 +132,7 @@ int upo_is_graph_empty(upo_dirgraph_t graph);
  * @param graph il grafo
  * @return una stringa rappresentante il grafo
  */
-char* upo_print_graph(upo_dirgraph_t graph);
+char* upo_w_print_graph(upo_w_dirgraph_t graph);
 
 /**
  * @brief alloca e valorizza il vettore delle distane e dei padri per una ricerca dei cammini minimi a partire da una sorgente
@@ -143,7 +143,7 @@ char* upo_print_graph(upo_dirgraph_t graph);
  * @param p_distanze e' il puntatore al vettore delle distanze
  * @return 1 se l'operazione e' andata a buon fine, restituisce un valore negativo in caso contrario
  */
-int upo_cmDijkstra(upo_wdirgraph_t graph, int source, int* p_padri, int* p_distanze);
+int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_distanze);
 
 /**
  * @brief cerca il valore minimo nella coda di priorita' e restituisce la sua posizione

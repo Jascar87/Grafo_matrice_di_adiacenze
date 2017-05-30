@@ -1,4 +1,4 @@
-#include "upo_dir_graph_adj_matrix.h"
+#include "upo_w_dir_graph_adj_matrix.h"
 #include <assert.h>
 #include <limits.h>
 #define DIM_STRING 1024
@@ -14,9 +14,9 @@
  *
  */
 
-upo_dirgraph_t upo_w_dirgraph_create(int n) {
-    upo_dirgraph_t graph = NULL;
-    graph = malloc(sizeof(upo_dirgraph_s)); /**< Allocazione della struttura grafo e controllo con assert. */
+upo_w_dirgraph_t upo_w_dirgraph_create(int n) {
+    upo_w_dirgraph_t graph = NULL;
+    graph = malloc(sizeof(upo_w_dirgraph_s)); /**< Allocazione della struttura grafo e controllo con assert. */
     assert(graph!=NULL);
     graph->n = 0;
     if(n < 1){ /**< Controllo che n abbia un valore valido. */
@@ -44,7 +44,7 @@ upo_dirgraph_t upo_w_dirgraph_create(int n) {
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  *
  */
-int upo_w_dirgraph_destroy(upo_dirgraph_t graph){
+int upo_w_dirgraph_destroy(upo_w_dirgraph_t graph){
     if(graph == NULL){
       return -1;
     }
@@ -73,7 +73,7 @@ int upo_w_dirgraph_destroy(upo_dirgraph_t graph){
  * @param graph il grafo
  * @return il numero di vertici del grafo, -1 se il grafo e' nullo
  */
-int upo_w_num_vertices(upo_dirgraph_t graph){
+int upo_w_num_vertices(upo_w_dirgraph_t graph){
     if(graph == NULL){
       return -1;
     }
@@ -86,7 +86,7 @@ int upo_w_num_vertices(upo_dirgraph_t graph){
  * @param graph il grafo
  * @return il numero di archi del grafo, -1 se il grafo e' nullo
  */
-int upo_w_num_edges(upo_dirgraph_t graph) {
+int upo_w_num_edges(upo_w_dirgraph_t graph) {
     if(graph == NULL){
       return -1;
     }
@@ -111,7 +111,7 @@ int upo_w_num_edges(upo_dirgraph_t graph) {
  * @param vertex il vertice
  * @return il grado entrante di vertex, -1 se il grafo e' nullo
  */
-int upo_w_get_in_degree(upo_dirgraph_t graph, int vertex) {
+int upo_w_get_in_degree(upo_w_dirgraph_t graph, int vertex) {
     if(graph == NULL){
       return -1;
     }
@@ -135,7 +135,7 @@ int upo_w_get_in_degree(upo_dirgraph_t graph, int vertex) {
  * @param vertex il vertice
  * @return il grado uscente di vertex, -1 se il grafo e' nullo
  */
-int upo_w_get_out_degree(upo_dirgraph_t graph, int vertex) {
+int upo_w_get_out_degree(upo_w_dirgraph_t graph, int vertex) {
     if(graph == NULL){
       return -1;
     }
@@ -159,7 +159,7 @@ int upo_w_get_out_degree(upo_dirgraph_t graph, int vertex) {
  * @param vertex il vertice
  * @return il grado complessivo di vertex, -1 se il grafo e' nullo
  */
-int upo_w_get_degree(upo_dirgraph_t graph, int vertex) {
+int upo_w_get_degree(upo_w_dirgraph_t graph, int vertex) {
     if(graph == NULL){
       return -1;
     }
@@ -172,7 +172,7 @@ int upo_w_get_degree(upo_dirgraph_t graph, int vertex) {
  * @param graph il grafo
  * @return 1 se il grafo e' vuoto, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_is_graph_empty(upo_dirgraph_t graph) {
+int upo_w_is_graph_empty(upo_w_dirgraph_t graph) {
     if(graph == NULL){
       return -1;
     }
@@ -191,7 +191,7 @@ int upo_w_is_graph_empty(upo_dirgraph_t graph) {
  * @param vertex il vertice
  * @return una lista contenente i vertici adiacenti a vertex, NULL se il grafo e' vuoto
  */
-upo_list_t upo_w_get_adj_vert(upo_dirgraph_t graph, int vertex) {
+upo_list_t upo_w_get_adj_vert(upo_w_dirgraph_t graph, int vertex) {
     upo_list_t adjVert = NULL;
       if(upo_w_is_graph_empty(graph) == 0 && upo_w_has_vertex(graph, vertex) == 1){
         adjVert = upo_create_list(sizeof(int),NULL); /**< Creazione della lista. */
@@ -216,7 +216,7 @@ upo_list_t upo_w_get_adj_vert(upo_dirgraph_t graph, int vertex) {
  * @param vertex il vertice
  * @return una lista contenente gli archi uscenti da vertex, NULL se il grafo e' vuoto
  */
-upo_list_t upo_w_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
+upo_list_t upo_w_get_inc_out_edg(upo_w_dirgraph_t graph, int vertex) {
   upo_list_t incOutEdges = NULL;
   if(upo_w_is_graph_empty(graph) == 0){
       incOutEdges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
@@ -224,7 +224,7 @@ upo_list_t upo_w_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
       int column = 0;
       for(; column < n; column++){ /**< Scorrimento delle colonne data una riga in cerca degli archi uscenti da un dato vertice. */
           if(graph->adj[vertex][column] == 1){ /**< Selezione degli archi da inserire nella lista. */
-            upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
+            upo_w_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
             assert(edge!=NULL);
             edge->from = vertex; /**< Salvataggio dell'arco nella memoria appena allocata. */
             edge->to = column;
@@ -242,7 +242,7 @@ upo_list_t upo_w_get_inc_out_edg(upo_dirgraph_t graph, int vertex) {
  * @param vertex il vertice
  * @return una lista contenente gli archi archi entranti in vertex, NULL se il grafo e' vuoto
  */
-upo_list_t upo_w_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
+upo_list_t upo_w_get_inc_in_edg(upo_w_dirgraph_t graph, int vertex) {
   upo_list_t incInEdges = NULL;
   if(upo_w_is_graph_empty(graph) == 0){
     incInEdges = upo_create_list(sizeof(upo_dir_edge_s),NULL); /**< Creazione della lista. */
@@ -250,7 +250,7 @@ upo_list_t upo_w_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
     int row = 0;
     for(; row < n; row++){ /**< Scorrimento delle righe data una colonna in cerca degli archi entranti da un dato vertice. */
       if(graph->adj[row][vertex] == 1){ /**< Selezione degli archi da inserire nella lista. */
-        upo_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
+        upo_w_dir_edge_t edge = malloc(sizeof(upo_dir_edge_s)); /**< Allocazione di memoria per contenere l'arco da passare alla lista per non perderlo all'uscita della funzione*/
         assert(edge!=NULL);
         edge->from = row; /**< Salvataggio dell'arco nella memoria appena allocata. */
         edge->to = vertex;
@@ -268,10 +268,10 @@ upo_list_t upo_w_get_inc_in_edg(upo_dirgraph_t graph, int vertex) {
  * @param vertex il vertice
  * @return una lista contenente gli archi incidenti a vertex, NULL se il grafo e' vuoto
  */
-upo_list_t upo_w_get_inc_edg(upo_dirgraph_t graph, int vertex) {
+upo_list_t upo_w_get_inc_edg(upo_w_dirgraph_t graph, int vertex) {
   upo_list_t incEdges = NULL;
   if(upo_w_is_graph_empty(graph) == 0){
-    incEdges = upo_get_inc_out_edg(graph, vertex);
+    incEdges = upo_w_get_inc_out_edg(graph, vertex);
     if( upo_list_size(incEdges) > 0){ /**< Se la lista degli archi uscenti dal vertice non è vuota collego alla sua coda la lista degli archi entranti in quel vertice. */
       upo_list_t tempList = upo_w_get_inc_in_edg(graph, vertex);
       incEdges->tail->next = tempList->head;
@@ -293,7 +293,7 @@ upo_list_t upo_w_get_inc_edg(upo_dirgraph_t graph, int vertex) {
  *
  */
 
-int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
+int upo_w_add_vertex(upo_w_dirgraph_t graph) {  /**TASK 1*/
     if(graph == NULL){
       return -1;
     }
@@ -311,7 +311,7 @@ int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
         graph->adj[n] = calloc (n+1, sizeof(int));
         assert(graph->adj[n]!=NULL);
         int line = 0;
-        for(; line < n; line++){
+        for(; line < n+1; line++){
           graph->adj[n][line] = INT_MIN; /**< Inizializzazione della nuova riga al piu' grande numero negativo rappresentabile su 32 bit. */
         }
         return 1;
@@ -329,7 +329,7 @@ int upo_w_add_vertex(upo_dirgraph_t graph) {  /**TASK 1*/
  * @param vertex il vertice da cercare
  * @return 1 se il grafo contiene il vertice, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_has_vertex(upo_dirgraph_t graph, int vertex) {
+int upo_w_has_vertex(upo_w_dirgraph_t graph, int vertex) {
     if(graph == NULL){
       return -1;
     }
@@ -348,7 +348,7 @@ int upo_w_has_vertex(upo_dirgraph_t graph, int vertex) {
  * @param vertex il vertice da eliminare
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_remove_vertex(upo_dirgraph_t graph, int vertex) {
+int upo_w_remove_vertex(upo_w_dirgraph_t graph, int vertex) {
   if (graph == NULL) {
       return -1;
   }
@@ -399,7 +399,7 @@ int upo_w_remove_vertex(upo_dirgraph_t graph, int vertex) {
  * @param weight il peso dell'arco
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2, int weight) { /**TASK 2*/
+int upo_w_add_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2, int weight) { /**TASK 2*/
   if (graph == NULL) {
       return -1;
   }
@@ -418,7 +418,7 @@ int upo_w_add_edge(upo_dirgraph_t graph, int vertex1, int vertex2, int weight) {
  * @param vertex2 dove entra l'arco
  * @return 1 se il grafo contiene l'arco, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
+int upo_w_has_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2) {
   if (graph == NULL) {
       return -1;
   }
@@ -438,7 +438,7 @@ int upo_w_has_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @param vertex2 dove entra l'arco
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
+int upo_w_remove_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2) {
   if (graph == NULL) {
       return -1;
   }
@@ -457,7 +457,7 @@ int upo_w_remove_edge(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @param vertex2 dove entra l'arco
  * @return 1 se l'operazione è andata a buon fine, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2) { /**TASK 3*/
+int upo_w_has_weight_edge(upo_w_dirgraph_t graph, int vertex1, int vertex2) { /**TASK 3*/
   if (graph == NULL) {
       return INT_MIN;
   }
@@ -475,7 +475,7 @@ int upo_w_has_weight_edge(upo_dirgraph_t graph, int vertex1, int vertex2) { /**T
  * @param vertex2 il secondo vertice
  * @return 1 se i vertici sono adiacenti, -1 se il grafo e' nullo, 0 altrimenti
  */
-int upo_w_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
+int upo_w_are_adj(upo_w_dirgraph_t graph, int vertex1, int vertex2) {
   if (graph == NULL) {
       return -1;
   }
@@ -491,7 +491,7 @@ int upo_w_are_adj(upo_dirgraph_t graph, int vertex1, int vertex2) {
  * @param graph il grafo
  * @return una stringa rappresentante il grafo
  */
-char* upo_w_print_graph(upo_dirgraph_t graph) {
+char* upo_w_print_graph(upo_w_dirgraph_t graph) {
   char* graphToString = calloc(DIM_STRING,sizeof(char)); /**< Allocazione della stringa da ritornare con inizializzazione della memoria allocata a 0 e controllo con assert. */
   assert(graphToString!=NULL);
   if (graph != NULL) {
@@ -504,7 +504,7 @@ char* upo_w_print_graph(upo_dirgraph_t graph) {
           while (upo_list_size(adjVert) != 0) { /**< Scorrimento della lista creata fino a che non sarà vuota, data la rimozione del primo elemento attraverso upo_remove_first. */
               int nextAdjVert = *((int*)upo_remove_first(adjVert)); /**< Rimozione dalla lista del primo elemento. */
               char buffer2 [DIM_BUF];
-              sprintf(buffer2," %d -> %d;\n", vertex, nextAdjVert);
+              sprintf(buffer2," %d - (%d) > %d;\n", vertex, graph->adj[vertex][nextAdjVert], nextAdjVert);
               strcat(graphToString,buffer2);
           }
           upo_destroy_list(adjVert); /**< Deallocazione della lista creata precedentemente. */
@@ -523,7 +523,7 @@ char* upo_w_print_graph(upo_dirgraph_t graph) {
  * @param p_distanze e' il puntatore al vettore delle distanze
  * @return 1 se l'operazione e' andata a buon fine, restituisce un valore negativo in caso contrario
  */
-int upo_cmDijkstra(upo_dirgraph_t graph, int source, int** p_padri, int** p_distanze){
+int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_distanze){
   if (upo_w_is_graph_empty(graph)==-1) return -1; /**il grafo e' NULL*/
   if (upo_w_is_graph_empty(graph)==1) return -2; /**il grafo e' vuoto*/
   if (upo_w_has_vertex(graph, source)!=1)return -3; /**source non esiste */
