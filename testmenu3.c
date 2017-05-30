@@ -93,7 +93,7 @@ void print_graph_menu_list() {
 }
 
 void print_menu_w_list() {
-    printf(MAGENTA "\n\t\tMenu grafo pesato:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tAggiungi un nuovo vertice\n\t4\tRimuovi un vertice\n\t5\tCrea un arco pesato tra due vertici\n\t6\tRimuovi un arco\n\t7\tStampa il grafo\n\t9\tTest statico\n\t0\tTorna al menu principale (causa la distruzione del grafo)\n" RESET);
+    printf(MAGENTA "\n\t\tMenu grafo pesato:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tAggiungi un nuovo vertice\n\t4\tRimuovi un vertice\n\t5\tCrea un arco pesato tra due vertici\n\t6\tRimuovi un arco\n\t7\tStampa il grafo\n\t8\tRcerca del cammino minimo\n\t9\tTest statico\n\t0\tTorna al menu principale (causa la distruzione del grafo)\n" RESET);
 }
 
 void print_menu_list() {
@@ -637,27 +637,21 @@ void Dijkstra(upo_w_dirgraph_t graph) {
         break;
     case -1 :
         printf(RED " ERRORE IL GRAFO E' NULLO\n" RESET);
-        break;
         return;
     case -2 :
         printf(RED " ERRORE IL GRAFO E' VUOTO\n" RESET);
-        break;
         return;
     case -3 :
         printf(RED " ERRORE LA SORGENTE SCELTA NON ESISTE\n" RESET);
-        break;
         return;
     case -4 :
         printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DEI PADRI\n" RESET);
-        break;
         return;
     case -5 :
         printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DELLE DISTANZE\n" RESET);
-        break;
         return;
     case -6:
         printf(RED " ERRORE UN PESO DI UN ARCO DEL GRAFO E' NEGATIVO\n" RESET);
-        break;
         return;
   }
   int n = 0;
@@ -1001,27 +995,21 @@ void static_w_test(upo_w_dirgraph_t* graph) {
           break;
       case -1 :
           printf(RED " ERRORE IL GRAFO E' NULLO\n" RESET);
-          break;
           return;
       case -2 :
           printf(RED " ERRORE IL GRAFO E' VUOTO\n" RESET);
-          break;
           return;
       case -3 :
           printf(RED " ERRORE LA SORGENTE SCELTA NON ESISTE\n" RESET);
-          break;
           return;
       case -4 :
           printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DEI PADRI\n" RESET);
-          break;
           return;
       case -5 :
           printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DELLE DISTANZE\n" RESET);
-          break;
           return;
       case -6:
           printf(RED " ERRORE UN PESO DI UN ARCO DEL GRAFO E' NEGATIVO\n" RESET);
-          break;
           return;
     }
     printf(MAGENTA "\n\tControllo della correttezza dei vettori restituiti dall'algoritmo di Dijkstra..." RESET);
@@ -1214,7 +1202,7 @@ void graph_with_weights(upo_w_dirgraph_t* graph) {
               break;
           case 0 :
               printf("\n\tEsci\n");
-              if (graph != NULL) {
+              if (*graph != NULL) {
                   upo_w_dirgraph_destroy(*graph);
                   printf("\n");
               }
@@ -1247,7 +1235,7 @@ void graph_without_weights(upo_dirgraph_t* graph) {
               break;
           case 0 :
               printf("\n\tEsci\n");
-              if (graph != NULL) {
+              if (*graph != NULL) {
                   upo_dirgraph_destroy(*graph);
                   printf("\n");
               }
@@ -1276,14 +1264,6 @@ int main(void) {
                 break;
             case 0 :
                 printf("\n\tEsci\n");
-                if (graph != NULL) {
-                    destroy_graph(&graph);
-                    printf("\n");
-                }
-                if (wGraph != NULL) {
-                    destroy_w_graph(&wGraph);
-                    printf("\n");
-                }
                 return 0;
             default :
                 printf("\a\"");
