@@ -90,7 +90,6 @@ void* upo_remove_first(upo_list_t list) {
     upo_list_node* node = list->head;
     void* element = node->element;
     list->head = node->next;
-    free(node->element);
     free(node);
     list->logicalLength--;
     return element;

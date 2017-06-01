@@ -38,19 +38,17 @@
      color[source]=GREY;/**source diventa GREY*/
      upo_add_last(queue, &source);/**inserisco in coda source*/
      while(upo_list_size(queue)>0){
-       vertex=upo_get_first(queue);
+       vertex=upo_remove_first(queue);
        adj_list=upo_get_adj_vert(graph, *vertex);
        while (upo_list_size(adj_list)>0){/**scorro tutta la lista di adiacienza del nodo analizzato*/
-         vertex_corrente=upo_get_first(adj_list);
+         vertex_corrente=upo_remove_first(adj_list);
          if (color[*vertex_corrente]==WHITE){/**se il colore del vertice considerato e' WHITE*/
            color[*vertex_corrente]=GREY;/**coloro il vertice di GREY*/
            upo_add_last(queue, &vett_elemento_corrente[*vertex_corrente]);/**inserisco la copia del valore puntato da vertex_corrente in coda*/
            padri[*vertex_corrente] = *vertex;
          }
-         upo_remove_first(adj_list);
        }
        color[*vertex] = BLACK;/**finito il ciclo l'elemento considerato lo coloro di BLACK*/
-       upo_remove_first(queue);
     }
      upo_destroy_list(adj_list);
      upo_destroy_list(queue);
@@ -115,12 +113,12 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
  */
   adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
-    vertex_corrente=upo_get_first(adj_list);
+    vertex_corrente=upo_remove_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
       padri[*vertex_corrente] = vertex;
       upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, fine_visita, vett_elemento_corrente);
     }
-    upo_remove_first(adj_list);
+    free(vertex_corrente);
   }
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
@@ -165,8 +163,7 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* pred
   color[vertex]=GREY;
   int i;
   int* vertex_corrente=NULL;
-  upo_list_t adj_list=upo_create_list(sizeof(int),NULL);
-  adj_list=upo_get_adj_vert(graph, vertex);
+  upo_list_t adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
     vertex_corrente=upo_remove_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
@@ -180,6 +177,7 @@ int upo_visit_ric_cyclic(upo_dirgraph_t graph, int vertex, int* color, int* pred
       upo_destroy_list(adj_list);
       return TRUE;
     }
+    free(vertex_corrente);
   }
   color[vertex]=BLACK;
   upo_destroy_list(adj_list);
@@ -255,17 +253,16 @@ int* upo_topological_sort(upo_dirgraph_t graph) {
 void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,int* padri, int*color, int* last_free, int* timer, int* d, int* f){
   int* vertex_corrente=NULL;
   upo_list_t adj_list=NULL;
-  adj_list = upo_create_list(sizeof(int),NULL);
+  adj_list = upo_get_adj_vert(graph, vertex);
   color[vertex]=GREY;
   d[vertex]= ++(*timer);
-  adj_list=upo_get_adj_vert(graph, vertex);
   while(upo_list_size(adj_list)>0){
-    vertex_corrente=upo_get_first(adj_list);
+    vertex_corrente=upo_remove_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
       padri[*vertex_corrente] = vertex;
       upo_DFS_topological(graph, *vertex_corrente, ord_topologico, padri, color, last_free, timer, d, f);
     }
-    upo_remove_first(adj_list);
+    free(vertex_corrente);
   }
   upo_destroy_list(adj_list);
   color[vertex]=BLACK;
