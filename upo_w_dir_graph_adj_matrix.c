@@ -552,7 +552,6 @@ int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_di
   distanze[source]=0;
   priority[source]=INT_MIN;
   printf("1\n");//debug
-  adj_list=upo_create_list(sizeof(int), NULL);
   adj_list=upo_w_get_adj_vert(graph, source);
   while(upo_list_size(adj_list)>0){ /**imposto le distanze, le priorita' e le distanze dei vertici adiacenti a source */
      printf("\tCICO WHILE: Dimensione adj_list: %d \n", upo_list_size(adj_list));//debug
@@ -575,6 +574,7 @@ int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_di
      if(min==-1) stop=1;
      else {
        *vertex=min;
+       upo_destroy_list(adj_list);
        adj_list=upo_w_get_adj_vert(graph, *vertex);
        while(upo_list_size(adj_list)>0){
          printf("\t\tCICLO WHILE ANNIDATO adj_list: %d\n", upo_list_size(adj_list));//debug

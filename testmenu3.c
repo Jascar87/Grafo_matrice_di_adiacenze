@@ -400,8 +400,9 @@ void adj_vert(upo_dirgraph_t graph) {
         int nextAdjVert = 0;
         int listSize = upo_list_size(adjVert);
         while ( listSize != 0) {
-            nextAdjVert = *((int*)upo_remove_first(adjVert));
+            nextAdjVert = *((int*)upo_get_first(adjVert));
             printf(YELLOW" %d -> %d;\n"RESET, vertex, nextAdjVert);
+            upo_remove_first(adjVert);
             listSize--;
         }
         upo_destroy_list(adjVert);
@@ -796,6 +797,7 @@ void create_w_graph(upo_w_dirgraph_t* graph) {
 void static_w_test(upo_w_dirgraph_t* graph) {
     printf(MAGENTA "\n\tTest statico\n" RESET);
     printf(MAGENTA "\n\tCreazione grafo vuoto..." RESET);
+    upo_w_dirgraph_destroy(*graph);
     *graph = upo_w_dirgraph_create(0);
     if(*graph != NULL) {
       printf(YELLOW " OK\n" RESET);
@@ -1021,6 +1023,10 @@ void static_w_test(upo_w_dirgraph_t* graph) {
     for(n = 0; n < (*graph)->n; n++) {
         printf("%d;", distanze[n]);
     }
+    free(padri);
+    free(distanze);
+    upo_w_dirgraph_destroy(*graph);
+    *graph=NULL;
 }
 
 void graph_properties_operations(upo_dirgraph_t* graph) {
