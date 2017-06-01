@@ -577,7 +577,6 @@ int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_di
            padri[*vertex_find]=*vertex;
            distanze[*vertex_find]=distanze[*vertex]+weight;
          }
-         printf("\n\t\t\t 3\n");
          free(vertex_find);
        }
        i++;
