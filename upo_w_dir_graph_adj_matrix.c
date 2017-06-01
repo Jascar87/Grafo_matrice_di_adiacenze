@@ -559,7 +559,6 @@ int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_di
      else priority[*vertex]=weight;
      padri[*vertex]=source;
      distanze[*vertex]=weight;
-     free(vertex);
    }
    i=0;
    while(i<graph->n-1 && negativ_weight==0 && stop==0){
@@ -578,7 +577,8 @@ int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_di
            padri[*vertex_find]=*vertex;
            distanze[*vertex_find]=distanze[*vertex]+weight;
          }
-         free(vertex);
+         printf("\n\t\t\t 3\n");
+         free(vertex_find);
        }
        i++;
        priority[*vertex]=INT_MIN;
