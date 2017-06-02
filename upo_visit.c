@@ -311,7 +311,7 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     }
     upo_destroy_list(fine_visita);
     upo_dirgraph_destroy(trasposto);
-    for(i=0; i<graph->n; i++)
+    for(i=0; i<graph->n; i++) printf("\t\t\t vector_strongly_connected[%d] = %d\n", i, vector_strongly_connected[i]);//debug
     return vector_strongly_connected;
 }
 
