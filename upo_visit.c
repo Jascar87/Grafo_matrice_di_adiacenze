@@ -115,7 +115,12 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
   while(upo_list_size(adj_list)>0){
     vertex_corrente=upo_remove_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
-      padri[*vertex_corrente] = vertex;
+      if(vett_elemento_corrente != NULL){/**nel caso del grafo originale*/
+          padri[*vertex_corrente] = vertex;
+      }
+      else{/**nel caso del grafo trasposto*/
+        padri[vertex] = *vertex_corrente;
+      }
       upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, fine_visita, vett_elemento_corrente);
     }
     free(vertex_corrente);
@@ -303,11 +308,12 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       if(color[i]==WHITE) upo_DFS_par(graph, i, color, vector_strongly_connected, &vertex_visitati, fine_visita, vett_elemento_corrente);
     }
     upo_dirgraph_trasposto(graph, &trasposto);
+    vertex_visitati = 0;
     for (i=0; i<graph->n; i++) color[i]=WHITE; /**ciclo che inizializza a WHITE gli elementi di color*/
 
     while(upo_list_size(fine_visita)>0){
       vertex=upo_remove_first(fine_visita);
-      if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, vector_strongly_connected, &vertex_visitati, NULL, NULL);
+      if (color[*vertex]==WHITE) upo_DFS_par(trasposto, *vertex, color, vector_strongly_connected, &vertex_visitati, NULL, NULL);
     }
     upo_destroy_list(fine_visita);
     upo_dirgraph_destroy(trasposto);
