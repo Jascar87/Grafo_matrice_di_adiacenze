@@ -18,50 +18,89 @@ void selection(int* digit) {
     fflush(stdin);
 }
 
+int split_container(int* contatore, int source, int next_p, int* scc, int* container)
+{
+  int boolean;
+  if(scc[next_p] == -1){boolean = FALSE;}
+  else if(scc[next_p] == source)
+  {
+    boolean = TRUE;
+    (*contatore)++;
+  }
+  else
+  {
+    if(split_container(contatore, source, scc[next_p], scc, container) == TRUE){boolean = TRUE;}
+    else{boolean = FALSE;}
+  }
+  if(boolean == TRUE)
+  {
+    container[next_p] = *contatore;
+    printf("Containe_p = %d, contatore = %d, source = %d, next_p = %d\n", container[next_p], *contatore, source, next_p);
+  }
+  return boolean;
+}
+
 void stampa_scc(int* scc, int dim){
   int vet[dim];
   int split; /**indice di appartenenza della cfc*/
   int i;
+  int j;
   int cont; /**se a 0 indica che sto cercando il primo elemento di una nuova cfc*/
+  int contatore = -1;
 
   /**parte di split delle varie cfc*/
 
   for(i = 0; i < dim; i++) /**inizializzo il vettore per dividere le varie cfc*/
   {
-    vet[i] = i;
+    vet[i] = -1;
   }
   for(i = 0; i < dim; i++) /**ciclo che divide le cfc indicizzandole*/
   {
-    if(scc[i] == -1){}
-    else
+    if(vet[i] == -1)
     {
-        vet[i] = vet[scc[i]];
+      split_container(&contatore, i, i, scc, vet);
+    }
+    for(j = 0; j < dim; j++)
+    {
+      printf("SCC = %d, vet = %d, posizione = %d\n", scc[j], vet[j], j);
     }
   }
 
   /**stampa del vettore*/
 
   printf("{");
+  for(i = 0; i < dim; i++)
+  {
+    if(vet[i] == -1)
+    {
+      printf("(");
+      printf("%d", i);
+      printf(");");
+    }
+  }
   for(split = 0; split < dim; split++)
   {
     cont = 0;
     for(i = 0; i < dim; i++)
     {
-      if(vet[i] == split && cont == 0)
+    if(vet[i] == split) //
+    {
+      if(cont == 0)
       {
         printf("(");
         printf("%d", i);
         cont++;
       }
-      else if(vet[i] == split)
+      else
       {
         printf(",%d", i);
       }
     }
-    if(cont != 0)
-    {
-        printf(");");
-    }
+  }
+  if(cont != 0)
+  {
+    printf(");");
+  }
   }
   printf("}\n");
 }
