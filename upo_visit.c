@@ -71,7 +71,6 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
   int i;
   int end = 0;
   int* padri=NULL;/**puntatore al vettore dei padri*/
-  int vertex_visitati=0;
   int vett_elemento_corrente[graph->n];
   padri=malloc(sizeof(int)*(graph->n));
   assert(padri!=NULL);
@@ -80,7 +79,7 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
     padri[i]=-1;
   }
   for(i=0; i<graph->n; i++){
-    if(color[i]==WHITE) upo_DFS_par(graph, i, color, padri, &vertex_visitati, NULL, NULL);
+    if(color[i]==WHITE) upo_DFS_par(graph, i, color, padri, NULL, NULL);
   }
 
   return padri;
@@ -94,20 +93,17 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
  * @param vertex e' il puntatore del vertice sorgente
  * @param color e' il vettore che memorizza lo stato dei vettori
  * @param padri e' il vettore che tiene l'ordina di visita
- * @param vertex_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
  * @param fine_visita è la lista che memorizza i vertici in ordine decrescentedi chiusura
  * @param vett_elemento_corrente è il puntatore al vettore che ha il valore i-esimo nella cella i-esima
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, upo_list_t fine_visita, int* vett_elemento_corrente){
+void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, upo_list_t fine_visita, int* vett_elemento_corrente){
   int* vertex_corrente=NULL;
   upo_list_t adj_list=NULL;
   if(upo_is_graph_empty(graph)!=0) return;/**controllo che esista e non sia vuoto il grafo*/
-  if (((*vertex_visitati)+1)==graph->n) return;/**caso di terminazione ho visitato tutti i nodi*/
   color[vertex]=GREY;
-  (*vertex_visitati)++;
 /**
  * visita di vertex
  */
@@ -116,7 +112,7 @@ void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* 
     vertex_corrente=upo_remove_first(adj_list);
     if (color[(*vertex_corrente)]==WHITE){
       padri[*vertex_corrente] = vertex;
-      upo_DFS_par(graph, *vertex_corrente, color, padri, vertex_visitati, fine_visita, vett_elemento_corrente);
+      upo_DFS_par(graph, *vertex_corrente, color, padri, fine_visita, vett_elemento_corrente);
     }
     free(vertex_corrente);
   }
@@ -290,7 +286,6 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     int vett_elemento_corrente[graph->n];
     int padri[graph->n];
     int end = 0;
-    int vertex_visitati=0;
     fine_visita=upo_create_list(sizeof(int), NULL);
     upo_dirgraph_t trasposto = NULL;
     for (i=0; i<graph->n; i++){ /**ciclo che inizializza a WHITE gli elementi di color e il vettore dei padri*/
@@ -300,14 +295,17 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
       vector_strongly_connected[i]=-1;
     }
     for(i=0; i<graph->n; i++){/**alla fine del ciclo fine_visita conterrà tutti i vertici in ordine decrescente di fine visita*/
-      if(color[i]==WHITE) upo_DFS_par(graph, i, color, vector_strongly_connected, &vertex_visitati, fine_visita, vett_elemento_corrente);
+      if(color[i]==WHITE) upo_DFS_par(graph, i, color, vector_strongly_connected, fine_visita, vett_elemento_corrente);
     }
     upo_dirgraph_trasposto(graph, &trasposto);
     for (i=0; i<graph->n; i++) color[i]=WHITE; /**ciclo che inizializza a WHITE gli elementi di color*/
 
     while(upo_list_size(fine_visita)>0){
       vertex=upo_remove_first(fine_visita);
-      if (color[*vertex]==WHITE) upo_DFS_par(trasposto, i, color, vector_strongly_connected, &vertex_visitati, NULL, NULL);
+      if (color[*vertex]==WHITE){
+        vector_strongly_connected[*vertex]=-1;
+        upo_DFS_par(trasposto, *vertex, color, vector_strongly_connected, NULL, NULL);
+      }
     }
     upo_destroy_list(fine_visita);
     upo_dirgraph_destroy(trasposto);

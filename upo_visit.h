@@ -31,14 +31,13 @@ int* upo_DFS_tot(upo_dirgraph_t graph);
  * @param vertex e' il puntatore del vertice sorgente
  * @param color e' il vettore che memorizza lo stato dei vettori
  * @param padri e' il vettore che tiene l'ordina di visita
- * @param vertex_visitati è il puntatore alla variabile che memorizza la dimensione dei vettori visitati
  * @param fine_visita è la lista che memorizza i vertici in ordine decrescentedi chiusura (puo' essere NULL)
  * @param vett_elemento_corrente è il puntatore al vettore che ha il valore i-esimo nella cella i-esima (puo' essere NULL)
  * @return void
  *
  */
 
-void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, int* vertex_visitati, upo_list_t fine_visita, int* vett_elemento_corrente);
+void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, upo_list_t fine_visita, int* vett_elemento_corrente);
 
 /**
  * @brief Controlla se un grafo graph contiene dei cicli
