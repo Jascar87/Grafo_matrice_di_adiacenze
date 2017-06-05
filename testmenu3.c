@@ -35,10 +35,10 @@ int split_container(int* contatore, int source, int next_p, int* scc, int* conta
   if(boolean == TRUE)
   {
     container[next_p] = *contatore;
+    printf("Containe_p = %d, contatore = %d, source = %d, next_p = %d\n", container[next_p], *contatore, source, next_p);
   }
   return boolean;
 }
-
 
 void stampa_scc(int* scc, int dim){
   int vet[dim];
@@ -59,6 +59,10 @@ void stampa_scc(int* scc, int dim){
     if(vet[i] == -1)
     {
       split_container(&contatore, i, i, scc, vet);
+    }
+    for(j = 0; j < dim; j++)
+    {
+      printf("SCC = %d, vet = %d, posizione = %d\n", scc[j], vet[j], j);
     }
   }
 
