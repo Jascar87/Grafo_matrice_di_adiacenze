@@ -18,52 +18,42 @@ void selection(int* digit) {
     fflush(stdin);
 }
 
-void stampa_scc(int* scc, int dim){
-  int vet[dim];
-  int split; /**indice di appartenenza della cfc*/
+void scc(int padre, int* vet, int dim){
   int i;
-  int cont; /**se a 0 indica che sto cercando il primo elemento di una nuova cfc*/
-
-  /**parte di split delle varie cfc*/
-
-  for(i = 0; i < dim; i++) /**inizializzo il vettore per dividere le varie cfc*/
-  {
-    vet[i] = i;
-  }
-  for(i = 0; i < dim; i++) /**ciclo che divide le cfc indicizzandole*/
-  {
-    if(scc[i] == -1){}
-    else
-    {
-        vet[i] = vet[scc[i]];
+  for(i = 0; i < dim; i++){
+    if(vet[i] == padre){
+      printf(YELLOW ",%d" RESET, i);
+      scc(i, vet, dim);
     }
   }
+  return;
+}
 
-  /**stampa del vettore*/
-
-  printf("{");
-  for(split = 0; split < dim; split++)
-  {
-    cont = 0;
-    for(i = 0; i < dim; i++)
-    {
-      if(vet[i] == split && cont == 0)
-      {
-        printf("(");
-        printf("%d", i);
-        cont++;
+void stampa_scc(int* vet, upo_dirgraph_t graph) {
+  if(vet == NULL) {
+      if(upo_is_graph_empty(graph)==-1) {
+          printf("\a\"");
+          printf(RED "\n\tIl grafo analizzato e' nullo\n" RESET);
+          return;
       }
-      else if(vet[i] == split)
-      {
-        printf(",%d", i);
+      else if(upo_is_graph_empty(graph)==1) {
+          printf("\a\"");
+          printf(RED "\n\tIl grafo analizzato e' vuoto\n" RESET);
+          return;
       }
-    }
-    if(cont != 0)
-    {
-        printf(");");
-    }
   }
-  printf("}\n");
+  int i;
+  printf(YELLOW "Componenti fortemente connesse\n" RESET);
+  printf(YELLOW "{" RESET);
+  for(i=0; i < graph->n; i++) {
+      if(vet[i] == -1) {
+        printf(YELLOW "(" RESET);
+        printf(YELLOW "%d" RESET, i);
+        scc(i, vet, graph->n);
+        printf(YELLOW");"RESET);
+      }
+  }
+  printf(YELLOW"}"RESET);
 }
 
 void stampa_vet(int source, int* vet, upo_dirgraph_t graph){
@@ -123,7 +113,7 @@ void print_graph(upo_dirgraph_t graph) {
 
 void strongly_connected_components(upo_dirgraph_t graph) {
     int* vet = upo_strongly_connected_components(graph);
-    stampa_scc(vet, graph->n);
+    stampa_scc(vet, graph);
     free(vet);
 }
 
