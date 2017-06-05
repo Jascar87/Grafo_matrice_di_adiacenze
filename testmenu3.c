@@ -22,6 +22,7 @@ void scc(int padre, int* vet, int dim){
   int i;
   for(i = 0; i < dim; i++){
     if(vet[i] == padre){
+
       printf(YELLOW ",%d" RESET, i);
       scc(i, vet, dim);
     }
@@ -53,7 +54,7 @@ void stampa_scc(int* vet, upo_dirgraph_t graph) {
         printf(YELLOW");"RESET);
       }
   }
-  printf(YELLOW"}"RESET);
+  printf(YELLOW"\b}"RESET);
 }
 
 void stampa_vet(int source, int* vet, upo_dirgraph_t graph){
@@ -93,7 +94,7 @@ void print_graph_menu_list() {
 }
 
 void print_menu_w_list() {
-    printf(MAGENTA "\n\t\tMenu grafo pesato:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tAggiungi un nuovo vertice\n\t4\tRimuovi un vertice\n\t5\tCrea un arco pesato tra due vertici\n\t6\tRimuovi un arco\n\t7\tStampa il grafo\n\t8\tRcerca del cammino minimo\n\t9\tTest statico\n\t0\tTorna al menu principale (causa la distruzione del grafo)\n" RESET);
+    printf(MAGENTA "\n\t\tMenu grafo pesato:\n\t1\tCrea un grafo vuoto\n\t2\tDistruggi il grafo\n\t3\tAggiungi un nuovo vertice\n\t4\tRimuovi un vertice\n\t5\tCrea un arco pesato tra due vertici\n\t6\tRimuovi un arco\n\t7\tStampa il grafo\n\t8\tRcerca del cammino minimo\n\t0\tTorna al menu principale (causa la distruzione del grafo)\n" RESET);
 }
 
 void print_menu_list() {
@@ -664,6 +665,8 @@ void Dijkstra(upo_w_dirgraph_t graph) {
   for(n = 0; n < graph->n; n++) {
       printf("%d;", distanze[n]);
   }
+  free(padri);
+  free(distanze);
 }
 
 void print_w_graph(upo_w_dirgraph_t graph) {
@@ -792,241 +795,6 @@ void create_w_graph(upo_w_dirgraph_t* graph) {
         printf("\a\"");
         printf(RED"\n\tCreazione annullata, il grafo e' gia stato creato\n"RESET);
     }
-}
-
-void static_w_test(upo_w_dirgraph_t* graph) {
-    printf(MAGENTA "\n\tTest statico\n" RESET);
-    printf(MAGENTA "\n\tCreazione grafo vuoto..." RESET);
-    upo_w_dirgraph_destroy(*graph);
-    *graph = upo_w_dirgraph_create(0);
-    if(*graph != NULL) {
-      printf(YELLOW " OK\n" RESET);
-    }
-    else {
-      printf(RED " ERRORE\n" RESET);
-      return;
-    }
-    printf(MAGENTA "\n\tDistruzione grafo vuoto..." RESET);
-    int returnValue = upo_w_dirgraph_destroy(*graph);
-    if(returnValue == 1) {
-      printf(YELLOW " OK\n" RESET);
-      *graph = NULL;
-    }
-    else {
-      printf(RED " ERRORE\n" RESET);
-      return;
-    }
-    printf(MAGENTA "\n\tDistruzione grafo non vuoto dopo aver cancellato alcuni vertici..." RESET);
-    *graph = upo_w_dirgraph_create(0);
-    int n = 0;
-    for (;n < 4; n++) {
-      returnValue = upo_w_add_vertex(*graph);
-      if (returnValue != 1) {
-        printf(RED " ERRORE AGGIUNTA VERTICE %d\n" RESET, n);
-        return;
-      }
-      returnValue = upo_w_has_vertex(*graph, n);
-      if (returnValue != 1) {
-        printf(RED " ERRORE RICERCA VERTICE %d\n" RESET, n);
-        return;
-      }
-    }
-    returnValue = upo_w_remove_vertex(*graph, 1);
-    if (returnValue != 1) {
-      printf(RED " ERRORE DISTRUZIONE VERTICE 1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_remove_vertex(*graph, 2);
-    if (returnValue != 1) {
-      printf(RED " ERRORE DISTRUZIONE VERTICE 2\n" RESET);
-      return;
-    }
-    returnValue = upo_w_dirgraph_destroy(*graph);
-    if(returnValue == 1) {
-      printf(YELLOW " OK\n" RESET);
-      *graph = NULL;
-    }
-    else {
-      printf(RED " ERRORE\n" RESET);
-      return;
-    }
-    printf(MAGENTA "\n\tDistruzione grafo non vuoto dopo operazioni sugli archi..." RESET);
-    *graph = upo_w_dirgraph_create(0);
-    for (n = 0; n < 4; n++) {
-      returnValue = upo_w_add_vertex(*graph);
-      if (returnValue != 1) {
-        printf(RED " ERRORE AGGIUNTA VERTICE %d\n" RESET, n);
-        return;
-      }
-    }
-    returnValue = upo_w_add_edge(*graph, 0, 1, 10);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 0->1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 0, 1, 10);
-    if (returnValue != 0) {
-      printf(RED " ERRORE AGGIUNTA RIPETUTA ARCO 0->1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 1, 2, -10);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 1->2\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 2, 3, INT_MIN);
-    if (returnValue == 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 2->3\n" RESET);
-      return;
-    }
-    returnValue = upo_w_has_edge(*graph, 0, 1);
-    if (returnValue != 1) {
-      printf(RED " ERRORE RICERCA ARCO 0->1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_has_weight_edge(*graph, 1, 2);
-    if (returnValue != -10) {
-      printf(RED " ERRORE RICERCA PESO ARCO 1->2\n" RESET);
-      return;
-    }
-    returnValue = upo_w_remove_edge(*graph, 0, 1);
-    if (returnValue != 1) {
-      printf(RED " ERRORE DISTRUZIONE ARCO 0->1 %d\n" RESET, returnValue);
-      return;
-    }
-    returnValue = upo_w_has_edge(*graph, 0, 1);
-    if (returnValue != 0) {
-      printf(RED " ERRORE RICERCA ARCO CANCELLATO 0->1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_dirgraph_destroy(*graph);
-    if(returnValue == 1) {
-      printf(YELLOW " OK\n" RESET);
-      *graph = NULL;
-    }
-    else {
-      printf(RED " ERRORE\n" RESET);
-      return;
-    }
-    printf(MAGENTA "\n\tRicerca del cammino minimo su grafo non vuoto..." RESET);
-    *graph = upo_w_dirgraph_create(0);
-    for (n = 0; n < 10; n++) {
-      returnValue = upo_w_add_vertex(*graph);
-      if (returnValue != 1) {
-        printf(RED " ERRORE AGGIUNTA VERTICE %d\n" RESET, n);
-        return;
-      }
-    }
-    returnValue = upo_w_add_edge(*graph, 0, 1, 1);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 0->1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 1, 5, 2);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 1->5\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 0, 2, 3);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 0->2\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 2, 3, 8);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 2->3\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 3, 6, 108);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 3->6\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 6, 7, 4);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 6->7\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 7, 9, 13);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 7->9\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 7, 5, 5);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 7->5\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 5, 9, 1);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 5->9\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 9, 8, 2);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 9->8\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 8, 4, 1);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 8->4\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 4, 1, 2);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 4->1\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 5, 7, 2);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 5->7\n" RESET);
-      return;
-    }
-    returnValue = upo_w_add_edge(*graph, 7, 6, 109);
-    if (returnValue != 1) {
-      printf(RED " ERRORE AGGIUNTA ARCO 7->6\n" RESET);
-      return;
-    }
-    printf(MAGENTA "\n\tCreato grafo di prova... " RESET);
-    int* padri = NULL;
-    int* distanze = NULL;
-    returnValue = upo_cmDijkstra(*graph, 0, &padri, &distanze);
-    switch (returnValue) {
-      case 1 :
-          printf(YELLOW" OK\n" RESET);
-          break;
-      case -1 :
-          printf(RED " ERRORE IL GRAFO E' NULLO\n" RESET);
-          return;
-      case -2 :
-          printf(RED " ERRORE IL GRAFO E' VUOTO\n" RESET);
-          return;
-      case -3 :
-          printf(RED " ERRORE LA SORGENTE SCELTA NON ESISTE\n" RESET);
-          return;
-      case -4 :
-          printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DEI PADRI\n" RESET);
-          return;
-      case -5 :
-          printf(RED " ERRORE NELLA ALLOCAZIONE DEL VETTORE DELLE DISTANZE\n" RESET);
-          return;
-      case -6:
-          printf(RED " ERRORE UN PESO DI UN ARCO DEL GRAFO E' NEGATIVO\n" RESET);
-          return;
-    }
-    printf(MAGENTA "\n\tControllo della correttezza dei vettori restituiti dall'algoritmo di Dijkstra..." RESET);
-    printf("\n\tPADRI\n\t");
-    for(n = 0; n < (*graph)->n; n++) {
-        printf("%d;", padri[n]);
-    }
-    printf("\n\tDISTANZE\n\t");
-    for(n = 0; n < (*graph)->n; n++) {
-        printf("%d;", distanze[n]);
-    }
-    free(padri);
-    free(distanze);
-    upo_w_dirgraph_destroy(*graph);
-    *graph=NULL;
 }
 
 void graph_properties_operations(upo_dirgraph_t* graph) {
@@ -1202,9 +970,6 @@ void graph_with_weights(upo_w_dirgraph_t* graph) {
               break;
           case 8 :
               Dijkstra(*graph);
-              break;
-          case 9 :
-              static_w_test(graph);
               break;
           case 0 :
               printf("\n\tEsci\n");

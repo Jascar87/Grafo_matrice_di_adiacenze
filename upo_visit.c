@@ -63,7 +63,7 @@
  * @return il vettore dei padri della foresta di visita, NULL se il grafo e' vuoto.
  *
  */
-
+/**Risolto problema non notato nella versione precedente*/
 int* upo_DFS_tot(upo_dirgraph_t graph) {
   if(upo_is_graph_empty(graph)!=0) return NULL;/**controllo che esista e non sia vuoto il grafo*/
   int color[graph->n];/**vettore per identificare i colori dei nodi*/
@@ -98,7 +98,7 @@ int* upo_DFS_tot(upo_dirgraph_t graph) {
  * @return void
  *
  */
-
+/**Risolto problema non notato nella versione precedente*/
 void upo_DFS_par(upo_dirgraph_t graph, int vertex, int* color, int* padri, upo_list_t fine_visita, int* vett_elemento_corrente){
   int* vertex_corrente=NULL;
   upo_list_t adj_list=NULL;
@@ -274,6 +274,8 @@ void upo_DFS_topological(upo_dirgraph_t graph, int vertex, int* ord_topologico,i
  * @return la foresta delle componenti fortemente connesse restituita dall'algoritmo di Kosaraju
  *
  */
+
+ /**Risolto problema non notato nella versione precedente*/
 int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     if (upo_is_graph_empty(graph)!= 0) return NULL;/**return NULL se il grafo è vuoto o non ha vertici*/
     int* vector_strongly_connected = NULL; /**vettore che indicherà in che componente fortemente connessa si trova il vertice i-esimo*/
@@ -309,7 +311,6 @@ int* upo_strongly_connected_components(upo_dirgraph_t graph) {
     }
     upo_destroy_list(fine_visita);
     upo_dirgraph_destroy(trasposto);
-    for(i=0; i<graph->n; i++) printf("\t\t\t vector_strongly_connected[%d] = %d\n", i, vector_strongly_connected[i]);//debug
     return vector_strongly_connected;
 }
 

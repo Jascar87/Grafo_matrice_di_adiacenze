@@ -545,7 +545,10 @@ int upo_cmDijkstra(upo_w_dirgraph_t graph, int source, int** p_padri, int** p_di
   if(padri==NULL) return -4;/**allocazione del vettore dei padri fallita*/
   vertex=padri;
   distanze=malloc(sizeof(int)*graph->n);
-  if(distanze==NULL) return -5;/**allocazione del vettore delle distanze fallita*/
+  if(distanze==NULL){/**allocazione del vettore delle distanze fallita*/
+    free(padri);
+    return -5;
+  }
   for(i=0; i<graph->n; i++){/**cilo di inizializzazione settando tutti i padri a -1, le distanze e le priorita' a infinito*/
     padri[i]=-1;
     distanze[i]=INT_MIN;
